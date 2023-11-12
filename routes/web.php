@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\session;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if (isset($_SESSION["user"]) and !empty($_SESSION["user"])) {
+        return view('dashboard');
+    } else {
+        return redirect('/iniciar-sesion');
+    }
 });
+
+Route::get('/iniciar-sesion', function () {
+    return view('login');
+});
+
+Route::get('/recuperar-cuenta', function () {
+    return view('recover');
+});
+
+Route::post('/login', [Session::class, 'login']);
