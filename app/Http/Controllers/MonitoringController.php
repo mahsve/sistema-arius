@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class MonitoreoController extends Controller
+class MonitoringController extends Controller
 {
 	public function index()
 	{

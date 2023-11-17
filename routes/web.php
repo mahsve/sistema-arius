@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MonitoreoController;
+use App\Http\Controllers\MonitoringController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +16,4 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', DashboardController::class);
-Route::get('/monitoreo', [MonitoreoController::class, 'index']);
+Route::get('/monitoreo', [MonitoringController::class, 'index']);
