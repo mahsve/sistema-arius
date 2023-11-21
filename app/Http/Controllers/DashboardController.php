@@ -8,6 +8,10 @@ class DashboardController extends Controller
 {
 	public function __invoke()
 	{
-		return view('dashboard');
+		if (session('user')) {
+			return view('dashboard');
+		} else {
+			return redirect('/iniciar-sesion');
+		}
 	}
 }

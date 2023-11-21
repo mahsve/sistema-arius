@@ -9,7 +9,7 @@
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="images/favicon.png">
 	<!-- plugins:css -->
-	<link rel="stylesheet" href="fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="vendors/feather/feather.css">
 	<link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
 	<link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
 	<link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
@@ -20,6 +20,7 @@
 	<!-- End plugin css for this page -->
 	<!-- inject:css -->
 	<link rel="stylesheet" href="css/vertical-layout-light/style.css">
+	<link rel="stylesheet" href="css/vertical-layout-light/theme.dark.css">
 	<!-- endinject -->
 </head>
 
@@ -44,7 +45,7 @@
 			<div class="navbar-menu-wrapper d-flex align-items-top border-bottom">
 				<ul class="navbar-nav">
 					<li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-						<h1 class="welcome-text">Bienvenido sr(a), <span class="text-black fw-bold">John Doe</span></h1>
+						<h1 class="welcome-text">Bienvenido sr(a), <span class="text-black fw-bold">{{session('user')->usuario}}</span></h1>
 						<h3 class="welcome-sub-text">Su resumen de desempeño esta semana</h3>
 					</li>
 				</ul>
@@ -182,19 +183,19 @@
 						<div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown">
 							<div class="dropdown-header text-center">
 								<img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
-								<p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
+								<p class="mb-1 mt-3 font-weight-semibold">{{session('user')->usuario}}</p>
 								<p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
 							</div>
-							<a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-account-outline text-primary me-2"></i> My Profile <span class="badge badge-pill badge-danger">1</span></a>
-							<a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-message-text-outline text-primary me-2"></i> Messages</a>
-							<a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-calendar-check-outline text-primary me-2"></i> Activity</a>
-							<a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-help-circle-outline text-primary me-2"></i> FAQ</a>
-							<a class="dropdown-item"><i class="dropdown-item-icon mdi mdi-power text-primary me-2"></i>Sign Out</a>
+							<a class="dropdown-item" href="#"><i class="dropdown-item-icon icon-account-outline text-primary me-2"></i> My Profile</a>
+							<a class="dropdown-item" href="#"><i class="dropdown-item-icon icon-message-text-outline text-primary me-2"></i> Messages</a>
+							<a class="dropdown-item" href="#"><i class="dropdown-item-icon icon-calendar-check-outline text-primary me-2"></i> Activity</a>
+							<a class="dropdown-item" href="#"><i class="dropdown-item-icon icon-help-circle-outline text-primary me-2"></i> FAQ</a>
+							<a class="dropdown-item" href="{{route('logout')}}"><i class="dropdown-item-icon icon-logout text-primary me-2"></i>Sign Out</a>
 						</div>
 					</li>
 				</ul>
 				<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
-					<span class="mdi mdi-menu"></span>
+					<span class="icon-menu"></span>
 				</button>
 			</div>
 		</nav>
@@ -356,13 +357,13 @@
 				<ul class="nav">
 					<li class="nav-item active">
 						<a class="nav-link" href="{{url('/')}}">
-							<i class="fas fa-home fa-sm menu-icon"></i>
+							<i class="icon-pie-chart menu-icon"></i>
 							<span class="menu-title">Panel principal</span>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" data-bs-toggle="collapse" href="#ui-clients" aria-expanded="false" aria-controls="ui-basic">
-							<i class="fas fa-users menu-icon"></i>
+							<i class="icon-user menu-icon"></i>
 							<span class="menu-title">Clientes</span>
 							<i class="menu-arrow"></i>
 						</a>
@@ -376,13 +377,13 @@
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="{{url('servicios')}}">
-							<i class="fas fa-laptop-house menu-icon"></i>
+							<i class="icon-monitor menu-icon"></i>
 							<span class="menu-title">Servicios</span>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" data-bs-toggle="collapse" href="#ui-monitoring" aria-expanded="false" aria-controls="ui-basic">
-							<i class="fas fa-desktop menu-icon"></i>
+							<i class="icon-monitor menu-icon"></i>
 							<span class="menu-title">Monitoreo</span>
 							<i class="menu-arrow"></i>
 						</a>

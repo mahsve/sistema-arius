@@ -1,0 +1,36 @@
+@media (min-width: 992px) {
+	.sidebar-dark.sidebar-icon-only .navbar .navbar-brand-wrapper {
+		background: #232227;
+	}
+
+	.sidebar-dark.sidebar-icon-only .navbar .navbar-brand-wrapper .navbar-toggler {
+		color: white;
+	}
+
+	.sidebar-dark.sidebar-icon-only .sidebar {
+		background: #232227;
+	}
+
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link {
+		color: #484848;
+	}
+
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-icon {
+		color: rgba(255, 255, 255, 0.5);
+	}
+
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item.active .nav-link i.menu-icon {
+		color: white;
+	}
+
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link {
+		color: #484848;
+	}
+
+
+
+
+	.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-icon {
+		font-size: 22px;
+	}
+}

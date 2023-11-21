@@ -1,7 +1,9 @@
 <?php
 
+// Importamos los controladores necesarios.
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\MonitoringController;
+use App\Http\Controllers\SessionController;
+
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,4 +18,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', DashboardController::class);
-Route::get('/monitoreo', [MonitoringController::class, 'index']);
+
+Route::get('/iniciar-sesion', [SessionController::class, 'showLogin'])->name('show-login');
+Route::post('/login', [SessionController::class, 'login'])->name('login');
+Route::get('/logout', [SessionController::class, 'logout'])->name('logout');
+
+Route::get('/recuperar', [SessionController::class, 'showRecover'])->name('show-recover');
