@@ -15026,8 +15026,8 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 	word-wrap: break-word;
 	background-color: #fff;
 	background-clip: border-box;
-	border: 1px solid #e3e3e3;
-	border-radius: 20px;
+	border: 1px solid #e9e9e9;
+	border-radius: .5rem;
 }
 
 .card>hr {
@@ -18210,7 +18210,7 @@ fieldset:disabled .swal2-modal .swal2-buttonswrapper .swal2-styled,
 }
 
 .ms-2,
-.btn-toolbar .btn-group+.btn-group{
+.btn-toolbar .btn-group+.btn-group {
 	margin-left: 0.5rem !important;
 }
 
@@ -25709,20 +25709,6 @@ code {
 	background: transparent;
 }
 
-/* Cards */
-.card {
-	box-shadow: 0 0 0 0 rgba(90, 113, 208, 0.11), 0 4px 16px 0 rgba(167, 175, 183, 0.33);
-	-webkit-box-shadow: 0 0 0 0 rgba(90, 113, 208, 0.11), 0 4px 16px 0 rgba(167, 175, 183, 0.33);
-	-moz-box-shadow: 0 0 0 0 rgba(90, 113, 208, 0.11), 0 4px 16px 0 rgba(167, 175, 183, 0.33);
-	-ms-box-shadow: 0 0 0 0 rgba(90, 113, 208, 0.11), 0 4px 16px 0 rgba(167, 175, 183, 0.33);
-	transition: background 0.25s ease;
-	-webkit-transition: background 0.25s ease;
-	-moz-transition: background 0.25s ease;
-	-ms-transition: background 0.25s ease;
-	border: none;
-	border: none;
-}
-
 .card.table-darkBGImg {
 	background: #1E283D url("../../images/dashboard/darkBG.png") repeat-y right top;
 }
@@ -32274,20 +32260,7 @@ div.tagsinput span.tag a {
 	margin-left: auto;
 	margin-right: 0;
 	color: #bfccda;
-}
-
-.sidebar .nav .nav-item .nav-link i.menu-arrow:before {
-	content: "\F142";
-	font-family: "Material Design Icons";
-	font-style: normal;
-	display: block;
-	font-size: 0.687rem;
-	line-height: 10px;
-	-webkit-transition: all 0.2s ease-in;
-	-moz-transition: all 0.2s ease-in;
-	-ms-transition: all 0.2s ease-in;
-	-o-transition: all 0.2s ease-in;
-	transition: all 0.2s ease-in;
+	transition: ease transform .3s;
 }
 
 .sidebar .nav .nav-item .nav-link .menu-title {
@@ -32302,7 +32275,7 @@ div.tagsinput span.tag a {
 	margin-left: auto;
 }
 
-.sidebar .nav .nav-item .nav-link[aria-expanded="true"] i.menu-arrow:before {
+.sidebar .nav .nav-item .nav-link[aria-expanded="true"] i.menu-arrow {
 	-moz-transform: rotate(90deg);
 	-o-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
@@ -32329,10 +32302,6 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item.active>.nav-link .menu-title {
 	font-size: 13px;
-}
-
-.sidebar .nav .nav-item.active>.nav-link i.menu-arrow::before {
-	content: "\e64b";
 }
 
 .sidebar .nav .nav-item:hover>.nav-link i,
@@ -32503,14 +32472,14 @@ div.tagsinput span.tag a {
 		top: 97px;
 		bottom: 0;
 		overflow: auto;
-		right: -270px;
+		left: -270px;
 		-webkit-transition: all 0.25s ease-out;
 		-o-transition: all 0.25s ease-out;
 		transition: all 0.25s ease-out;
 	}
 
 	.sidebar-offcanvas.active {
-		right: 0;
+		left: 0;
 	}
 }
 
@@ -32981,8 +32950,9 @@ div.tagsinput span.tag a {
 	border-radius: 6px;
 	cursor: pointer;
 }
+
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-item:hover {
-	background: rgba(150,150,150,.3);
+	background: rgba(150, 150, 150, .3);
 }
 
 .navbar .navbar-menu-wrapper .navbar-nav .nav-item.dropdown .navbar-dropdown .dropdown-divider {
@@ -34675,7 +34645,7 @@ div.tagsinput span.tag a {
 		width: 70px;
 		background: #fff;
 	}
-	
+
 	.sidebar-icon-only .sidebar .nav {
 		overflow: visible;
 		margin-left: 0;
