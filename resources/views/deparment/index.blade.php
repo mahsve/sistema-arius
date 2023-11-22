@@ -3,66 +3,86 @@
 @section('title', 'Departamentos - ' . env('TITLE'))
 
 @section('content')
-<div class="card">
-	<div class="card-body border-bottom">
-		<div class="row align-items-center">
-			<div class="col-6">
-				<h4 class="card-title m-0">Departamentos</h4>
-			</div>
-			<div class="col-6">
-				<input type="text" class="form-control" placeholder="Buscar...">
-			</div>
+<div class="mb-3">
+	<div class="row align-items-center">
+		<div class="col-6 text-start">
+			<h4 class="card-title m-0">Departamentos</h4>
+		</div>
+		<div class="col-6 text-end">
+			<button type="button" class="btn btn-primary btn-sm rounded" data-bs-toggle="modal" data-bs-target="#form-register"><i data-feather="plus"></i> Agregar</button>
 		</div>
 	</div>
-	<div class="table-responsive">
-		<table class="table table-hover">
-			<thead>
-				<tr>
-					<th>N°</th>
-					<th>User</th>
-					<th>Product</th>
-					<th>Sale</th>
-					<th>Status</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>1</td>
-					<td>Jacob</td>
-					<td>Photoshop</td>
-					<td class="text-danger"> 28.76% <i class="ti-arrow-down"></i></td>
-					<td><label class="badge badge-danger">Pending</label></td>
-				</tr>
-				<tr>
-					<td>1</td>
-					<td>Messsy</td>
-					<td>Flash</td>
-					<td class="text-danger"> 21.06% <i class="ti-arrow-down"></i></td>
-					<td><label class="badge badge-warning">In progress</label></td>
-				</tr>
-				<tr>
-					<td>1</td>
-					<td>John</td>
-					<td>Premier</td>
-					<td class="text-danger"> 35.00% <i class="ti-arrow-down"></i></td>
-					<td><label class="badge badge-info">Fixed</label></td>
-				</tr>
-				<tr>
-					<td>1</td>
-					<td>Peter</td>
-					<td>After effects</td>
-					<td class="text-success"> 82.00% <i class="ti-arrow-up"></i></td>
-					<td><label class="badge badge-success">Completed</label></td>
-				</tr>
-				<tr>
-					<td>1</td>
-					<td>Dave</td>
-					<td>53275535</td>
-					<td class="text-success"> 98.05% <i class="ti-arrow-up"></i></td>
-					<td><label class="badge badge-warning">In progress</label></td>
-				</tr>
-			</tbody>
-		</table>
+</div>
+
+<div class="card mb-4">
+	<div class="card-body">
+		<div class="table-responsive">
+			<table class="table table-hover" id="data-table">
+				<thead>
+					<tr>
+						<th>N°</th>
+						<th>Departamento</th>
+						<th>Departamento</th>
+						<th>Estatus</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach($departments as $department)
+					<tr>
+						<td>1</td>
+						<td>Jacob</td>
+						<td>Photoshop</td>
+						<td class="text-danger"> 28.76% <i class="ti-arrow-down"></i></td>
+						<td><label class="badge badge-danger">Pending</label></td>
+					</tr>
+					@endforeach
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="form-register" tabindex="-1" aria-labelledby="form-register-label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{url('create-client')}}">
+					@csrf
+					<div class="form-group">
+						<label for="exampleInputUsername1">Username</label>
+						<input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputEmail1">Email address</label>
+						<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputPassword1">Password</label>
+						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+					</div>
+					<div class="form-group">
+						<label for="exampleInputConfirmPassword1">Confirm Password</label>
+						<input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password">
+					</div>
+					<div class="form-check form-check-flat form-check-primary">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input">
+							Remember me
+						</label>
+					</div>
+					<button type="submit" class="btn btn-primary me-2">Submit</button>
+					<button class="btn btn-light">Cancel</button>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
+		</div>
 	</div>
 </div>
 @endsection

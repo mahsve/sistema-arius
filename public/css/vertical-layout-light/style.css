@@ -12977,6 +12977,11 @@ textarea.is-invalid.tt-hint {
 	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+.btn.btn-sm svg {
+	width: 16px;
+	height: 16px;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
 	.btn,

@@ -8,20 +8,11 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="{{url('images/favicon.ico')}}">
-	<!-- Icons Fonts CSS -->
-	<link rel="stylesheet" href="{{url('vendors/ti-icons/css/themify-icons.css')}}">
 	<!-- Libraries and plugings -->
 	<link rel="stylesheet" href="{{url('vendors/css/vendor.bundle.base.css')}}">
-	<link rel="stylesheet" href="{{url('js/select.dataTables.min.css')}}">
 	<!-- Dashboard CSS -->
 	<link rel="stylesheet" href="{{url('css/vertical-layout-light/style.css')}}">
 	<link rel="stylesheet" href="{{url('css/vertical-layout-light/theme.dark.css')}}">
-	<style>
-		.btn.btn svg {
-			width: 16px;
-			height: 16px;
-		}
-	</style>
 </head>
 
 <body class="sidebar-dark">
