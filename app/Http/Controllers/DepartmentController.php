@@ -10,8 +10,8 @@ class DepartmentController extends Controller
 	// Display a listing of the resource. 
 	public function index()
 	{
-		$Departments = Departments::all();
-		return view('deparment.index');
+		$department = Departments::all();
+		return view('deparment.index', ["departments" => $department]);
 	}
 
 	// Show the form for creating a new resource. 
@@ -22,12 +22,20 @@ class DepartmentController extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
-		$Department = new Departments();
+		$request->validate([
+			'departamento' => 'required|min:3|max:255'
+		]);
+		$department = new Departments();
+		$department->departamento	= $request->departamento;
+		$department->save();
+		return redirect('/departamentos')->with('success', '¡Departamento creado exitosamente!');
 	}
 
 	// Display the specified resource. 
 	public function show(string $id)
 	{
+		$department = Departments::find($id);
+		return json_encode($department);
 	}
 
 	// Show the form for editing the specified resource. 
@@ -38,6 +46,13 @@ class DepartmentController extends Controller
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
+		$request->validate([
+			'departamento' => 'required|min:3|max:255'
+		]);
+		$department = Departments::find($id);
+		$department->departamento	= $request->departamento;
+		$department->save();
+		return redirect('/departamentos')->with('success', '¡Departamento actualizado exitosamente!');
 	}
 
 	// Remove the specified resource from storage. 

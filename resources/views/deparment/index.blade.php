@@ -9,10 +9,17 @@
 			<h4 class="card-title m-0">Departamentos</h4>
 		</div>
 		<div class="col-6 text-end">
-			<button type="button" class="btn btn-primary btn-sm rounded" data-bs-toggle="modal" data-bs-target="#form-register"><i data-feather="plus"></i> Agregar</button>
+			<button type="button" class="btn btn-primary btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modal-register"><i data-feather="plus"></i> Agregar</button>
 		</div>
 	</div>
 </div>
+
+@if (session('success'))
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+	<i data-feather="check"></i> {{session('success')}}
+	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
 
 <div class="card mb-4">
 	<div class="card-body">
@@ -21,19 +28,33 @@
 				<thead>
 					<tr>
 						<th>N°</th>
-						<th>Departamento</th>
-						<th>Departamento</th>
+						<th>Nombre departamento</th>
+						<th>Personal</th>
+						<th>Creado</th>
+						<th>Actualizado</th>
 						<th>Estatus</th>
+						<th class="text-center"><i data-feather="settings" width="14px" height="14px"></i></th>
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($departments as $department)
+					@foreach($departments as $index => $department)
 					<tr>
-						<td>1</td>
-						<td>Jacob</td>
-						<td>Photoshop</td>
-						<td class="text-danger"> 28.76% <i class="ti-arrow-down"></i></td>
-						<td><label class="badge badge-danger">Pending</label></td>
+						<td>{{$index + 1}}</td>
+						<td>{{$department->departamento}}</td>
+						<td>{{0}} usuarios</td>
+						<td>{{date('h:i:s A d/m/y', strtotime($department->created_at))}}</td>
+						<td>{{date('h:i:s A d/m/y', strtotime($department->updated_at))}}</td>
+						<td>
+							@if ($department->estatus == "A")
+							<label class="badge badge-success"><i data-feather="check" width="14px" height="14px"></i> Activo</label>
+							@else
+							<label class="badge badge-danger"><i data-feather="x" width="14px" height="14px"></i> Inactivo</label>
+							@endif
+						</td>
+						<td class="p-2" style="width: 20px;">
+							<button type="button" class="btn btn-primary btn-sm rounded p-2" onclick="edit('{{$department->id}}')"><i data-feather="edit"></i></button>
+							<button type="button" class="btn btn-danger btn-sm rounded p-2"><i data-feather="trash"></i></button>
+						</td>
 					</tr>
 					@endforeach
 				</tbody>
@@ -42,47 +63,73 @@
 	</div>
 </div>
 
-<div class="modal fade" id="form-register" tabindex="-1" aria-labelledby="form-register-label" aria-hidden="true">
+<div class="modal fade" id="modal-register" tabindex="-1" aria-labelledby="modal-register-label" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
-			<div class="modal-header">
-				<h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+			<div class="modal-header border-0 pb-0">
+				<h1 class="modal-title fs-5" id="modal-register-label">Registrar departamento</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<div class="modal-body">
-				<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{url('create-client')}}">
+			<div class="modal-body py-3">
+				<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('departamentos.store')}}">
 					@csrf
 					<div class="form-group">
-						<label for="exampleInputUsername1">Username</label>
-						<input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username">
+						<label for="departamento_new">Departamento</label>
+						<input type="text" class="form-control" name="departamento" id="departamento_new" placeholder="Ingrese el nombre del departamento" required minlength="3">
 					</div>
-					<div class="form-group">
-						<label for="exampleInputEmail1">Email address</label>
-						<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary btn-sm rounded" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm rounded"><i data-feather="save"></i> Guardar</button>
 					</div>
-					<div class="form-group">
-						<label for="exampleInputPassword1">Password</label>
-						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-					</div>
-					<div class="form-group">
-						<label for="exampleInputConfirmPassword1">Confirm Password</label>
-						<input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password">
-					</div>
-					<div class="form-check form-check-flat form-check-primary">
-						<label class="form-check-label">
-							<input type="checkbox" class="form-check-input">
-							Remember me
-						</label>
-					</div>
-					<button type="submit" class="btn btn-primary me-2">Submit</button>
-					<button class="btn btn-light">Cancel</button>
 				</form>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-				<button type="button" class="btn btn-primary">Save changes</button>
 			</div>
 		</div>
 	</div>
 </div>
+
+<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header border-0 pb-0">
+				<h1 class="modal-title fs-5" id="modal-edit-label">Modificar departamento</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body py-3">
+				<form class="forms-sample" name="form-edit" id="form-edit" method="POST" action="{{route('departamentos.update', ['departamento' => 0])}}">
+					@csrf
+					@method('PATCH')
+					<div class="form-group">
+						<label for="departamento_edit">Departamento</label>
+						<input type="text" class="form-control" name="departamento" id="departamento_edit" placeholder="Ingrese el nombre del departamento" required minlength="3">
+					</div>
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary btn-sm rounded" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm rounded"><i data-feather="save"></i> Guardar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	const edit = (id) => {
+		fetch(`departamentos/${id}`, {
+			headers: {
+				"X-CSRF-Token": document.querySelector('input[name=_token]').value
+			},
+			method: 'get'
+		}).then(response => response.json()).then((data) => {
+			const modal_ = new bootstrap.Modal('#modal-edit');
+			let action = document.getElementById('form-edit').getAttribute('action').split('/');
+			action[action.length - 1] = id;
+			action = action.join('/');
+
+			// Cargamos los datos.
+			document.getElementById('form-edit').setAttribute('action', action);
+			document.getElementById('departamento_edit').value = data.departamento;
+			modal_.show();
+		});
+	}
+</script>
 @endsection

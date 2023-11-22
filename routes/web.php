@@ -1,12 +1,5 @@
 <?php
 
-// Importamos los controladores necesarios.
-
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\DepartmentController;
-use App\Http\Controllers\PersonalController;
-use App\Http\Controllers\SessionController;
-use App\Http\Controllers\TypePersonalController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,18 +13,19 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', DashboardController::class);
+Route::get('/', App\Http\Controllers\DashboardController::class);
 
-Route::get('/iniciar-sesion', [SessionController::class, 'showLogin'])->name('show-login');
-Route::post('/login', [SessionController::class, 'login'])->name('login');
-Route::get('/logout', [SessionController::class, 'logout'])->name('logout');
+Route::get('/iniciar-sesion', [App\Http\Controllers\SessionController::class, 'showLogin'])->name('show-login');
+Route::post('/login', [App\Http\Controllers\SessionController::class, 'login'])->name('login');
+Route::get('/logout', [App\Http\Controllers\SessionController::class, 'logout'])->name('logout');
 
-Route::get('/recuperar', [SessionController::class, 'showRecover'])->name('show-recover');
+Route::get('/recuperar', [App\Http\Controllers\SessionController::class, 'showRecover'])->name('show-recover');
 
 // Controladores [Personal]
-Route::resource('/personal', PersonalController::class);
-Route::resource('/departamentos', DepartmentController::class);
-Route::resource('/tipo-personal', TypePersonalController::class);
+Route::resource('/personal', App\Http\Controllers\PersonalController::class);
+Route::resource('/departamentos', App\Http\Controllers\DepartmentController::class);
+Route::resource('/tipo-personal', App\Http\Controllers\TypePersonalController::class);
+
 
 Route::get('/clientes', [App\Http\Controllers\ClientController::class, 'index']);
 Route::get('/registrar-cliente', [App\Http\Controllers\ClientController::class, 'create']);
