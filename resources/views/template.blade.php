@@ -7,17 +7,21 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="images/favicon.png">
+	<link rel="shortcut icon" href="{{url('images/favicon.ico')}}">
 	<!-- Icons Fonts CSS -->
-	<link rel="stylesheet" href="vendors/feather/feather.css">
-	<link rel="stylesheet" href="vendors/ti-icons/css/themify-icons.css">
-	<link rel="stylesheet" href="vendors/simple-line-icons/css/simple-line-icons.css">
+	<link rel="stylesheet" href="{{url('vendors/ti-icons/css/themify-icons.css')}}">
 	<!-- Libraries and plugings -->
-	<link rel="stylesheet" href="vendors/css/vendor.bundle.base.css">
-	<link rel="stylesheet" href="js/select.dataTables.min.css">
+	<link rel="stylesheet" href="{{url('vendors/css/vendor.bundle.base.css')}}">
+	<link rel="stylesheet" href="{{url('js/select.dataTables.min.css')}}">
 	<!-- Dashboard CSS -->
-	<link rel="stylesheet" href="css/vertical-layout-light/style.css">
-	<link rel="stylesheet" href="css/vertical-layout-light/theme.dark.css">
+	<link rel="stylesheet" href="{{url('css/vertical-layout-light/style.css')}}">
+	<link rel="stylesheet" href="{{url('css/vertical-layout-light/theme.dark.css')}}">
+	<style>
+		.btn.btn svg {
+			width: 16px;
+			height: 16px;
+		}
+	</style>
 </head>
 
 <body class="sidebar-dark">
@@ -26,15 +30,15 @@
 			<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
 				<div class="me-3">
 					<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
-						<span class="icon-menu"></span>
+						<i data-feather="menu"></i>
 					</button>
 				</div>
 				<div>
 					<a class="navbar-brand brand-logo" href="{{url('/')}}">
-						<img src="images/logo.svg" alt="logo">
+						<img src="images/logo.png" alt="logo">
 					</a>
 					<a class="navbar-brand brand-logo-mini" href="{{url('/')}}">
-						<img src="images/logo-mini.svg" alt="logo">
+						<img src="images/logo-mini.png" alt="logo">
 					</a>
 				</div>
 			</div>
@@ -49,13 +53,13 @@
 				<ul class="navbar-nav ms-auto">
 					<li class="nav-item">
 						<form class="search-form" action="#">
-							<i class="icon-search"></i>
+							<i data-feather="search" class="menu-icon"></i>
 							<input type="search" class="form-control" placeholder="Search Here" title="Search here">
 						</form>
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-							<i class="icon-bell icon-lg"></i>
+							<i data-feather="bell"></i>
 						</a>
 						<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
 							<a class="dropdown-item py-3 border-bottom">
@@ -93,7 +97,7 @@
 					</li>
 					<li class="nav-item dropdown">
 						<a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-							<i class="icon-mail"></i>
+							<i data-feather="message-square"></i>
 							<span class="count"></span>
 						</a>
 						<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
@@ -148,12 +152,12 @@
 				</ul>
 
 				<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
-					<span class="icon-menu"></span>
+					<i data-feather="menu"></i>
 				</button>
 			</div>
 		</nav>
 
-		<div class="container-fluid page-body-wrapper">
+		<div class="container-fluid page-body-wrapper px-0">
 			<div id="right-sidebar" class="settings-panel">
 				<i class="settings-close ti-close"></i>
 				<ul class="nav nav-tabs border-top" id="setting-panel" role="tablist">
@@ -307,44 +311,48 @@
 			</div>
 
 			<nav class="sidebar sidebar-offcanvas" id="sidebar">
+				<div class="sidebar-logo text-center d-flex d-lg-none align-items-center justify-content-center py-3 px-4">
+					<a href="{{url('/')}}">
+						<img src="images/logo.png" alt="Logo {{env('TITLE')}}">
+					</a>
+				</div>
+
 				<ul class="nav">
 					<li class="nav-item active">
 						<a class="nav-link" href="{{url('/')}}">
-							<i class="icon-pie-chart menu-icon"></i>
+							<i data-feather="pie-chart" class="menu-icon"></i>
 							<span class="menu-title">Panel principal</span>
 						</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" data-bs-toggle="collapse" href="#ui-clients" aria-expanded="false" aria-controls="ui-basic">
-							<i class="icon-user menu-icon"></i>
+							<i data-feather="user" class="menu-icon"></i>
 							<span class="menu-title">Clientes</span>
-							<i class="icon-arrow-right menu-arrow"></i>
+							<i data-feather="chevron-right" class="menu-arrow"></i>
 						</a>
 						<div class="collapse" id="ui-clients">
 							<ul class="nav flex-column sub-menu">
-								<li class="nav-item"><a class="nav-link" href="{{url('/mapas-zonas')}}">Mapas de zonas</a></li>
+								<li class="nav-item"><a class="nav-link" href="{{url('clientes')}}">Clientes</a></li>
 							</ul>
 						</div>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" data-bs-toggle="collapse" href="#ui-monitoring" aria-expanded="false" aria-controls="ui-basic">
-							<i class="icon-monitor menu-icon"></i>
+							<i data-feather="monitor" class="menu-icon"></i>
 							<span class="menu-title">Monitoreo</span>
-							<i class="icon-arrow-right menu-arrow"></i>
+							<i data-feather="chevron-right" class="menu-arrow"></i>
 						</a>
 						<div class="collapse" id="ui-monitoring">
 							<ul class="nav flex-column sub-menu">
 								<li class="nav-item"> <a class="nav-link" href="{{url('monitoreo')}}">Servicio Técnico Solicitdado</a></li>
-								<li class="nav-item"> <a class="nav-link" href="#">opción 1</a></li>
-								<li class="nav-item"> <a class="nav-link" href="#">opción 1</a></li>
 							</ul>
 						</div>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" data-bs-toggle="collapse" href="#ui-users" aria-expanded="false" aria-controls="ui-basic">
-							<i class="icon-monitor menu-icon"></i>
+							<i data-feather="users" class="menu-icon"></i>
 							<span class="menu-title">Personal</span>
-							<i class="icon-arrow-right menu-arrow"></i>
+							<i data-feather="chevron-right" class="menu-arrow"></i>
 						</a>
 						<div class="collapse" id="ui-users">
 							<ul class="nav flex-column sub-menu">
@@ -358,7 +366,7 @@
 			</nav>
 
 			<div class="main-panel">
-				<div class="content-wrapper px-4">
+				<div class="content-wrapper px-4 pt-4 pb-0">
 					@yield('content')
 				</div>
 
@@ -391,6 +399,19 @@
 	<script src="js/dashboard.js"></script>
 	<script src="js/Chart.roundedBarCharts.js"></script>
 	<!-- End custom js for this page-->
+	<link href="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.css" rel="stylesheet">
+	<script src="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.js"></script>
+	<script src="{{url('icons/feather.min.js')}}"></script>
+	<script>
+		feather.replace();
+	</script>
+
+	<script>
+		let table = null;
+		if (document.getElementById('data-table')) {
+			table = new DataTable('#data-table');
+		}
+	</script>
 </body>
 
 </html>

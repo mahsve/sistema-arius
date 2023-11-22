@@ -1,6 +1,7 @@
 <?php
 
 // Importamos los controladores necesarios.
+
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\PersonalController;
@@ -31,3 +32,7 @@ Route::get('/recuperar', [SessionController::class, 'showRecover'])->name('show-
 Route::resource('/personal', PersonalController::class);
 Route::resource('/departamentos', DepartmentController::class);
 Route::resource('/tipo-personal', TypePersonalController::class);
+
+Route::get('/clientes', [App\Http\Controllers\ClientController::class, 'index']);
+Route::get('/registrar-cliente', [App\Http\Controllers\ClientController::class, 'create']);
+Route::post('/create-client', [App\Http\Controllers\ClientController::class, 'store']);

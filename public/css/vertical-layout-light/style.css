@@ -32166,9 +32166,15 @@ div.tagsinput span.tag a {
 }
 
 @media (max-width: 991px) {
+	.page-body-wrapper {
+		min-height: calc(100vh - 70px);
+		padding-top: 70px;
+	}
+
 	.main-panel {
-		margin-left: 0;
 		width: 100%;
+		min-height: calc(100vh - 70px);
+		margin-left: 0;
 	}
 }
 
@@ -32249,12 +32255,17 @@ div.tagsinput span.tag a {
 	color: inherit;
 }
 
-.sidebar .nav .nav-item .nav-link i.menu-icon {
-	width: 20px center;
+.sidebar .nav .nav-item .nav-link i.menu-icon,
+.sidebar .nav .nav-item .nav-link svg.menu-icon {
+	width: 18px;
+	height: 18px;
+	text-align: center;
 	margin-right: 1rem;
 }
 
-.sidebar .nav .nav-item .nav-link i.menu-arrow {
+.sidebar .nav .nav-item .nav-link i.menu-arrow,
+.sidebar .nav .nav-item .nav-link svg.menu-arrow,
+.sidebar .nav .nav-item.active .nav-link svg.menu-arrow  {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	margin-left: auto;
@@ -32275,7 +32286,8 @@ div.tagsinput span.tag a {
 	margin-left: auto;
 }
 
-.sidebar .nav .nav-item .nav-link[aria-expanded="true"] i.menu-arrow {
+.sidebar .nav .nav-item .nav-link[aria-expanded="true"] i.menu-arrow,
+.sidebar .nav .nav-item .nav-link[aria-expanded="true"] svg.menu-arrow {
 	-moz-transform: rotate(90deg);
 	-o-transform: rotate(90deg);
 	-ms-transform: rotate(90deg);
@@ -32468,14 +32480,19 @@ div.tagsinput span.tag a {
 @media screen and (max-width: 991px) {
 	.sidebar-offcanvas {
 		position: fixed;
-		max-height: calc(100vh - 97px);
-		top: 97px;
+		max-height: 100vh;
+		top: 0;
 		bottom: 0;
 		overflow: auto;
 		left: -270px;
 		-webkit-transition: all 0.25s ease-out;
 		-o-transition: all 0.25s ease-out;
 		transition: all 0.25s ease-out;
+		z-index: 9999;
+	}
+
+	.sidebar-offcanvas .sidebar-logo img {
+		height: 34px;
 	}
 
 	.sidebar-offcanvas.active {
@@ -32522,7 +32539,13 @@ div.tagsinput span.tag a {
 
 @media (max-width: 991px) {
 	.navbar .navbar-brand-wrapper {
-		padding: 20px 0;
+		background: white !important;
+		border-bottom: 1px solid #dee2e6;
+		padding: 0;
+	}
+
+	.navbar .navbar-brand-wrapper {
+		height: 70px;
 	}
 }
 
@@ -32622,11 +32645,17 @@ div.tagsinput span.tag a {
 
 @media (max-width: 991px) {
 	.navbar .navbar-menu-wrapper {
-		width: calc(100% - 55px);
-		padding-top: 12px;
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
 		padding-left: 15px;
 		padding-right: 11px;
-		height: auto;
+		height: 70px !important;
+	}
+}
+
+@media (max-width: 480px) {
+	.navbar .navbar-menu-wrapper {
+		width: calc(100% - 55px);
 	}
 }
 
@@ -33107,7 +33136,8 @@ div.tagsinput span.tag a {
 	height: 14px;
 }
 
-.navbar .navbar-menu-wrapper .navbar-nav .nav-item .search-form i {
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item .search-form i,
+.navbar .navbar-menu-wrapper .navbar-nav .nav-item .search-form svg {
 	font-size: 1.25rem;
 	position: absolute;
 	left: 0;
@@ -34495,17 +34525,9 @@ div.tagsinput span.tag a {
 		flex-direction: row;
 	}
 
-	.navbar .navbar-brand-wrapper {
+	/* .navbar .navbar-brand-wrapper {
 		width: 55px;
-	}
-
-	.navbar .navbar-brand-wrapper .navbar-brand.brand-logo {
-		display: none;
-	}
-
-	.navbar .navbar-brand-wrapper .navbar-brand.brand-logo-mini {
-		display: inline-block;
-	}
+	} */
 
 	.navbar-collapse {
 		display: -webkit-box;
@@ -34518,6 +34540,14 @@ div.tagsinput span.tag a {
 @media (max-width: 480px) {
 	.navbar .navbar-brand-wrapper {
 		width: 55px;
+	}
+
+	.navbar .navbar-brand-wrapper .navbar-brand.brand-logo {
+		display: none;
+	}
+
+	.navbar .navbar-brand-wrapper .navbar-brand.brand-logo-mini {
+		display: inline-block;
 	}
 
 	.navbar .navbar-brand-wrapper .brand-logo-mini {
@@ -34575,14 +34605,16 @@ div.tagsinput span.tag a {
 		display: none;
 	}
 
-	.sidebar-mini .sidebar .nav .nav-item .nav-link i.menu-icon {
+	.sidebar-mini .sidebar .nav .nav-item .nav-link i.menu-icon,
+	.sidebar-mini .sidebar .nav .nav-item .nav-link svg.menu-icon {
 		display: block;
 		margin-right: auto;
 		margin-left: auto;
 		margin-bottom: .25rem;
 	}
 
-	.sidebar-mini .sidebar .nav .nav-item .nav-link i.menu-arrow {
+	.sidebar-mini .sidebar .nav .nav-item .nav-link i.menu-arrow,
+	.sidebar-mini .sidebar .nav .nav-item .nav-link svg.menu-arrow {
 		display: inline-block;
 		margin-left: 5px;
 		position: absolute;
@@ -34690,7 +34722,8 @@ div.tagsinput span.tag a {
 		color: rgba(31, 59, 179, 0.7);
 	}
 
-	.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-arrow {
+	.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-arrow,
+	.sidebar-icon-only .sidebar .nav .nav-item .nav-link svg.menu-arrow {
 		display: none;
 	}
 

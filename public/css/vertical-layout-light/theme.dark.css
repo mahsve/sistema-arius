@@ -15,22 +15,23 @@
 		color: #484848;
 	}
 
-	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-icon {
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-icon,
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link svg.menu-icon {
 		color: rgba(255, 255, 255, 0.5);
 	}
 
-	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item.active .nav-link i.menu-icon {
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item.active .nav-link i.menu-icon,
+	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item.active .nav-link svg.menu-icon {
 		color: white;
 	}
 
-	.sidebar-dark.sidebar-icon-only .sidebar .nav .nav-item .nav-link {
-		color: #484848;
-	}
-
-
-
-
 	.sidebar-icon-only .sidebar .nav .nav-item .nav-link i.menu-icon {
 		font-size: 22px;
+	}
+
+	.sidebar-icon-only .sidebar .nav .nav-item .nav-link svg.menu-icon {
+		width: 24px;
+		height: 24px;
+		margin: 0px;
 	}
 }
