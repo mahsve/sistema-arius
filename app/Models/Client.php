@@ -9,5 +9,9 @@ class Client extends Model
 {
 	use HasFactory;
 
+	const CREATED_AT = 'created';
+	const UPDATED_AT = 'updated';
+
 	protected $table = 'tb_clientes';
+	protected $primaryKey = 'cedula';
 }

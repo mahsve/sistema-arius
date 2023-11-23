@@ -26,7 +26,4 @@ Route::resource('/personal', App\Http\Controllers\PersonalController::class);
 Route::resource('/departamentos', App\Http\Controllers\DepartmentController::class);
 Route::resource('/tipo-personal', App\Http\Controllers\TypePersonalController::class);
 
-
-Route::get('/clientes', [App\Http\Controllers\ClientController::class, 'index']);
-Route::get('/registrar-cliente', [App\Http\Controllers\ClientController::class, 'create']);
-Route::post('/create-client', [App\Http\Controllers\ClientController::class, 'store']);
+Route::resource('/clientes', App\Http\Controllers\ClientController::class);
