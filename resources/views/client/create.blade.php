@@ -2,6 +2,10 @@
 
 @section('title', 'Registrar cliente - ' . env('TITLE'))
 
+@section('scripts')
+<script src="{{url('js/app/create-client.js')}}"></script>
+@endsection
+
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
@@ -55,26 +59,31 @@
 				</div>
 			</div>
 
-			<div class="col-12 mt-3">
-				<div class="button-container text-end mb-3">
-					<button type="button" class="btn btn-primary btn-sm rounded"><i data-feather="user-plus"></i> Agregar usuario</button>
+			<div class="col-12 mt-2">
+				<div class="row align-items-center mb-3">
+					<div class="col-6 text-start">
+						<h5 class="m-0">Usuarios</h5>
+					</div>
+					<div class="col-6 text-end">
+						<button type="button" class="btn btn-primary btn-sm rounded" id="btn-new-user"><i data-feather="user-plus"></i> Agregar usuario</button>
+					</div>
 				</div>
 
 				<div class="table-responsive border rounded">
-					<table id="data-table" class="table table-hover m-0">
+					<table id="table-user" class="table table-hover m-0">
 						<thead>
 							<tr>
-								<th>N°</th>
-								<th>Nombre y apellido</th>
-								<th>Cédula</th>
-								<th>Contraseña</th>
-								<th>Teléfono</th>
-								<th class="text-center"><i data-feather="settings" width="14px" height="14px"></i></th>
+								<th class="px-2" width="36px">N°</th>
+								<th class="px-2">Nombre y apellido</th>
+								<th class="px-2">Cédula</th>
+								<th class="px-2">Contraseña</th>
+								<th class="px-2">Teléfono</th>
+								<th class="px-2 text-center" width="52px"><i data-feather="settings" width="14px" height="14px"></i></th>
 							</tr>
 						</thead>
 
 						<tbody>
-							<tr>
+							<tr class="no-users">
 								<td colspan="6" class="text-center">Sin usuarios registrados</td>
 							</tr>
 						</tbody>
