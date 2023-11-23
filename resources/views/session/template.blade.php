@@ -8,10 +8,13 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Favicon -->
 	<link rel="shortcut icon" href="{{url('images/' . env('FAVICON'))}}">
-	<!-- BASE CSS -->
+	<!-- Base CSS -->
 	<link rel="stylesheet" href="{{url('vendors/css/vendor.bundle.base.css')}}">
-	<!-- CUSTOM CSS -->
+	<!-- Libraries and plugings CSS -->
+	@yield('styles')
+	<!-- Dashboard CSS -->
 	<link rel="stylesheet" href="{{url('css/vertical-layout-light/style.css')}}">
+	<link rel="stylesheet" href="{{url('css/vertical-layout-light/theme.dark.css')}}">
 </head>
 
 <body>
@@ -34,18 +37,16 @@
 			</div>
 		</div>
 	</div>
-	
-	<!-- Base JS -->
-	<script src="../../vendors/js/vendor.bundle.base.js"></script>
-	<!-- <script src="../../js/off-canvas.js"></script>
-	<script src="../../js/hoverable-collapse.js"></script>
-	<script src="../../js/template.js"></script>
-	<script src="../../js/todolist.js"></script> -->
-	<!-- endinject -->
 
-	<!-- ICON JS -->
+	<!-- Base JS -->
+	<script src="{{url('vendors/js/vendor.bundle.base.js')}}"></script>
+	<!-- Libraries and plugings JS -->
+	@yield('scripts')
+	<!-- Icon JS -->
 	<script src="{{url('icons/feather.min.js')}}"></script>
-	<script>feather.replace();</script>
+	<script>
+		feather.replace();
+	</script>
 </body>
 
 </html>

@@ -7,9 +7,11 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<!-- Favicon -->
-	<link rel="shortcut icon" href="{{url('images/favicon.ico')}}">
-	<!-- Libraries and plugings -->
+	<link rel="shortcut icon" href="{{url('images/' . env('FAVICON'))}}">
+	<!-- Base CSS -->
 	<link rel="stylesheet" href="{{url('vendors/css/vendor.bundle.base.css')}}">
+	<!-- Libraries and plugings CSS -->
+	@yield('styles')
 	<!-- Dashboard CSS -->
 	<link rel="stylesheet" href="{{url('css/vertical-layout-light/style.css')}}">
 	<link rel="stylesheet" href="{{url('css/vertical-layout-light/theme.dark.css')}}">
@@ -24,15 +26,17 @@
 						<i data-feather="menu"></i>
 					</button>
 				</div>
+
 				<div>
 					<a class="navbar-brand brand-logo" href="{{url('/')}}">
-						<img src="images/logo.png" alt="logo">
+						<img src="{{url('images/' . env('LOGO_LIGHT'))}}" alt="Logo {{env('TITLE')}}" style="filter: invert(1);">
 					</a>
 					<a class="navbar-brand brand-logo-mini" href="{{url('/')}}">
-						<img src="images/logo-mini.png" alt="logo">
+						<img src="{{url('images/' . env('LOGO_MINI'))}}" alt="Logo {{env('TITLE')}}">
 					</a>
 				</div>
 			</div>
+
 			<div class="navbar-menu-wrapper d-flex align-items-top border-bottom px-4 bg-white">
 				<ul class="navbar-nav">
 					<li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
@@ -49,14 +53,56 @@
 						</form>
 					</li>
 					<li class="nav-item dropdown">
+						<a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+							<i data-feather="message-square"></i>
+							<span class="count"></span>
+						</a>
+						<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded" aria-labelledby="countDropdown">
+							<span class="dropdown-item py-3 bg-transparent">
+								<p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
+								<span class="badge badge-pill badge-primary float-right">View all</span>
+							</span>
+							<div class="dropdown-divider mb-2"></div>
+							<a class="dropdown-item preview-item">
+								<div class="preview-thumbnail">
+									<img src="{{url('images/faces/face10.jpg')}}" alt="image" class="img-sm profile-pic">
+								</div>
+								<div class="preview-item-content flex-grow py-2">
+									<p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
+									<p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+								</div>
+							</a>
+							<a class="dropdown-item preview-item">
+								<div class="preview-thumbnail">
+									<img src="{{url('images/faces/face12.jpg')}}" alt="image" class="img-sm profile-pic">
+								</div>
+								<div class="preview-item-content flex-grow py-2">
+									<p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
+									<p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+								</div>
+							</a>
+							<a class="dropdown-item preview-item">
+								<div class="preview-thumbnail">
+									<img src="{{url('images/faces/face1.jpg')}}" alt="image" class="img-sm profile-pic">
+								</div>
+								<div class="preview-item-content flex-grow py-2">
+									<p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
+									<p class="fw-light small-text mb-0"> The meeting is cancelled </p>
+								</div>
+							</a>
+						</div>
+					</li>
+					<li class="nav-item dropdown">
 						<a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
 							<i data-feather="bell"></i>
+							<span class="count"></span>
 						</a>
-						<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="notificationDropdown">
-							<a class="dropdown-item py-3 border-bottom">
+						<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded" aria-labelledby="notificationDropdown">
+							<span class="dropdown-item py-3 bg-transparent">
 								<p class="mb-0 font-weight-medium float-left">You have 4 new notifications </p>
 								<span class="badge badge-pill badge-primary float-right">View all</span>
-							</a>
+							</span>
+							<div class="dropdown-divider mb-2"></div>
 							<a class="dropdown-item preview-item py-3">
 								<div class="preview-thumbnail">
 									<i class="icon-alert m-auto text-primary"></i>
@@ -87,52 +133,12 @@
 						</div>
 					</li>
 					<li class="nav-item dropdown">
-						<a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-							<i data-feather="message-square"></i>
-							<span class="count"></span>
-						</a>
-						<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list pb-0" aria-labelledby="countDropdown">
-							<a class="dropdown-item py-3">
-								<p class="mb-0 font-weight-medium float-left">You have 7 unread mails </p>
-								<span class="badge badge-pill badge-primary float-right">View all</span>
-							</a>
-							<div class="dropdown-divider"></div>
-							<a class="dropdown-item preview-item">
-								<div class="preview-thumbnail">
-									<img src="images/faces/face10.jpg" alt="image" class="img-sm profile-pic">
-								</div>
-								<div class="preview-item-content flex-grow py-2">
-									<p class="preview-subject ellipsis font-weight-medium text-dark">Marian Garner </p>
-									<p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-								</div>
-							</a>
-							<a class="dropdown-item preview-item">
-								<div class="preview-thumbnail">
-									<img src="images/faces/face12.jpg" alt="image" class="img-sm profile-pic">
-								</div>
-								<div class="preview-item-content flex-grow py-2">
-									<p class="preview-subject ellipsis font-weight-medium text-dark">David Grey </p>
-									<p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-								</div>
-							</a>
-							<a class="dropdown-item preview-item">
-								<div class="preview-thumbnail">
-									<img src="images/faces/face1.jpg" alt="image" class="img-sm profile-pic">
-								</div>
-								<div class="preview-item-content flex-grow py-2">
-									<p class="preview-subject ellipsis font-weight-medium text-dark">Travis Jenkins </p>
-									<p class="fw-light small-text mb-0"> The meeting is cancelled </p>
-								</div>
-							</a>
-						</div>
-					</li>
-					<li class="nav-item dropdown">
 						<a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-							<img class="img-xs rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
+							<img class="img-xs rounded-circle" src="{{url('images/faces/face8.jpg')}}" alt="Profile image">
 						</a>
 						<div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown" style="min-width: 200px;">
 							<div class="dropdown-header text-center">
-								<img class="img-md rounded-circle" src="images/faces/face8.jpg" alt="Profile image">
+								<img class="img-md rounded-circle" src="{{url('images/faces/face8.jpg')}}" alt="Profile image">
 								<p class="mb-1 mt-3 font-weight-semibold">{{session('user')->usuario}}</p>
 								<p class="fw-light text-muted mb-0">{{session('user')->cedula}}</p>
 							</div>
@@ -304,7 +310,7 @@
 			<nav class="sidebar sidebar-offcanvas" id="sidebar">
 				<div class="sidebar-logo text-center d-flex d-lg-none align-items-center justify-content-center py-3 px-4">
 					<a href="{{url('/')}}">
-						<img src="images/logo.png" alt="Logo {{env('TITLE')}}">
+						<img src="{{url('images/' . env('LOGO_DARK'))}}" alt="Logo {{env('TITLE')}}">
 					</a>
 				</div>
 
@@ -371,37 +377,19 @@
 		</div>
 	</div>
 
-	<!-- plugins:js -->
-	<script src="vendors/js/vendor.bundle.base.js"></script>
-	<!-- endinject -->
-	<!-- Plugin js for this page -->
-	<script src="vendors/chart.js/Chart.min.js"></script>
-	<script src="vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
-	<script src="vendors/progressbar.js/progressbar.min.js"></script>
-
-	<!-- End plugin js for this page -->
-	<!-- inject:js -->
-	<script src="js/off-canvas.js"></script>
-	<script src="js/hoverable-collapse.js"></script>
-	<script src="js/template.js"></script>
-	<script src="js/todolist.js"></script>
-	<!-- endinject -->
-	<!-- Custom js for this page-->
-	<script src="js/dashboard.js"></script>
-	<script src="js/Chart.roundedBarCharts.js"></script>
-	<!-- End custom js for this page-->
-	<link href="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.css" rel="stylesheet">
-	<script src="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.js"></script>
+	<!-- Base JS -->
+	<script src="{{url('vendors/js/vendor.bundle.base.js')}}"></script>
+	<!-- Default plugins JS -->
+	<script src="{{url('js/off-canvas.js')}}"></script>
+	<script src="{{url('js/hoverable-collapse.js')}}"></script>
+	<script src="{{url('js/template.js')}}"></script>
+	<script src="{{url('js/todolist.js')}}"></script>
+	<!-- Libraries and plugings JS -->
+	@yield('scripts')
+	<!-- Icon JS -->
 	<script src="{{url('icons/feather.min.js')}}"></script>
 	<script>
 		feather.replace();
-	</script>
-
-	<script>
-		let table = null;
-		if (document.getElementById('data-table')) {
-			table = new DataTable('#data-table');
-		}
 	</script>
 </body>
 

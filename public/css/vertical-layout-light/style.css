@@ -10069,6 +10069,29 @@ progress {
 	margin-top: var(--bs-gutter-y);
 }
 
+.form-row {
+	display: flex;
+	flex-wrap: wrap;
+	margin-right: -5px;
+	margin-left: -5px;
+}
+
+.form-row>div {
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.required {
+	color: red;
+	font-weight: bold;
+}
+
+.form-inline .form-control {
+  display: inline-block;
+  width: auto;
+  vertical-align: middle;
+}
+
 .col {
 	flex: 1 0 0%;
 }
@@ -32274,7 +32297,7 @@ div.tagsinput span.tag a {
 
 .sidebar .nav .nav-item .nav-link i.menu-arrow,
 .sidebar .nav .nav-item .nav-link svg.menu-arrow,
-.sidebar .nav .nav-item.active .nav-link svg.menu-arrow  {
+.sidebar .nav .nav-item.active .nav-link svg.menu-arrow {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 	margin-left: auto;
@@ -32382,7 +32405,6 @@ div.tagsinput span.tag a {
 	list-style: none;
 	padding: 0.25rem 0 0 3.07rem;
 	background: #fff;
-	padding-bottom: 12px;
 }
 
 .sidebar .nav.sub-menu .nav-item {

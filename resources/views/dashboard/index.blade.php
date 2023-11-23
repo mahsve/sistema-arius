@@ -2,6 +2,13 @@
 
 @section('title', 'Panel principal - Arius Seguridad Integral C.A.')
 
+@section('scripts')
+<script src="{{url('vendors/chart.js/Chart.min.js')}}"></script>
+<!-- Custom js for this page-->
+<script src="{{url('js/dashboard.js')}}"></script>
+<script src="{{url('js/Chart.roundedBarCharts.js')}}"></script>
+@endsection
+
 @section('content')
 <div class="home-tab">
 	<div class="d-sm-flex align-items-center justify-content-between border-bottom">

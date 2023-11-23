@@ -3,7 +3,7 @@
 @section('title', 'Registrar cliente - ' . env('TITLE'))
 
 @section('content')
-<div class="mb-4">
+<div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
 			<h4 class="card-title m-0">Registrar cliente</h4>
@@ -16,32 +16,75 @@
 
 <div class="card">
 	<div class="card-body">
-		<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{url('create-client')}}">
+		<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{url('clientes.store')}}">
 			@csrf
-			<div class="form-group">
-				<label for="exampleInputUsername1">Username</label>
-				<input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username">
+			<div class="form-row justify-content-end">
+				<div class="form-group col-4 mb-3 d-flex align-items-center">
+					<label for="codemap" style="white-space: nowrap;">Código: <span class="required">*</span></label>
+					<input type="text" class="form-control ms-3" name="codemap" id="codemap" value="2002" readonly="true">
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="exampleInputEmail1">Email address</label>
-				<input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+			<div class="form-row">
+				<div class="form-group col-3 mb-2">
+					<label for="cedula">Cédula <span class="required">*</span></label>
+					<input type="text" class="form-control" name="cedula" id="cedula" placeholder="Ingrese la cédula del cliente" required>
+				</div>
+				<div class="form-group col-9 mb-2">
+					<label for="fullname">Nombre del cliente <span class="required">*</span></label>
+					<input type="text" class="form-control" name="fullname" id="fullname" placeholder="Ingrese el nombre del cliente" required>
+				</div>
+				<div class="form-group col-6 mb-2">
+					<label for="address">Dirección <span class="required">*</span></label>
+					<textarea class="form-control" name="address" id="address" placeholder="Ingrese la dirección del cliente" required style="height: initial;"></textarea>
+				</div>
+				<div class="form-group col-6 mb-2">
+					<label for="references">Punto de referencia</label>
+					<textarea class="form-control" name="references" id="references" placeholder="Ingrese el punto de referencia" style="height: initial;"></textarea>
+				</div>
+				<div class="form-group col-3 mb-2">
+					<label for="phone1">Teléfono 1: <span class="required">*</span></label>
+					<input type="text" class="form-control" name="phone1" id="phone1" placeholder="Ingrese el teléfono del cliente" required>
+				</div>
+				<div class="form-group col-3 mb-2">
+					<label for="phone2">Teléfono 2:</label>
+					<input type="text" class="form-control" name="phone2" id="phone2" placeholder="Ingrese el teléfono del cliente">
+				</div>
+				<div class="form-group col-6 mb-2">
+					<label for="email">Correo electrónico:</label>
+					<input type="text" class="form-control" name="email" id="email" placeholder="Ingrese el correo electrónico">
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="exampleInputPassword1">Password</label>
-				<input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+
+			<div class="col-12 mt-3">
+				<div class="button-container text-end mb-3">
+					<button type="button" class="btn btn-primary btn-sm rounded"><i data-feather="user-plus"></i> Agregar usuario</button>
+				</div>
+
+				<div class="table-responsive border rounded">
+					<table id="data-table" class="table table-hover m-0">
+						<thead>
+							<tr>
+								<th>N°</th>
+								<th>Nombre y apellido</th>
+								<th>Cédula</th>
+								<th>Contraseña</th>
+								<th>Teléfono</th>
+								<th class="text-center"><i data-feather="settings" width="14px" height="14px"></i></th>
+							</tr>
+						</thead>
+
+						<tbody>
+							<tr>
+								<td colspan="6" class="text-center">Sin usuarios registrados</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="exampleInputConfirmPassword1">Confirm Password</label>
-				<input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password">
+
+			<div class="text-end mt-2">
+				<button type="submit" class="btn btn-primary"><i data-feather="save"></i> Guardar</button>
 			</div>
-			<div class="form-check form-check-flat form-check-primary">
-				<label class="form-check-label">
-					<input type="checkbox" class="form-check-input">
-					Remember me
-				</label>
-			</div>
-			<button type="submit" class="btn btn-primary me-2">Submit</button>
-			<button class="btn btn-light">Cancel</button>
 		</form>
 	</div>
 </div>
