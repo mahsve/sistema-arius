@@ -11837,21 +11837,21 @@ progress {
 
 .form-control-lg {
 	min-height: 3.175rem;
-	padding: 0.94rem 1.94rem;
+	padding: 0.94rem;
 	font-size: 1.25rem;
 	border-radius: 0.3rem;
 }
 
 .form-control-lg::file-selector-button {
-	padding: 0.94rem 1.94rem;
-	margin: -0.94rem -1.94rem;
-	margin-inline-end: 1.94rem;
+	padding: 0.94rem;
+	margin: -0.94rem;
+	margin-inline-end: 0.94rem;
 }
 
 .form-control-lg::-webkit-file-upload-button {
-	padding: 0.94rem 1.94rem;
-	margin: -0.94rem -1.94rem;
-	margin-inline-end: 1.94rem;
+	padding: 0.94rem;
+	margin: -0.94rem;
+	margin-inline-end: 0.94rem;
 }
 
 textarea.form-control,
@@ -12975,6 +12975,11 @@ textarea.is-invalid.tt-hint {
 	font-size: 0.875rem;
 	border-radius: 0.1875rem;
 	transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn svg {
+	width: 20px;
+	height: 20px;
 }
 
 .btn.btn-sm svg {
@@ -26811,7 +26816,6 @@ select.border-dark.tt-hint:focus {
 	font-size: 0.812rem;
 	line-height: 1.4rem;
 	vertical-align: top;
-	margin-bottom: .5rem;
 }
 
 .form-group.has-danger .form-control,

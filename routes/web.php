@@ -15,13 +15,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', App\Http\Controllers\DashboardController::class);
 
-Route::get('/iniciar-sesion', [App\Http\Controllers\SessionController::class, 'showLogin'])->name('show-login');
+// Controlador [Sesión]
+Route::get('/iniciar-sesion', [App\Http\Controllers\SessionController::class, 'show_login']);
 Route::post('/login', [App\Http\Controllers\SessionController::class, 'login'])->name('login');
 Route::get('/logout', [App\Http\Controllers\SessionController::class, 'logout'])->name('logout');
 
-Route::get('/recuperar', [App\Http\Controllers\SessionController::class, 'showRecover'])->name('show-recover');
+// Controlador [Recuperar cuenta]
+Route::get('/recuperar', [App\Http\Controllers\SessionController::class, 'show_recover']);
 
-// Controladores [Personal]
+// Controlador [Personal]
 Route::resource('/personal', App\Http\Controllers\PersonalController::class);
 Route::resource('/departamentos', App\Http\Controllers\DepartmentController::class);
 Route::resource('/tipo-personal', App\Http\Controllers\TypePersonalController::class);

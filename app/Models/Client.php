@@ -14,4 +14,5 @@ class Client extends Model
 
 	protected $table = 'tb_clientes';
 	protected $primaryKey = 'cedula';
+	protected $keyType = 'string';
 }
