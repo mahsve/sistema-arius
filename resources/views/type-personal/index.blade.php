@@ -2,6 +2,23 @@
 
 @section('title', 'Tipo de personal - ' . env('TITLE'))
 
+@section('styles')
+<link href="{{url('css/datatable/datatables.min.css')}}" rel="stylesheet">
+@endsection
+
+@section('scripts')
+<script src="{{url('js/datatable/datatables.min.js')}}"></script>
+<script>
+	setTimeout(() => {
+		let table = new DataTable('#data-table', {
+			language: {
+				url: '{{url("js/datatable-languaje-ES.json")}}',
+			},
+		});
+	}, 500);
+</script>
+@endsection
+
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
@@ -42,8 +59,8 @@
 						<td>{{$index + 1}}</td>
 						<td>{{$type->tipo_personal}}</td>
 						<td>{{0}} usuarios</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($type->created_at))}}</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($type->updated_at))}}</td>
+						<td>{{date('h:i:s A d/m/y', strtotime($type->created))}}</td>
+						<td>{{date('h:i:s A d/m/y', strtotime($type->updated))}}</td>
 						<td>
 							@if ($type->estatus == "A")
 							<label class="badge badge-success"><i data-feather="check" width="14px" height="14px"></i> Activo</label>

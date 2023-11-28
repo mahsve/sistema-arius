@@ -9,7 +9,7 @@ class TypePersonal extends Model
 {
 	use HasFactory;
 
-	const CREATED_AT = 'created';
+	const created = 'created';
 	const UPDATED_AT = 'updated';
 
 	protected $table = 'tb_tipos_personal';

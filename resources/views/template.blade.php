@@ -57,6 +57,10 @@
 	<script src="{{url('icons/feather.min.js')}}"></script>
 	<script>
 		feather.replace();
+
+		document.getElementById('dropdown-user-menu').addEventListener('click', (e) => {
+			e.stopPropagation();
+		})
 	</script>
 </body>
 

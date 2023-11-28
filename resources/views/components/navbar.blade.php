@@ -5,7 +5,6 @@
 				<i data-feather="menu"></i>
 			</button>
 		</div>
-
 		<div>
 			<a class="navbar-brand brand-logo" href="{{url('/')}}">
 				<img src="{{url('images/' . env('LOGO_LIGHT'))}}" alt="Logo {{env('TITLE')}}" style="filter: invert(1);">
@@ -25,12 +24,15 @@
 		</ul>
 
 		<ul class="navbar-nav ms-auto">
+			<!-- Search panel -->
 			<li class="nav-item">
 				<form class="search-form" action="#">
 					<i data-feather="search" class="menu-icon"></i>
 					<input type="search" class="form-control" placeholder="Search Here" title="Search here">
 				</form>
 			</li>
+
+			<!-- Messages -->
 			<li class="nav-item dropdown">
 				<a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
 					<i data-feather="message-square"></i>
@@ -71,6 +73,8 @@
 					</a>
 				</div>
 			</li>
+
+			<!-- Notifications -->
 			<li class="nav-item dropdown">
 				<a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
 					<i data-feather="bell"></i>
@@ -111,18 +115,19 @@
 					</a>
 				</div>
 			</li>
+
 			<li class="nav-item dropdown">
-				<a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-					<img class="img-xs rounded-circle" src="{{url('images/faces/face8.jpg')}}" alt="Profile image">
+				<a class="nav-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+					<img class="img-xs rounded-circle" src="{{url('images/faces/face8.jpg')}}" alt="Imagen usuario">
 				</a>
-				<div class="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="UserDropdown" style="min-width: 200px;">
-					<div class="dropdown-header text-center">
-						<img class="img-md rounded-circle" src="{{url('images/faces/face8.jpg')}}" alt="Profile image">
+				<div id="dropdown-user-menu" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded mt-3" aria-labelledby="dropdown-user" style="min-width: 220px;">
+					<div class="dropdown-header text-center mb-2">
+						<img class="img-md rounded-circle w-50 mt-2" src="{{url('images/faces/face8.jpg')}}" alt="Imagen usuario">
 						<p class="mb-1 mt-3 font-weight-semibold">{{session('user')->usuario}}</p>
 						<p class="fw-light text-muted mb-0">{{session('user')->cedula}}</p>
 					</div>
-					<a class="dropdown-item" href="{{url('perfil')}}"><i class="dropdown-item-icon icon-account-outline text-primary me-2"></i> Mi perfil</a>
-					<a class="dropdown-item" href="{{url('logout')}}"><i class="dropdown-item-icon icon-logout text-primary me-2"></i>Cerrar sesión</a>
+					<a class="dropdown-item px-2" href="{{url('perfil')}}"><i data-feather="user" width="18px" height="18px" class="ms-2 me-2" wdith></i> Mi perfil</a>
+					<a class="dropdown-item px-2" href="{{url('logout')}}"><i data-feather="log-out" width="18px" height="18px" class="ms-2 me-2"></i> Cerrar sesión</a>
 				</div>
 			</li>
 		</ul>
