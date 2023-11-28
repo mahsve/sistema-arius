@@ -28,4 +28,6 @@ Route::resource('/personal', App\Http\Controllers\PersonalController::class);
 Route::resource('/departamentos', App\Http\Controllers\DepartmentController::class);
 Route::resource('/tipo-personal', App\Http\Controllers\TypePersonalController::class);
 
+// Controlador [Cliente].
 Route::resource('/clientes', App\Http\Controllers\ClientController::class);
+Route::post('/clientes', [App\Http\Controllers\ClientController::class, '']);

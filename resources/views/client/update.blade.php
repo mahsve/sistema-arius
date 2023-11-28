@@ -58,7 +58,7 @@
 				</div>
 				<div class="form-group col-6">
 					<label for="email">Correo electrónico <span class="required">*</span></label>
-					<input type="email" class="form-control" name="email" id="email" value="{{$client->correo_electronico}}" placeholder="Ingrese el correo electrónico">
+					<input type="email" class="form-control" name="email" id="email" value="{{$client->correo_electronico}}" placeholder="Ingrese el correo electrónico" required>
 				</div>
 
 				<div class="form-group col-6">
