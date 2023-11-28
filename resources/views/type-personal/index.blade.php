@@ -99,7 +99,7 @@
 						<select class="form-control" name="id_departamento" id="id_departamento_new" required>
 							<option value="">Seleccione el departamento</option>
 							@foreach ($departments as $department)
-							<option value="{{$department->id}}">{{$department->departamento}}</option>
+							<option value="{{$department->id_departamento}}">{{$department->departamento}}</option>
 							@endforeach
 						</select>
 					</div>
@@ -133,7 +133,7 @@
 						<select class="form-control" name="id_departamento" id="id_departamento_edit" required>
 							<option value="">Seleccione el departamento</option>
 							@foreach ($departments as $department)
-							<option value="{{$department->id}}">{{$department->departamento}}</option>
+							<option value="{{$department->id_departamento}}">{{$department->departamento}}</option>
 							@endforeach
 						</select>
 					</div>
