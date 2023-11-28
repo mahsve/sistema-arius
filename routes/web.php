@@ -30,4 +30,5 @@ Route::resource('/tipo-personal', App\Http\Controllers\TypePersonalController::c
 
 // Controlador [Cliente].
 Route::resource('/clientes', App\Http\Controllers\ClientController::class);
-Route::post('/clientes', [App\Http\Controllers\ClientController::class, '']);
+Route::get('/clientes/{id}/instalacion', [App\Http\Controllers\ClientController::class, 'install'])->name('instalacion');
+Route::post('/clientes/{id}/instalacion', [App\Http\Controllers\ClientController::class, 'update_install']);

@@ -77,7 +77,7 @@
 						</td>
 						<td class="p-2" style="width: 20px;">
 							<a href="{{route('clientes.edit', ['cliente' => $client->id_codigo])}}" class="btn btn-primary btn-sm rounded p-2"><i data-feather="edit"></i></a>
-							<button type="button" class="btn btn-danger btn-sm rounded p-2"><i data-feather="trash"></i></button>
+							<a href="{{route('instalacion', ['id' => $client->id_codigo])}}" class="btn btn-info btn-sm rounded p-2"><i data-feather="settings"></i></a>
 						</td>
 					</tr>
 					@endforeach

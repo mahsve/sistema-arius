@@ -165,6 +165,24 @@ class ClientController extends Controller
 		return redirect()->route('clientes.index')->with('success', '¡Cliente modificado exitosamente!');
 	}
 
+	// Show form devices install. 
+	public function install(string $id)
+	{
+		$client	= DB::table('tb_clientes')
+			->select('*')
+			->join('tb_mapa_zonas', 'tb_clientes.identificacion', '=', 'tb_mapa_zonas.id_cliente')
+			->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', '=', 'tb_personal.cedula')
+			->where('tb_mapa_zonas.id_codigo', $id)
+			->first();
+
+		return view('client.install', ['client' => $client]);
+	}
+
+	// Update data Install
+	public function update_install(Request $request, string $id)
+	{
+	}
+
 	// Remove the specified resource from storage. 
 	public function destroy(string $id)
 	{
