@@ -14,4 +14,5 @@ class ZoneMaps extends Model
 
 	protected $table = 'tb_mapa_zonas';
 	protected $primaryKey = 'id_codigo';
+	protected $keyType = 'string';
 }
