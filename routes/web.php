@@ -26,7 +26,7 @@ Route::get('/recuperar', [App\Http\Controllers\SessionController::class, 'show_r
 // Controlador [Personal]
 Route::resource('/personal', App\Http\Controllers\PersonalController::class);
 Route::resource('/departamentos', App\Http\Controllers\DepartmentController::class);
-Route::resource('/tipo-personal', App\Http\Controllers\TypePersonalController::class);
+Route::resource('/cargo', App\Http\Controllers\PositionController::class);
 
 // Controlador [Cliente].
 Route::resource('/clientes', App\Http\Controllers\ClientController::class);

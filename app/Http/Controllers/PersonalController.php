@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Personal;
 use App\Models\Session;
-use App\Models\TypePersonal;
+use App\Models\Position;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use PhpParser\Node\Stmt\TryCatch;
 
 class PersonalController extends Controller
 {
@@ -23,31 +24,35 @@ class PersonalController extends Controller
 	// Show the form for creating a new resource. 
 	public function create()
 	{
-		$types = TypePersonal::all();
-		return view('personal.create', ['types_of_personal' => $types]);
+		$types = Position::all();
+		return view('personal.create', ['positions' => $types]);
 	}
 
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
-		DB::transaction(function () use ($request) {
-			$personal = new Personal();
-			$personal->cedula = $request->cedula;
-			$personal->nombres = $request->firstname;
-			$personal->apellidos = $request->lastname;
-			$personal->correo = $request->email;
-			$personal->telefono1 = $request->phone1;
-			$personal->telefono2 = $request->phone2;
-			$personal->direccion = $request->address;
-			$personal->id_tipo = $request->type_personal;
-			$personal->save();
-
-			$usuario = new Session();
-			$usuario->cedula = $request->cedula;
-			$usuario->usuario = explode(' ', $request->firstname)[0] . explode(' ', $request->lastname)[0] . rand(4, 4);
-			$usuario->contrasena = password_hash($request->cedula, PASSWORD_DEFAULT);
-			$usuario->save();
-		});
+		try {
+			DB::transaction(function () use ($request) {
+				$personal = new Personal();
+				$personal->cedula = $request->cedula;
+				$personal->nombres = $request->firstname;
+				$personal->apellidos = $request->lastname;
+				$personal->correo = $request->email;
+				$personal->telefono1 = $request->phone1;
+				$personal->telefono2 = $request->phone2;
+				$personal->direccion = $request->address;
+				$personal->id_cargo = $request->id_position;
+				$personal->save();
+	
+				$usuario = new Session();
+				$usuario->cedula = $request->cedula;
+				$usuario->usuario = explode(' ', $request->firstname)[0] . explode(' ', $request->lastname)[0] . rand(4, 4);
+				$usuario->contrasena = password_hash($request->cedula, PASSWORD_DEFAULT);
+				$usuario->save();
+			});
+		} catch (\Throwable $th) {
+			return redirect()->route('personal.index')->with('error', 'Ocurrió un error al registrar el personal');
+		}
 
 		return redirect()->route('personal.index')->with('success', 'Personal creado exitosamente');
 	}
@@ -61,26 +66,30 @@ class PersonalController extends Controller
 	public function edit(string $id)
 	{
 		$personal = Personal::find($id);
-		$types = TypePersonal::all();
+		$types = Position::all();
 
-		return view('personal.update', ['personal' => $personal, 'types_of_personal' => $types]);
+		return view('personal.update', ['personal' => $personal, 'positions' => $types]);
 	}
 
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
-		DB::transaction(function () use ($request, $id) {
-			$personal = Personal::find($id);
-			$personal->cedula = $request->cedula;
-			$personal->nombres = $request->firstname;
-			$personal->apellidos = $request->lastname;
-			$personal->correo = $request->email;
-			$personal->telefono1 = $request->phone1;
-			$personal->telefono2 = $request->phone2;
-			$personal->direccion = $request->address;
-			$personal->id_tipo = $request->type_personal;
-			$personal->save();
-		});
+		try {
+			DB::transaction(function () use ($request, $id) {
+				$personal = Personal::find($id);
+				$personal->cedula = $request->cedula;
+				$personal->nombres = $request->firstname;
+				$personal->apellidos = $request->lastname;
+				$personal->correo = $request->email;
+				$personal->telefono1 = $request->phone1;
+				$personal->telefono2 = $request->phone2;
+				$personal->direccion = $request->address;
+				$personal->id_cargo = $request->id_position;
+				$personal->save();
+			});
+		} catch (\Throwable $th) {
+			return redirect()->route('personal.index')->with('error', 'Ocurrió un error al actualizar el personal');
+		}
 
 		return redirect()->route('personal.index')->with('success', 'Personal actualizado exitosamente');
 	}

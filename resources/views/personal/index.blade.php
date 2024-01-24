@@ -38,6 +38,13 @@
 </div>
 @endif
 
+@if (session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+	<i data-feather="x"></i> {{session('error')}}
+	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
 <div class="card mb-4">
 	<div class="card-body">
 		<div class="table-responsive">

@@ -20,7 +20,6 @@
 			</a>
 			<div class="collapse" id="ui-clients">
 				<ul class="nav flex-column sub-menu">
-					<li class="nav-item"><a class="nav-link" href="{{route('clientes.index')}}">Clientes</a></li>
 				</ul>
 			</div>
 		</li>
@@ -37,18 +36,6 @@
 			</div>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" data-bs-toggle="collapse" href="#ui-users" aria-expanded="false" aria-controls="ui-users">
-				<i data-feather="users" class="menu-icon"></i>
-				<span class="menu-title">Personal</span>
-				<i data-feather="chevron-right" class="menu-arrow"></i>
-			</a>
-			<div class="collapse" id="ui-users">
-				<ul class="nav flex-column sub-menu">
-					<li class="nav-item"> <a class="nav-link" href="{{route('personal.index')}}">Personal</a></li>
-				</ul>
-			</div>
-		</li>
-		<li class="nav-item">
 			<a class="nav-link" data-bs-toggle="collapse" href="#ui-settings" aria-expanded="false" aria-controls="ui-settings">
 				<i data-feather="settings" class="menu-icon"></i>
 				<span class="menu-title">Configuración</span>
@@ -56,8 +43,10 @@
 			</a>
 			<div class="collapse" id="ui-settings">
 				<ul class="nav flex-column sub-menu">
+					<li class="nav-item"><a class="nav-link" href="{{route('clientes.index')}}">Clientes</a></li>
+					<li class="nav-item"> <a class="nav-link" href="{{route('personal.index')}}">Personal</a></li>
+					<li class="nav-item"> <a class="nav-link" href="{{route('cargo.index')}}">Cargo</a></li>
 					<li class="nav-item"> <a class="nav-link" href="{{route('departamentos.index')}}">Departamentos</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('tipo-personal.index')}}">Tipo personal</a></li>
 				</ul>
 			</div>
 		</li>

@@ -50,11 +50,11 @@
 					<input type="email" class="form-control" name="email" id="email" placeholder="Ingrese el correo electrónico" value="{{$personal->correo}}" required>
 				</div>
 				<div class="form-group col-3">
-					<label for="type_personal">Tipo personal <span class="required">*</span></label>
-					<select class="form-control" name="type_personal" id="type_personal" required>
+					<label for="id_position">Cargo <span class="required">*</span></label>
+					<select class="form-control" name="id_position" id="id_position" required>
 						<option value="0">Seleccione una opción</option>
-						@foreach ($types_of_personal as $type_)
-						<option value="{{$type_->id_tipo}}" {{$personal->id_tipo == $type_->id_tipo ? "selected" : ""}}>{{$type_->tipo_personal}}</option>
+						@foreach ($positions as $cargo)
+						<option value="{{$cargo->id_cargo}}" {{$cargo->id_cargo == $personal->id_cargo ? "selected" : ""}}>{{$cargo->cargo}}</option>
 						@endforeach
 					</select>
 				</div>
