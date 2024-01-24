@@ -13,15 +13,10 @@
 			</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" data-bs-toggle="collapse" href="#ui-clients" aria-expanded="false" aria-controls="ui-clients">
-				<i data-feather="user" class="menu-icon"></i>
-				<span class="menu-title">Clientes</span>
-				<i data-feather="chevron-right" class="menu-arrow"></i>
+			<a class="nav-link" href="{{url('/mapas-de-zonas')}}">
+				<i data-feather="map" class="menu-icon"></i>
+				<span class="menu-title">Mapas de zonas</span>
 			</a>
-			<div class="collapse" id="ui-clients">
-				<ul class="nav flex-column sub-menu">
-				</ul>
-			</div>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" data-bs-toggle="collapse" href="#ui-monitoring" aria-expanded="false" aria-controls="ui-monitoring">

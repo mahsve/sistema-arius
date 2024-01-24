@@ -24,11 +24,13 @@ Route::get('/logout', [App\Http\Controllers\SessionController::class, 'logout'])
 Route::get('/recuperar', [App\Http\Controllers\SessionController::class, 'show_recover']);
 
 // Controlador [Personal]
+Route::resource('/mapas-de-zonas', App\Http\Controllers\ZoneMapController::class);
+
+
+// Controlador [Cliente].
 Route::resource('/personal', App\Http\Controllers\PersonalController::class);
 Route::resource('/departamentos', App\Http\Controllers\DepartmentController::class);
 Route::resource('/cargo', App\Http\Controllers\PositionController::class);
-
-// Controlador [Cliente].
 Route::resource('/clientes', App\Http\Controllers\ClientController::class);
 Route::get('/clientes/{id}/instalacion', [App\Http\Controllers\ClientController::class, 'install'])->name('instalacion');
 Route::post('/clientes/{id}/instalacion', [App\Http\Controllers\ClientController::class, 'update_install']);
