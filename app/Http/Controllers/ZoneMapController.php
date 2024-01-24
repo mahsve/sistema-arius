@@ -27,27 +27,19 @@ class ZoneMapController extends Controller
 		return view('zonemaps.create');
 	}
 
+	public function search_client(string $type, string $id)
+	{
+		$client = Client::select('*')
+			->where('tipo_cliente', '=', $type)
+			->where('identificacion', '=', $id)
+			->first();
+		return json_encode($client);
+	}
+
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
 		DB::transaction(function () use ($request) {
-			// Consultamos si ya existe el cliente registrado en la tabla de clientes.
-			if ($client = Client::find($request->identification)) {
-			} else {
-				$client = new Client();
-			}
-
-			// [Registramos|Actualizamos] los datos del cliente.
-			$client->identificacion = $request->identification;
-			$client->tipo_cliente = $request->kind_of_client;
-			$client->nombre_completo = $request->fullname;
-			$client->correo_electronico = $request->email;
-			$client->telefono1 = $request->phone1;
-			$client->telefono2 = $request->phone2;
-			$client->estatus = "R";
-			$client->save();
-
-			// Registramos un nuevo mapa de zona.
 			$ZoneMaps = new ZoneMaps();
 			$ZoneMaps->id_codigo = $request->code_map;
 			$ZoneMaps->id_cliente = $request->identification;
@@ -57,7 +49,6 @@ class ZoneMapController extends Controller
 			$ZoneMaps->observaciones = $request->observation;
 			$ZoneMaps->save();
 
-			// Recorremos todos los usuarios de contactos agregados.
 			for ($var = 0; $var < count($request->cedula_); $var++) {
 				// Consultamos si ya existe el contacto registrado en la tabla de clientes.
 				if ($contact = Client::find($request->cedula_[$var])) {
@@ -83,7 +74,7 @@ class ZoneMapController extends Controller
 			}
 		});
 
-		return redirect()->route('clientes.index')->with('success', '¡Cliente registrado exitosamente!');
+		return redirect()->route('mapas-de-zonas.index')->with('success', '¡Mapa de zona registrado exitosamente!');
 	}
 
 	// Display the specified resource. 
@@ -122,15 +113,6 @@ class ZoneMapController extends Controller
 			$ZoneMaps->observaciones = $request->observation;
 			$ZoneMaps->save();
 
-			// Actualizamos los datos del cliente.
-			$client = Client::find($ZoneMaps->id_cliente);
-			$client->nombre_completo = $request->fullname;
-			$client->correo_electronico = $request->email;
-			$client->telefono1 = $request->phone1;
-			$client->telefono2 = $request->phone2;
-			$client->save();
-
-			// Recorremos todos los usuarios de contactos agregados.
 			for ($var = 0; $var < count($request->cedula_); $var++) {
 				// Consultamos si ya existe el contacto registrado en la tabla de clientes.
 				if ($contact = Client::find($request->cedula_[$var])) {
@@ -162,25 +144,7 @@ class ZoneMapController extends Controller
 			}
 		});
 
-		return redirect()->route('clientes.index')->with('success', '¡Cliente modificado exitosamente!');
-	}
-
-	// Show form devices install. 
-	public function install(string $id)
-	{
-		$client	= DB::table('tb_clientes')
-			->select('*')
-			->join('tb_mapa_zonas', 'tb_clientes.identificacion', '=', 'tb_mapa_zonas.id_cliente')
-			->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', '=', 'tb_personal.cedula')
-			->where('tb_mapa_zonas.id_codigo', $id)
-			->first();
-
-		return view('zonemaps.install', ['client' => $client]);
-	}
-
-	// Update data Install
-	public function update_install(Request $request, string $id)
-	{
+		return redirect()->route('mapas-de-zonas.index')->with('success', '¡Mapa de zona actualizado exitosamente!');
 	}
 
 	// Remove the specified resource from storage. 

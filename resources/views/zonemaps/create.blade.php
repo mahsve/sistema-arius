@@ -44,25 +44,25 @@
 				</div>
 				<div id="nm_container" class="form-group col-6">
 					<label for="fullname">Nombre del cliente <span class="required">*</span></label>
-					<input type="text" class="form-control" name="fullname" id="fullname" placeholder="Ingrese el nombre del cliente" required>
+					<input type="text" class="form-control" name="fullname" id="fullname" placeholder="Ingrese el nombre del cliente" readonly>
 				</div>
 
 				<div class="form-group col-3">
 					<label for="phone1">Teléfono 1 <span class="required">*</span></label>
-					<input type="text" class="form-control" name="phone1" id="phone1" placeholder="Ingrese el teléfono del cliente" required>
+					<input type="text" class="form-control" name="phone1" id="phone1" placeholder="Ingrese el teléfono del cliente" readonly>
 				</div>
 				<div class="form-group col-3">
 					<label for="phone2">Teléfono 2</label>
-					<input type="text" class="form-control" name="phone2" id="phone2" placeholder="Ingrese el teléfono del cliente">
+					<input type="text" class="form-control" name="phone2" id="phone2" placeholder="Ingrese el teléfono del cliente" readonly>
 				</div>
 				<div class="form-group col-6">
 					<label for="email">Correo electrónico <span class="required">*</span></label>
-					<input type="email" class="form-control" name="email" id="email" placeholder="Ingrese el correo electrónico" required>
+					<input type="email" class="form-control" name="email" id="email" placeholder="Ingrese el correo electrónico" readonly>
 				</div>
 
 				<div class="form-group col-6">
 					<label for="address">Dirección <span class="required">*</span></label>
-					<textarea class="form-control" name="address" id="address" placeholder="Ingrese la dirección del cliente" required style="height: initial;"></textarea>
+					<textarea class="form-control" name="address" id="address" placeholder="Ingrese la dirección del cliente" style="height: initial;"></textarea>
 				</div>
 				<div class="form-group col-6">
 					<label for="references">Punto de referencia</label>
@@ -114,4 +114,33 @@
 		</form>
 	</div>
 </div>
+
+<script>
+	const buscarCliente = () => {
+		fetch(`{{url('buscar-cliente')}}/${KindOfClientKey.value}/${identificationKey.value}`, {
+			headers: {
+				"X-CSRF-Token": document.querySelector('input[name=_token]').value
+			},
+			method: 'get'
+		}).then(response => response.json()).then((data) => {
+			if (data) {
+				document.getElementById("fullname").value = data.nombre_completo;
+				document.getElementById("phone1").value = data.telefono1;
+				document.getElementById("phone2").value = data.telefono2;
+				document.getElementById("email").value = data.correo_electronico;
+			} else {
+				document.getElementById("fullname").value = "";
+				document.getElementById("phone1").value = "";
+				document.getElementById("phone2").value = "";
+				document.getElementById("email").value = "";
+				alert("¡El usuario no existe!");
+			}
+		});
+	};
+
+	let identificationKey = document.getElementById("identification");
+	let KindOfClientKey = document.getElementById("kind_of_client");
+	identificationKey.addEventListener("change", buscarCliente);
+	KindOfClientKey.addEventListener("change", buscarCliente);
+</script>
 @endsection

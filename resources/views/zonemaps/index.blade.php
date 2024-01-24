@@ -76,7 +76,7 @@
 							@endif
 						</td>
 						<td class="p-2" style="width: 20px;">
-							<a href="{{route('mapas-de-zonas.edit', ['cliente' => $client->id_codigo])}}" class="btn btn-primary btn-sm rounded p-2"><i data-feather="edit"></i></a>
+							<a href="{{route('mapas-de-zonas.edit', ['mapas_de_zona' => $client->id_codigo])}}" class="btn btn-primary btn-sm rounded p-2"><i data-feather="edit"></i></a>
 						</td>
 					</tr>
 					@endforeach

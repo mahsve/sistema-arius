@@ -25,6 +25,7 @@ Route::get('/recuperar', [App\Http\Controllers\SessionController::class, 'show_r
 
 // Controlador [Personal]
 Route::resource('/mapas-de-zonas', App\Http\Controllers\ZoneMapController::class);
+Route::get('/buscar-cliente/{type}/{id}', [App\Http\Controllers\ZoneMapController::class, 'search_client']);
 
 
 // Controlador [Cliente].
