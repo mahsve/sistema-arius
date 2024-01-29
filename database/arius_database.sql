@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1
--- Tiempo de generación: 24-01-2024 a las 12:58:50
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- Servidor: localhost
+-- Tiempo de generación: 29-01-2024 a las 18:21:39
+-- Versión del servidor: 10.4.28-MariaDB
+-- Versión de PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -315,7 +315,7 @@ CREATE TABLE `tb_usuarios` (
 --
 
 INSERT INTO `tb_usuarios` (`id_usuario`, `cedula`, `usuario`, `contrasena`, `pregunta1`, `respuesta1`, `pregunta2`, `respuesta2`, `created`, `updated`, `estatus`) VALUES
-(1, '25791966', 'admin', '$2y$10$0yHbTaXkAujnitdPBtGN9OkHE9ttMbDvX9JHI6k3SdV3I2UN/hGZ6', '-', '-', '-', '-', '2024-01-16 11:08:23', '2024-01-16 11:08:23', 'P'),
+(1, '25791966', 'admin', '$2y$10$OP4yhioIZ74qvQGVl982WOiBDxOAtPcKrxP695XI0ALMf7KSUjZyq', '-', '-', '-', '-', '2024-01-16 11:08:23', '2024-01-16 11:08:23', 'P'),
 (2, '25791967', 'MiguelHerrera4', '$2y$10$kFE6jzVtWYHFI3sYWLRNYeYmA4ZXVtHi5iStgCFTxRAGO62JgaFCW', NULL, NULL, NULL, NULL, '2024-01-24 09:32:43', '2024-01-24 09:32:43', 'P'),
 (3, '2579198', 'MiguelHerrera4', '$2y$10$oqbofTMvMC58yXFKdMTUiOBy1w6W162DHdUcG4drFS5tw.SljX3Ha', NULL, NULL, NULL, NULL, '2024-01-24 09:39:44', '2024-01-24 09:39:44', 'P');
 
