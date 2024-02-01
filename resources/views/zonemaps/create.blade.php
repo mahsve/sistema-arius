@@ -101,6 +101,79 @@
 				</table>
 			</div>
 
+			<div class="row align-items-center mb-3">
+				<div class="col-6 text-start">
+					<h5 class="m-0">Zonas</h5>
+				</div>
+				<div class="col-6 text-end">
+					<button type="button" class="btn btn-primary btn-sm rounded" id="btn-new-zone"><i data-feather="plus"></i> Agregar zona</button>
+				</div>
+			</div>
+
+			<div class="table-responsive border rounded mb-4">
+				<table id="table-zone" class="table table-hover m-0">
+					<thead>
+						<tr>
+							<th class="px-2 text-center" width="36px">N°</th>
+							<th class="px-2">Descripción de zona</th>
+							<th class="px-2">Configuración</th>
+							<th class="px-2">Equipos</th>
+							<th class="px-1 text-center" width="42px"><i data-feather="settings" width="14px" height="14px"></i></th>
+						</tr>
+					</thead>
+
+					<tbody>
+						<tr class="no-zones">
+							<td colspan="7" class="text-center">Sin zonas registradas</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="row align-items-center mb-3">
+				<div class="col-6 text-start">
+					<h5 class="m-0">Otros datos</h5>
+				</div>
+			</div>
+
+			<?php /*
+			<div class="col-12">Horario de trabajo</div>
+			<div class="form-row">
+				<div class="col-6">
+					<div class="form-row">
+						<div class="form-group col-6">
+							<label for="dia_inicio">Lunes a Viernes<span class="required">*</span></label>
+							<div class="form-row">
+								<div class="col-6">
+									<input type="text" class="form-control" name="dia_inicio" id="dia_inicio" placeholder="Hora inicio" readonly>
+								</div>
+								<div class="col-6">
+									<input type="text" class="form-control" name="dia_inicio" id="dia_inicio" placeholder="Hora fin" readonly>
+								</div>
+							</div>
+						</div>
+						<div class="form-group col-6">
+							<label for="phone2">Sabado y domingo</label>
+							<input type="text" class="form-control" name="phone2" id="phone2" placeholder="Ingrese canal de comunicación">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group col-4">
+					<label for="phone1">Panel y Versión del sistema<span class="required">*</span></label>
+					<input type="text" class="form-control" name="phone1" id="phone1" placeholder="Ingrese el panel y la versión">
+				</div>
+				<div class="form-group col-3">
+					<label for="phone2">Reporta por:</label>
+					<input type="text" class="form-control" name="phone2" id="phone2" placeholder="Ingrese canal de comunicación">
+				</div>
+				<div class="form-group col-6">
+					<label for="email">N° de teléfono asig. <span class="required">*</span></label>
+					<input type="text" class="form-control" name="email" id="email" placeholder="Ingrese el número asignado">
+				</div>
+			</div>
+			*/ ?>
+
 			<div class="form-row">
 				<div class="form-group col-12">
 					<label for="observation">Observación: </label>

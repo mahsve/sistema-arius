@@ -9,10 +9,10 @@ btn_new_user.addEventListener('click', (e) => {
 	if (table_user.children.length > 0 && table_user.children[0].classList.contains('no-users')) table_user.innerHTML = '';
 
 	// Creamos una nueva fila y la agregamos a la tabla.
-	table_user.appendChild(createTrElement());
+	table_user.appendChild(createTrElementUser());
 });
 
-const createTrElement = () => {
+const createTrElementUser = () => {
 	// Creamos un elemento TR.
 	const tr_element = document.createElement('tr');
 
@@ -30,7 +30,7 @@ const createTrElement = () => {
 		<td class="py-2 px-1"><input type="text" class="form-control border-0" name="phone_[]" id="phone_${tr_id_rand}" placeholder="Teléfono"></td>
 		<td class="py-2 px-1"><input type="text" class="form-control border-0" name="note_[]" id="note_${tr_id_rand}" placeholder="Nota (Opcional)"></td>
 		<td class="py-0 px-1">
-			<button type="button" class="btn btn-danger btn-sm rounded px-2" onclick="deleteTrElement('${tr_id_rand}')">
+			<button type="button" class="btn btn-danger btn-sm rounded px-2" onclick="deleteTrElementUser('${tr_id_rand}')">
 				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash">
 					<polyline points="3 6 5 6 21 6"></polyline>
 					<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -40,9 +40,9 @@ const createTrElement = () => {
 
 	// Retornamos todo el elemento armado.
 	return tr_element;
-}
+};
 
-const deleteTrElement = (id) => {
+const deleteTrElementUser = (id) => {
 	// Eliminamos la fila cliqueada.
 	document.getElementById(`tr-user-${id}`).remove();
 
@@ -51,7 +51,66 @@ const deleteTrElement = (id) => {
 
 	// En caso que quede vacío, cargamos un mensaje en la tabla "Sin usuarios".
 	if (table_user.children.length == 0) table_user.innerHTML = table_message;
+};
+
+const table_zone = document.querySelector('#table-zone tbody');
+const table_message_zone = table_zone.innerHTML;
+const btn_new_zone = document.getElementById('btn-new-zone');
+
+btn_new_zone.addEventListener('click', (e) => {
+	e.preventDefault();
+
+	// Si tiene el mensaje "Sin usuarios", eliminamos primero ese mensaje.
+	if (table_zone.children.length > 0 && table_zone.children[0].classList.contains('no-zones')) table_zone.innerHTML = '';
+
+	// Creamos una nueva fila y la agregamos a la tabla.
+	table_zone.appendChild(createTrElementZone());
+});
+
+const createTrElementZone = () => {
+	// Creamos un elemento TR.
+	const tr_element = document.createElement('tr');
+
+	// Generamos un ID para poder eliminar la fila en caso que presione el botón eliminar.
+	const tr_id_rand = Math.random().toString().replace('.', '');
+	tr_element.id = `tr-zone-${tr_id_rand}`; // Le agregamos el ID a la fila creada.
+
+	// Definimos toda la estructura de la nueva fila.
+	tr_element.innerHTML = `
+		<input type="hidden" name="idzone_[]" value="0">
+		<td class="py-2 px-2 text-end zones-counter">${table_zone.children.length + 1}</td>
+		<td class="py-2 px-1"><input type="text" class="form-control border-0" name="description_zone[]" id="description_${tr_id_rand}" placeholder="Descripción de la zona"></td>
+		<td class="py-2 px-1"><input type="text" class="form-control border-0" name="config_zone[]" id="config_${tr_id_rand}" placeholder="Configuración"></td>
+		<td class="py-2 px-1"><input type="text" class="form-control border-0" name="equipos_zone[]" id="equipos_${tr_id_rand}" placeholder="Equipos"></td>
+		<td class="py-0 px-1">
+			<button type="button" class="btn btn-danger btn-sm rounded px-2" onclick="deleteTrElementZone('${tr_id_rand}')">
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash">
+					<polyline points="3 6 5 6 21 6"></polyline>
+					<path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+				</svg>
+			</button>
+		</td>`;
+
+	// Retornamos todo el elemento armado.
+	return tr_element;
+};
+
+const deleteTrElementZone = (id) => {
+	// Eliminamos la fila cliqueada.
+	document.getElementById(`tr-zone-${id}`).remove();
+
+	// Reordenamos la enumeración del listado.
+	Array.from(document.querySelectorAll('.zones-counter')).forEach((element, index) => element.innerHTML = (index + 1));
+
+	// En caso que quede vacío, cargamos un mensaje en la tabla "Sin usuarios".
+	if (table_zone.children.length == 0) table_zone.innerHTML = table_message_zone;
 }
+
+
+
+
+
+
 
 
 
