@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cargo;
 use App\Models\Personal;
-use App\Models\Session;
-use App\Models\Position;
+use App\Models\Sesion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
@@ -24,7 +24,7 @@ class PersonalControlador extends Controller
 	// Show the form for creating a new resource. 
 	public function create()
 	{
-		$types = Position::all();
+		$types = Cargo::all();
 		return view('personal.create', ['positions' => $types]);
 	}
 
@@ -44,7 +44,7 @@ class PersonalControlador extends Controller
 				$personal->id_cargo = $request->id_position;
 				$personal->save();
 	
-				$usuario = new Session();
+				$usuario = new Sesion();
 				$usuario->cedula = $request->cedula;
 				$usuario->usuario = explode(' ', $request->firstname)[0] . explode(' ', $request->lastname)[0] . rand(4, 4);
 				$usuario->contrasena = password_hash($request->cedula, PASSWORD_DEFAULT);
@@ -66,7 +66,7 @@ class PersonalControlador extends Controller
 	public function edit(string $id)
 	{
 		$personal = Personal::find($id);
-		$types = Position::all();
+		$types = Cargo::all();
 
 		return view('personal.update', ['personal' => $personal, 'positions' => $types]);
 	}

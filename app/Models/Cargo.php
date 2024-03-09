@@ -13,5 +13,5 @@ class Cargo extends Model
 	const UPDATED_AT = 'updated';
 
 	protected $table = 'tb_cargos';
-	protected $primaryKey = 'id_cargo';
+	protected $primaryKey = 'idcargo';
 }

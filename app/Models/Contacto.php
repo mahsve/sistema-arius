@@ -11,5 +11,5 @@ class Contacto extends Model
 
 	public $timestamps = false;
 	protected $table = 'tb_contactos';
-	protected $primaryKey = 'id_contacto';
+	protected $primaryKey = 'idcontacto';
 }

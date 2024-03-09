@@ -13,6 +13,6 @@ class MapaDeZona extends Model
 	const UPDATED_AT = 'updated';
 
 	protected $table = 'tb_mapa_zonas';
-	protected $primaryKey = 'id_codigo';
+	protected $primaryKey = 'idcodigo';
 	protected $keyType = 'string';
 }

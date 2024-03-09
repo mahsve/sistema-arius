@@ -8,10 +8,10 @@ class PanelControlador extends Controller
 {
 	public function __invoke()
 	{
-		if (session('user')) {
-			return view('dashboard.index');
+		if (session('usuario')) {
+			return view('panel.index');
 		} else {
-			return redirect('/iniciar-sesion');
+			return redirect('/iniciar_sesion');
 		}
 	}
 }

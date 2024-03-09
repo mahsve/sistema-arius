@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Departments;
+use App\Models\Departamento;
 use Illuminate\Http\Request;
 
 class DepartamentoControlador extends Controller
@@ -10,7 +10,7 @@ class DepartamentoControlador extends Controller
 	// Display a listing of the resource. 
 	public function index()
 	{
-		$department = Departments::all();
+		$department = Departamento::all();
 		return view('deparment.index', ["departments" => $department]);
 	}
 
@@ -26,7 +26,7 @@ class DepartamentoControlador extends Controller
 		$request->validate([
 			'departamento' => 'required|min:3|max:255'
 		]);
-		$department = new Departments();
+		$department = new Departamento();
 		$department->departamento	= $request->departamento;
 		$department->save();
 		return redirect('/departamentos')->with('success', '¡Departamento creado exitosamente!');
@@ -35,7 +35,7 @@ class DepartamentoControlador extends Controller
 	// Display the specified resource. 
 	public function show(string $id)
 	{
-		$department = Departments::find($id);
+		$department = Departamento::find($id);
 		return json_encode($department);
 	}
 
@@ -51,7 +51,7 @@ class DepartamentoControlador extends Controller
 		$request->validate([
 			'departamento' => 'required|min:3|max:255'
 		]);
-		$department = Departments::find($id);
+		$department = Departamento::find($id);
 		$department->departamento	= $request->departamento;
 		$department->save();
 		return redirect('/departamentos')->with('success', '¡Departamento actualizado exitosamente!');

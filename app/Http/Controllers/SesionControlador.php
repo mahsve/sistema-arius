@@ -2,39 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Session;
+use App\Models\Sesion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SesionControlador extends Controller
 {
-	public function show_login()
+	public function formulario_iniciar_sesion()
 	{
-		return view('session.login');
+		return view('sesion.index');
 	}
 
-	public function login(Request $request)
+	public function iniciar_sesion(Request $request)
 	{
-		// Consultamos la información del usuario.
-		$user	= DB::table('tb_usuarios')
+		// Consultamos la información del usuario en la base de datos.
+		$usuario	= DB::table('tb_usuarios')
 			->join('tb_personal', 'tb_usuarios.cedula', '=', 'tb_personal.cedula')
-			->select('tb_personal.*', 'tb_usuarios.usuario', 'tb_usuarios.id_usuario', 'tb_usuarios.estatus', 'tb_usuarios.contrasena')
-			->where('usuario', $request->username)->first();
+			->select('tb_personal.*', 'tb_usuarios.usuario', 'tb_usuarios.idusuario', 'tb_usuarios.estatus', 'tb_usuarios.contrasena')
+			->where('tb_usuarios.usuario', $request->usuario)->first();
 
 		// Validamos si encontró el usuario solicitado.
-		if (!$user) return redirect('iniciar-sesion')->with('error', 'El usuario no se encuentra registrado');
+		if (!$usuario) return redirect('iniciar_sesion')->with('error', '¡El usuario no se encuentra registrado!');
 
 		// Comprobamos que la contraseña sea correcta.
-		if (!password_verify($request->password, $user->contrasena)) return redirect('iniciar-sesion')->with('error', 'La contraseña ingresada es incorrecta');
+		if (!password_verify($request->contrasena, $usuario->contrasena)) return redirect('iniciar_sesion')->with('error', '¡La contraseña ingresada es incorrecta!');
 
 		// Guardamos la sesión y redireccionamos al panel principal.
-		session(['user' => $user]);
+		session(['usuario' => $usuario]);
 		return redirect('/');
 	}
 
-	public function logout()
+	public function cerrar_sesion()
 	{
-		session(['user' => null]);
+		session(['usuario' => null]);
 		return redirect('/');
 	}
 

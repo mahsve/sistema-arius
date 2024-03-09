@@ -13,5 +13,5 @@ class Departamento extends Model
 	const UPDATED_AT = 'updated';
 
 	protected $table = 'tb_departamentos';
-	protected $primaryKey = 'id_departamento';
+	protected $primaryKey = 'iddepartamento';
 }
