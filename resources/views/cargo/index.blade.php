@@ -1,21 +1,28 @@
 @extends('plantilla')
 
-@section('title', 'Cargo - ' . env('TITLE'))
+@section('title', 'Cargos - ' . env('TITLE'))
 
 @section('styles')
 <link href="{{url('css/datatable/datatables.min.css')}}" rel="stylesheet">
+<style>
+	.form-switch .form-check-input {
+		width: 3em !important;
+		height: 1.5em !important;
+		box-shadow: none !important;
+		cursor: pointer;
+	}
+</style>
 @endsection
 
 @section('scripts')
 <script src="{{url('js/datatable/datatables.min.js')}}"></script>
 <script>
-	setTimeout(() => {
-		let table = new DataTable('#data-table', {
-			language: {
-				url: '{{url("js/datatable-languaje-ES.json")}}',
-			},
-		});
-	}, 500);
+	// Inicializamos el DataTable con configuración del lenguaje español.
+	const table = new DataTable('#data-table', {
+		language: {
+			url: '{{url("js/datatable-languaje-ES.json")}}',
+		},
+	});
 </script>
 @endsection
 
@@ -23,7 +30,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title m-0">Cargo</h4>
+			<h4 class="card-title m-0">Cargos</h4>
 		</div>
 		<div class="col-6 text-end">
 			<button type="button" class="btn btn-primary btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modal-register"><i data-feather="plus"></i> Agregar</button>
@@ -38,6 +45,13 @@
 </div>
 @endif
 
+@if (session('error'))
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+	<i data-feather="x"></i> {{session('error')}}
+	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+@endif
+
 <div class="card mb-4">
 	<div class="card-body">
 		<div class="table-responsive">
@@ -46,22 +60,28 @@
 					<tr>
 						<th>N°</th>
 						<th>Cargo</th>
-						<th>Personal</th>
+						<th>Departamento</th>
 						<th>Creado</th>
 						<th>Actualizado</th>
+						<th>Estatus</th>
 						<th>Estatus</th>
 						<th class="text-center"><i data-feather="settings" width="14px" height="14px"></i></th>
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($position as $index => $cargo)
+					@foreach($cargos as $index => $cargo)
 					<tr>
 						<td>{{$index + 1}}</td>
 						<td>{{$cargo->cargo}}</td>
-						<td>{{0}} usuarios</td>
+						<td>{{$cargo->departamento}}</td>
 						<td>{{date('h:i:s A d/m/y', strtotime($cargo->created))}}</td>
 						<td>{{date('h:i:s A d/m/y', strtotime($cargo->updated))}}</td>
 						<td>
+							<div class="form-switch text-center">
+								<input class="form-check-input" type="checkbox" role="switch" id="estatus{{$cargo->idcargo}}" onchange="cambiar_estatus('{{$cargo->idcargo}}')" {{$cargo->estatus == "A" ?"checked" :""}}>
+							</div>
+						</td>
+						<td class="p-2">
 							@if ($cargo->estatus == "A")
 							<label class="badge badge-success"><i data-feather="check" width="14px" height="14px"></i> Activo</label>
 							@else
@@ -69,7 +89,7 @@
 							@endif
 						</td>
 						<td class="p-2" style="width: 20px;">
-							<button type="button" class="btn btn-primary btn-sm rounded p-2" onclick="edit('{{$cargo->id_cargo}}')"><i data-feather="edit"></i></button>
+							<button type="button" class="btn btn-primary btn-sm rounded p-2" onclick="consultar('{{$cargo->idcargo}}')"><i data-feather="edit"></i></button>
 							<button type="button" class="btn btn-danger btn-sm rounded p-2"><i data-feather="trash"></i></button>
 						</td>
 					</tr>
@@ -88,7 +108,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
-				<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('cargo.store')}}">
+				<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('cargos.store')}}">
 					@csrf
 					<div class="form-group mb-3">
 						<label for="cargo_new">Cargo</label>
@@ -96,10 +116,10 @@
 					</div>
 					<div class="form-group">
 						<label for="id_departamento_new">Departamento</label>
-						<select class="form-control" name="id_departamento" id="id_departamento_new" required>
+						<select class="form-control" name="iddepartamento" id="id_departamento_new" required>
 							<option value="">Seleccione el departamento</option>
-							@foreach ($departments as $department)
-							<option value="{{$department->id_departamento}}">{{$department->departamento}}</option>
+							@foreach ($departamentos as $departamento)
+							<option value="{{$departamento->iddepartamento}}">{{$departamento->departamento}}</option>
 							@endforeach
 						</select>
 					</div>
@@ -113,15 +133,15 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" aria-hidden="true">
+<div class="modal fade" id="modal-consultar" tabindex="-1" aria-labelledby="modal-consultar-label" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title fs-5" id="modal-edit-label">Modificar cargo</h1>
+				<h1 class="modal-title fs-5" id="modal-consultar-label">Modificar cargo</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
-				<form class="forms-sample" name="form-edit" id="form-edit" method="POST" action="{{route('cargo.update', ['cargo' => 0])}}">
+				<form class="forms-sample" name="form-consultar" id="form-consultar" method="POST" action="{{route('cargos.update', ['cargo' => 0])}}">
 					@csrf
 					@method('PATCH')
 					<div class="form-group">
@@ -130,10 +150,10 @@
 					</div>
 					<div class="form-group">
 						<label for="id_departamento_edit">Departamento</label>
-						<select class="form-control" name="id_departamento" id="id_departamento_edit" required>
+						<select class="form-control" name="iddepartamento" id="id_departamento_edit" required>
 							<option value="">Seleccione el departamento</option>
-							@foreach ($departments as $department)
-							<option value="{{$department->id_departamento}}">{{$department->departamento}}</option>
+							@foreach ($departamentos as $departamento)
+							<option value="{{$departamento->iddepartamento}}">{{$departamento->departamento}}</option>
 							@endforeach
 						</select>
 					</div>
@@ -148,23 +168,35 @@
 </div>
 
 <script>
-	const edit = (id) => {
-		fetch(`cargo/${id}`, {
+	// Consultamos los datos en la base de datos para editar.
+	const consultar = (id) => {
+		fetch(`cargos/${id}`, {
 			headers: {
 				"X-CSRF-Token": document.querySelector('input[name=_token]').value
 			},
 			method: 'get'
 		}).then(response => response.json()).then((data) => {
-			const modal_ = new bootstrap.Modal('#modal-edit');
-			let action = document.getElementById('form-edit').getAttribute('action').split('/');
+			const modal_ = new bootstrap.Modal('#modal-consultar');
+			let action = document.getElementById('form-consultar').getAttribute('action').split('/');
 			action[action.length - 1] = id;
 			action = action.join('/');
 
 			// Cargamos los datos.
-			document.getElementById('form-edit').setAttribute('action', action);
+			document.getElementById('form-consultar').setAttribute('action', action);
 			document.getElementById('cargo_edit').value = data.cargo;
-			document.getElementById('id_departamento_edit').value = data.id_departamento;
+			document.getElementById('id_departamento_edit').value = data.iddepartamento;
 			modal_.show();
+		});
+	};
+
+	const cambiar_estatus = (id) => {
+		fetch(`cargos/estatus/${id}`, {
+			headers: {
+				"X-CSRF-Token": document.querySelector('input[name=_token]').value
+			},
+			method: 'get'
+		}).then(response => response.json()).then((data) => {
+			alert(data);
 		});
 	}
 </script>

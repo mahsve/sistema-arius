@@ -20,14 +20,14 @@
 <body class="sidebar-dark">
 	<div class="container-scroller">
 		<!-- Navbar -->
-		@include('components.navbar')
+		@include('componentes.navbar')
 
 		<div class="container-fluid page-body-wrapper px-0">
 			<!-- Sidebar Todos -->
-			@include('components.todos')
+			@include('componentes.todos')
 
 			<!-- Sidebar Menu -->
-			@include('components.sidebar')
+			@include('componentes.sidebar')
 
 			<div class="main-panel">
 				<div class="content-wrapper px-4 pt-4 pb-0">

@@ -13,7 +13,7 @@
 			</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="{{url('/mapas-de-zonas')}}">
+			<a class="nav-link" href="{{route('mapas_de_zonas.index')}}">
 				<i data-feather="map" class="menu-icon"></i>
 				<span class="menu-title">Mapas de zonas</span>
 			</a>
@@ -39,9 +39,9 @@
 			<div class="collapse" id="ui-settings">
 				<ul class="nav flex-column sub-menu">
 					<li class="nav-item"><a class="nav-link" href="{{route('clientes.index')}}">Clientes</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('personal.index')}}">Personal</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('cargo.index')}}">Cargos</a></li>
 					<li class="nav-item"> <a class="nav-link" href="{{route('departamentos.index')}}">Departamentos</a></li>
+					<li class="nav-item"> <a class="nav-link" href="{{route('cargos.index')}}">Cargos</a></li>
+					<li class="nav-item"> <a class="nav-link" href="{{route('personal.index')}}">Personal</a></li>
 				</ul>
 			</div>
 		</li>

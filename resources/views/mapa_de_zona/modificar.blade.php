@@ -13,14 +13,14 @@
 			<h4 class="card-title m-0">Modificar mapa de zona</h4>
 		</div>
 		<div class="col-6 text-end">
-			<a href="{{route('mapas-de-zonas.index')}}" class="btn btn-primary btn-sm rounded"><i data-feather="chevron-left"></i> Regresar</a>
+			<a href="{{route('mapas_de_zonas.index')}}" class="btn btn-primary btn-sm rounded"><i data-feather="chevron-left"></i> Regresar</a>
 		</div>
 	</div>
 </div>
 
 <div class="card mb-4">
 	<div class="card-body">
-		<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('mapas-de-zonas.update', ['mapas_de_zona' => $client->id_codigo])}}">
+		<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('mapas_de_zonas.update', ['mapas_de_zona' => $client->id_codigo])}}">
 			@csrf
 			@method('PATCH')
 

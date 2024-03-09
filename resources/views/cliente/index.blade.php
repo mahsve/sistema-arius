@@ -1,4 +1,4 @@
-@extends('template')
+@extends('plantilla')
 
 @section('title', 'Clientes - ' . env('TITLE'))
 
@@ -56,17 +56,17 @@
 				</thead>
 
 				<tbody>
-					@foreach ($clients as $index => $client)
+					@foreach ($clientes as $index => $cliente)
 					<tr>
 						<td class="px-2 text-end">{{$index + 1}}</td>
-						<td class="px-2">{{$client->tipo_cliente == "N" ? "Natural" : "Jurídico"}}</td>
-						<td class="px-2">{{$client->identificacion}}</td>
-						<td class="px-2">{{$client->nombre_completo}}</td>
-						<td class="px-2">{{$client->telefono1}}</td>
-						<td class="px-2">{{$client->correo_electronico}}</td>
-						<td class="px-2">{{date('h:i:s A d/m/y', strtotime($client->created))}}</td>
+						<td class="px-2">{{$cliente->tipo_cliente == "N" ? "Natural" : "Jurídico"}}</td>
+						<td class="px-2">{{$cliente->identificacion}}</td>
+						<td class="px-2">{{$cliente->nombre_completo}}</td>
+						<td class="px-2">{{$cliente->telefono1}}</td>
+						<td class="px-2">{{$cliente->correo_electronico}}</td>
+						<td class="px-2">{{date('h:i:s A d/m/y', strtotime($cliente->created))}}</td>
 						<td class="p-2" style="width: 20px;">
-							<a href="{{route('clientes.edit', ['cliente' => $client->identificacion])}}" class="btn btn-primary btn-sm rounded p-2"><i data-feather="edit"></i></a>
+							<a href="{{route('clientes.edit', ['cliente' => $cliente->identificacion])}}" class="btn btn-primary btn-sm rounded p-2"><i data-feather="edit"></i></a>
 						</td>
 					</tr>
 					@endforeach

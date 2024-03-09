@@ -22,7 +22,7 @@
 	<div class="card-body">
 		<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('clientes.update', ['cliente' => $client->identificacion])}}">
 			@csrf
-			@method('PATCH')
+			@method('PUT')
 
 			<div class="form-row">
 				<div class="form-group col-3">
