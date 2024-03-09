@@ -1,4 +1,4 @@
-@extends('template')
+@extends('plantilla')
 
 @section('title', 'Modificar cliente - ' . env('TITLE'))
 

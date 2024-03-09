@@ -1,4 +1,4 @@
-@extends('template')
+@extends('plantilla')
 
 @section('title', 'Panel principal - Arius Seguridad Integral C.A.')
 

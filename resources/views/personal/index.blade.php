@@ -1,4 +1,4 @@
-@extends('template')
+@extends('plantilla')
 
 @section('title', 'Personal - ' . env('TITLE'))
 

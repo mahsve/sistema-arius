@@ -1,4 +1,4 @@
-@extends('template')
+@extends('plantilla')
 
 @section('title', 'Registrar mapa de zona - ' . env('TITLE'))
 

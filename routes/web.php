@@ -23,15 +23,17 @@ Route::get('/logout', [App\Http\Controllers\SessionController::class, 'logout'])
 // Controlador [Recuperar cuenta]
 Route::get('/recuperar', [App\Http\Controllers\SessionController::class, 'show_recover']);
 
-// Controlador [Personal]
-Route::resource('/mapas-de-zonas', App\Http\Controllers\ZoneMapController::class);
-Route::get('/buscar-cliente/{type}/{id}', [App\Http\Controllers\ZoneMapController::class, 'search_client']);
+// Controlador [Mapa de zona]
+Route::resource('/mapas-de-zonas', App\Http\Controllers\MapaDeZonaControlador::class);
+Route::get('/buscar-cliente/{type}/{id}', [App\Http\Controllers\MapaDeZonaControlador::class, 'search_client']);
 
 
 // Controlador [Cliente].
+Route::resource('/cargos', App\Http\Controllers\CargoControlador::class);
+Route::resource('/departamentos', App\Http\Controllers\DepartamentoControlador::class);
 Route::resource('/personal', App\Http\Controllers\PersonalController::class);
-Route::resource('/departamentos', App\Http\Controllers\DepartmentController::class);
-Route::resource('/cargo', App\Http\Controllers\PositionController::class);
-Route::resource('/clientes', App\Http\Controllers\ClientController::class);
+Route::resource('/clientes', App\Http\Controllers\ClienteControlador::class);
+
+
 Route::get('/clientes/{id}/instalacion', [App\Http\Controllers\ClientController::class, 'install'])->name('instalacion');
 Route::post('/clientes/{id}/instalacion', [App\Http\Controllers\ClientController::class, 'update_install']);
