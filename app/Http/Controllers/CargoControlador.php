@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Departments;
-use App\Models\Position;
+use App\Models\Departamento;
+use App\Models\Cargo;
 use Illuminate\Http\Request;
 
-class PositionController extends Controller
+class CargoControlador extends Controller
 {
 	// Display a listing of the resource. 
 	public function index()
 	{
-		$department	= Departments::all();
-		$personalTy = Position::all();
-		return view('position.index', ["departments" => $department, "position" => $personalTy]);
+		$departamentos	= Departamento::all();
+		$cargos					= Cargo::all();
+		return view('cargo.index', ["departamentos" => $departamentos, "cargos" => $cargos]);
 	}
 
 	// Show the form for creating a new resource. 
@@ -24,22 +24,24 @@ class PositionController extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
+		// Validaciones.
 		$request->validate([
 			'cargo'						=> 'required|min:3|max:255',
 			'id_departamento'	=> 'required'
 		]);
-		$position = new Position();
-		$position->cargo						= $request->cargo;
-		$position->id_departamento	= $request->id_departamento;
-		$position->save();
+
+		$cargo	= new Cargo();
+		$cargo->cargo						= $request->cargo;
+		$cargo->id_departamento	= $request->id_departamento;
+		$cargo->save();
 		return redirect('/cargo')->with('success', '¡Cargo creado exitosamente!');
 	}
 
 	// Display the specified resource. 
 	public function show(string $id)
 	{
-		$position = Position::find($id);
-		return json_encode($position);
+		$cargo	= Cargo::find($id);
+		return json_encode($cargo);
 	}
 
 	// Show the form for editing the specified resource. 
@@ -50,14 +52,16 @@ class PositionController extends Controller
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
+		// Validaciones.
 		$request->validate([
 			'cargo'						=> 'required|min:3|max:255',
 			'id_departamento'	=> 'required'
 		]);
-		$position = Position::find($id);
-		$position->cargo		= $request->cargo;
-		$position->id_departamento	= $request->id_departamento;
-		$position->save();
+
+		$cargo = Cargo::find($id);
+		$cargo->cargo						= $request->cargo;
+		$cargo->id_departamento	= $request->id_departamento;
+		$cargo->save();
 		return redirect('/cargo')->with('success', '¡Cargo actualizado exitosamente!');
 	}
 

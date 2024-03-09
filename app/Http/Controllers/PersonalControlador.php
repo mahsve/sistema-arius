@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
 
-class PersonalController extends Controller
+class PersonalControlador extends Controller
 {
 	// Display a listing of the resource. 
 	public function index()

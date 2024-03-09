@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ZoneMaps extends Model
+class MapaDeZona extends Model
 {
 	use HasFactory;
 

@@ -8,7 +8,7 @@ use App\Models\ZoneMaps;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class ZoneMapController extends Controller
+class MapaDeZonaControlador extends Controller
 {
 	// Display a listing of the resource. 
 	public function index()

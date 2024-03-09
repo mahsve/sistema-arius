@@ -6,7 +6,7 @@ use App\Models\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class SessionController extends Controller
+class SesionControlador extends Controller
 {
 	public function show_login()
 	{

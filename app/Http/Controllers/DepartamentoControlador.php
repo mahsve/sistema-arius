@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departments;
 use Illuminate\Http\Request;
 
-class DepartmentController extends Controller
+class DepartamentoControlador extends Controller
 {
 	// Display a listing of the resource. 
 	public function index()
