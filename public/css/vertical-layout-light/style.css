@@ -10081,11 +10081,6 @@ progress {
 	padding-right: 5px;
 }
 
-.required {
-	color: red;
-	font-weight: bold;
-}
-
 .form-inline .form-control {
   display: inline-block;
   width: auto;

@@ -1,0 +1,22 @@
+/* Form */
+.form-group label {
+	font-weight: 600;
+	font-size: 11px;
+	text-transform: uppercase;
+}
+
+.form-group label::after {
+	content: '*';
+	color: red;
+	font-weight: bold;
+	font-size: 14px;
+	margin-left: 5px;
+}
+
+select.form-control {
+	appearance: inherit !important;
+}
+
+textarea.form-control {
+	height: initial;
+}
