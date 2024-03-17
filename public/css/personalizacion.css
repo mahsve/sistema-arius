@@ -1,0 +1,93 @@
+.menu-icon {
+	display: flex;
+	align-items: center;
+	line-height: initial;
+	top: 1px;
+	position: relative;
+}
+
+
+/* Form */
+.form-group label {
+	font-weight: 600;
+	font-size: 12px;
+	text-transform: uppercase;
+	color: #6c757d;
+}
+
+.form-group label.required::after {
+	content: '*';
+	color: red;
+	font-weight: bold;
+	font-size: 15px;
+	margin-left: 5px;
+}
+
+select.form-control {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position-y: center;
+	background-position-x: calc(100% - 5px);
+	background-size: 16px 12px;
+	padding-right: 25px;
+	cursor: pointer;
+}
+
+textarea.form-control {
+	height: initial;
+}
+
+.form-check.loading {
+	position: relative;
+}
+
+.form-check.loading>* {
+	opacity: 0 !important;
+}
+
+.form-check.loading::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 1.5rem;
+	height: 1.5rem;
+	vertical-align: -0.125em;
+	border: 0.2rem solid var(--bs-primary);
+	border-right-color: rgba(0, 0, 0, 0);
+	border-radius: 50%;
+	animation: 0.75s linear infinite spinner-border;
+	-webkit-animation: 0.75s linear infinite spinner-border;
+}
+
+.btn.loading {
+	color: transparent !important;
+	position: relative;
+}
+
+.btn.loading::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 2rem;
+	height: 2rem;
+	vertical-align: -0.125em;
+	border: 0.25rem solid white;
+	border-right-color: rgba(0, 0, 0, 0);
+	border-radius: 50%;
+	animation: 0.75s linear infinite spinner-border;
+	-webkit-animation: 0.75s linear infinite spinner-border;
+}
+
+.btn.btn-sm.loading::after {
+	width: 1rem;
+	height: 1rem;
+	border-width: 0.15rem;
+}
