@@ -9,68 +9,78 @@
 @section('scripts')
 <script src="{{url('js/datatable/datatables.min.js')}}"></script>
 <script>
-	setTimeout(() => {
-		let table = new DataTable('#data-table', {
-			language: {
-				url: '{{url("js/datatable/datatable-languaje-ES.json")}}',
-			},
-		});
-	}, 500);
+	const table = new DataTable('#data-table', {
+		language: {
+			url: '{{url("js/datatable/datatable-languaje-ES.json")}}',
+		},
+	});
+	table.on('draw.dt', function () {
+		let elemento1 = document.querySelector('table#data-table').parentElement;
+		elemento1.classList.add("table-responsive","p-0","mb-3");
+	});
 </script>
+<script id="contenedor_script_variables">
+	const url_ = '{{url('/')}}';
+	const token_ = '{{csrf_token()}}';
+
+	// Una vez cargado en las constantes, se elimina la etiqueta script por temas de seguridad.
+	document.getElementById('contenedor_script_variables').remove();
+</script>
+<script src="{{url('js/app/departamento/index.js')}}"></script>
 @endsection
 
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0">Departamentos</h4>
+			<h4 class="card-title text-uppercase m-0"><i class="fas fa-hotel"></i> Departamentos</h4>
 		</div>
 		<div class="col-6 text-end">
-			<button type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#modal-register"><i data-feather="plus"></i> Agregar</button>
+			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_departamento"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
 		</div>
 	</div>
 </div>
 
-@if (session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-	<i data-feather="check"></i> {{session('success')}}
-	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
 <div class="card mb-4">
 	<div class="card-body">
 		<div class="table-responsive">
-			<table class="table table-hover" id="data-table">
+			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th>N°</th>
-						<th>Nombre departamento</th>
-						<th>Personal</th>
-						<th>Creado</th>
-						<th>Actualizado</th>
-						<th>Estatus</th>
-						<th class="text-center"><i data-feather="settings" width="14px" height="14px"></i></th>
+						<th class="ps-2"><i class="fas fa-hotel"></i> Departamento</th>
+						<th class="ps-2"><i class="fas fa-user-tie"></i> Personal</th>
+						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
+						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
+						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
+						<th class="ps-2 text-center"><i class="fas fa-toggle-on"></i></th>
+						<th class="ps-2 text-center"><i class="fas fa-cogs"></i></th>
 					</tr>
 				</thead>
+
 				<tbody>
 					@foreach($departamentos as $index => $departamento)
+					@php
+					$idrand = rand(100000,999999);
+					@endphp
 					<tr>
-						<td>{{$index + 1}}</td>
-						<td>{{$departamento->departamento}}</td>
-						<td>{{0}} usuarios</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($departamento->created))}}</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($departamento->updated))}}</td>
-						<td>
+						<td class="py-1 px-2">{{$departamento->departamento}}</td>
+						<td class="py-1 px-2">{{0}} trabajadores</td>
+						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($departamento->created))}}</td>
+						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($departamento->updated))}}</td>
+						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
 							@if ($departamento->estatus == "A")
-							<label class="badge badge-success"><i data-feather="check" width="14px" height="14px"></i> Activo</label>
+								<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
 							@else
-							<label class="badge badge-danger"><i data-feather="x" width="14px" height="14px"></i> Inactivo</label>
+								<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
 							@endif
 						</td>
-						<td class="p-2" style="width: 20px;">
-							<button type="button" class="btn btn-primary btn-sm  p-2" onclick="edit('{{$departamento->iddepartamento}}')"><i data-feather="edit"></i></button>
-							<button type="button" class="btn btn-danger btn-sm p-2"><i data-feather="trash"></i></button>
+						<td class="py-1 px-2 text-center">
+							<div class="form-check form-switch form-check-inline m-0">
+								<input type="checkbox" class="form-check-input mx-auto switch_estatus" role="switch" id="switch_estatus{{$idrand}}" data-id="{{$idrand}}" value="{{$departamento->iddepartamento}}" <?= $departamento->estatus == "A" ? "checked" : "" ?>>
+							</div>
+						</td>
+						<td class="py-1 px-2" style="width: 20px;">
+							<button type="button" class="btn btn-primary btn-sm p-2 btn_editar" data-id="{{$departamento->iddepartamento}}"><i class="fas fa-edit"></i></button>
 						</td>
 					</tr>
 					@endforeach
@@ -80,23 +90,23 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modal-register" tabindex="-1" aria-labelledby="modal-register-label" aria-hidden="true">
+<div class="modal fade" id="modal_registrar" tabindex="-1" aria-labelledby="modal_registrar_label" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title fs-5" id="modal-register-label">Registrar departamento</h1>
+				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_label">Registrar departamento</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
-				<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('departamentos.store')}}">
+				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('departamentos.store')}}">
 					@csrf
 					<div class="form-group">
-						<label for="departamento_new">Departamento</label>
-						<input type="text" class="form-control text-uppercase" name="departamento" id="departamento_new" placeholder="Ingrese el nombre del departamento" required minlength="3">
+						<label for="c_departamento_r" class="required"><i class="fas fa-hotel"></i> Departamento</label>
+						<input type="text" class="form-control text-uppercase" name="c_departamento" id="c_departamento_r" placeholder="Ingrese el nombre del departamento" minlength="3" required>
 					</div>
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
-						<button type="submit" class="btn btn-primary btn-sm "><i data-feather="save"></i> Guardar</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -104,49 +114,28 @@
 	</div>
 </div>
 
-<div class="modal fade" id="modal-edit" tabindex="-1" aria-labelledby="modal-edit-label" aria-hidden="true">
+<div class="modal fade" id="modal_modificar" tabindex="-1" aria-labelledby="modal_modificar_label" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title fs-5" id="modal-edit-label">Modificar departamento</h1>
+				<h1 class="modal-title text-uppercase fs-5" id="modal_modificar_label">Modificar departamento</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
-				<form class="forms-sample" name="form-edit" id="form-edit" method="POST" action="{{route('departamentos.update', ['departamento' => 0])}}">
+				<form class="forms-sample" name="formulario_actualizacion" id="formulario_actualizacion" method="POST" action="">
 					@csrf
 					@method('PATCH')
 					<div class="form-group">
-						<label for="departamento_edit">Departamento</label>
-						<input type="text" class="form-control" name="departamento" id="departamento_edit" placeholder="Ingrese el nombre del departamento" required minlength="3">
+						<label for="c_departamento_m" class="required"><i class="fas fa-hotel"></i> Departamento</label>
+						<input type="text" class="form-control" name="c_departamento" id="c_departamento_m" placeholder="Ingrese el nombre del departamento" minlength="3" required>
 					</div>
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
-						<button type="submit" class="btn btn-primary btn-sm "><i data-feather="save"></i> Guardar</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="btn_modificar"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
-
-<script>
-	const edit = (id) => {
-		fetch(`departamentos/${id}`, {
-			headers: {
-				"X-CSRF-Token": '{{ csrf_token() }}'
-			},
-			method: 'get'
-		}).then(response => response.json()).then((data) => {
-			const modal_ = new bootstrap.Modal('#modal-edit');
-			let action = document.getElementById('form-edit').getAttribute('action').split('/');
-			action[action.length - 1] = id;
-			action = action.join('/');
-
-			// Cargamos los datos.
-			document.getElementById('form-edit').setAttribute('action', action);
-			document.getElementById('departamento_edit').value = data.departamento;
-			modal_.show();
-		});
-	}
-</script>
 @endsection
