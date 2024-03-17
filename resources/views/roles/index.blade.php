@@ -1,6 +1,6 @@
 @extends('plantilla')
 
-@section('title', 'Personal - ' . env('TITLE'))
+@section('title', 'Roles - ' . env('TITLE'))
 
 @section('styles')
 <link href="{{url('css/datatable/datatables.min.css')}}" rel="stylesheet">
@@ -62,30 +62,6 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($personal as $index => $persona)
-					<tr>
-						<td class="text-end">{{$index + 1}}</td>
-						<td>{{$persona->cedula}}</td>
-						<td>{{$persona->nombre_completo}}</td>
-						<td>{{$persona->usuario}}</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($persona->created))}}</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($persona->updated))}}</td>
-						<td>
-							@if ($persona->estatus == "A")
-								<label class="badge badge-success"><i data-feather="check" width="14px" height="14px"></i> Activo</label>
-							@else
-								<label class="badge badge-danger"><i data-feather="x" width="14px" height="14px"></i> Inactivo</label>
-							@endif
-						</td>
-						<td class="p-2" style="width: 20px;">
-							<?php /* @if ($persona->cedula != session('user')->cedula)
-							<a href="{{route('personal.edit', ['personal' => $persona->cedula])}}" class="btn btn-primary btn-sm  p-2"><i data-feather="edit"></i></a>
-							<button type="button" class="btn btn-danger btn-sm p-2"><i data-feather="trash"></i></button>
-							@endif
-							*/ ?>
-						</td>
-					</tr>
-					@endforeach
 				</tbody>
 			</table>
 		</div>

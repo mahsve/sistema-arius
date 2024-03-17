@@ -12,7 +12,7 @@
 	setTimeout(() => {
 		let table = new DataTable('#data-table', {
 			language: {
-				url: '{{url("js/datatable-languaje-ES.json")}}',
+				url: '{{url("js/datatable/datatable-languaje-ES.json")}}',
 			},
 		});
 	}, 500);
@@ -23,10 +23,10 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title m-0">Departamentos</h4>
+			<h4 class="card-title text-uppercase m-0">Departamentos</h4>
 		</div>
 		<div class="col-6 text-end">
-			<button type="button" class="btn btn-primary btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modal-register"><i data-feather="plus"></i> Agregar</button>
+			<button type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#modal-register"><i data-feather="plus"></i> Agregar</button>
 		</div>
 	</div>
 </div>
@@ -54,23 +54,23 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($departments as $index => $department)
+					@foreach($departamentos as $index => $departamento)
 					<tr>
 						<td>{{$index + 1}}</td>
-						<td>{{$department->departamento}}</td>
+						<td>{{$departamento->departamento}}</td>
 						<td>{{0}} usuarios</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($department->created))}}</td>
-						<td>{{date('h:i:s A d/m/y', strtotime($department->updated))}}</td>
+						<td>{{date('h:i:s A d/m/y', strtotime($departamento->created))}}</td>
+						<td>{{date('h:i:s A d/m/y', strtotime($departamento->updated))}}</td>
 						<td>
-							@if ($department->estatus == "A")
+							@if ($departamento->estatus == "A")
 							<label class="badge badge-success"><i data-feather="check" width="14px" height="14px"></i> Activo</label>
 							@else
 							<label class="badge badge-danger"><i data-feather="x" width="14px" height="14px"></i> Inactivo</label>
 							@endif
 						</td>
 						<td class="p-2" style="width: 20px;">
-							<button type="button" class="btn btn-primary btn-sm rounded p-2" onclick="edit('{{$department->id}}')"><i data-feather="edit"></i></button>
-							<button type="button" class="btn btn-danger btn-sm rounded p-2"><i data-feather="trash"></i></button>
+							<button type="button" class="btn btn-primary btn-sm  p-2" onclick="edit('{{$departamento->iddepartamento}}')"><i data-feather="edit"></i></button>
+							<button type="button" class="btn btn-danger btn-sm p-2"><i data-feather="trash"></i></button>
 						</td>
 					</tr>
 					@endforeach
@@ -92,11 +92,11 @@
 					@csrf
 					<div class="form-group">
 						<label for="departamento_new">Departamento</label>
-						<input type="text" class="form-control" name="departamento" id="departamento_new" placeholder="Ingrese el nombre del departamento" required minlength="3">
+						<input type="text" class="form-control text-uppercase" name="departamento" id="departamento_new" placeholder="Ingrese el nombre del departamento" required minlength="3">
 					</div>
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary btn-sm rounded" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
-						<button type="submit" class="btn btn-primary btn-sm rounded"><i data-feather="save"></i> Guardar</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm "><i data-feather="save"></i> Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -120,8 +120,8 @@
 						<input type="text" class="form-control" name="departamento" id="departamento_edit" placeholder="Ingrese el nombre del departamento" required minlength="3">
 					</div>
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary btn-sm rounded" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
-						<button type="submit" class="btn btn-primary btn-sm rounded"><i data-feather="save"></i> Guardar</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm "><i data-feather="save"></i> Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -133,7 +133,7 @@
 	const edit = (id) => {
 		fetch(`departamentos/${id}`, {
 			headers: {
-				"X-CSRF-Token": document.querySelector('input[name=_token]').value
+				"X-CSRF-Token": '{{ csrf_token() }}'
 			},
 			method: 'get'
 		}).then(response => response.json()).then((data) => {

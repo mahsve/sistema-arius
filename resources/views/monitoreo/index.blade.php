@@ -8,7 +8,7 @@
 		<h3 class="m-0">Servicios Técnicos solicitados</h3>
 	</div>
 	<div class="col-6 text-end">
-		<button type="button" class="btn btn-primary btn-sm rounded"><i class="fas fa-plus"></i> Nuevo</button>
+		<button type="button" class="btn btn-primary btn-sm "><i class="fas fa-plus"></i> Nuevo</button>
 	</div>
 </div>
 
@@ -21,7 +21,7 @@
 			<div class="col-6">
 				<div class="input-group">
 					<input type="text" class="form-control" name="search-table" id="search-table" placeholder="Buscar...">
-					<button type="button" class="btn btn-primary btn-sm rounded-end"><i class="fas fa-search" style="font-size: 14px;"></i><span class="ms-2">Buscar</span></button>
+					<button type="button" class="btn btn-primary btn-sm -end"><i class="fas fa-search" style="font-size: 14px;"></i><span class="ms-2">Buscar</span></button>
 				</div>
 			</div>
 		</div>

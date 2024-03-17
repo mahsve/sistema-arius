@@ -20,7 +20,7 @@
 	// Inicializamos el DataTable con configuración del lenguaje español.
 	const table = new DataTable('#data-table', {
 		language: {
-			url: '{{url("js/datatable-languaje-ES.json")}}',
+			url: '{{url("js/datatable/datatable-languaje-ES.json")}}',
 		},
 	});
 </script>
@@ -30,10 +30,10 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title m-0">Cargos</h4>
+			<h4 class="card-title text-uppercase m-0">Cargos</h4>
 		</div>
 		<div class="col-6 text-end">
-			<button type="button" class="btn btn-primary btn-sm rounded" data-bs-toggle="modal" data-bs-target="#modal-register"><i data-feather="plus"></i> Agregar</button>
+			<button type="button" class="btn btn-primary btn-sm " data-bs-toggle="modal" data-bs-target="#modal-register"><i data-feather="plus"></i> Agregar</button>
 		</div>
 	</div>
 </div>
@@ -89,8 +89,8 @@
 							@endif
 						</td>
 						<td class="p-2" style="width: 20px;">
-							<button type="button" class="btn btn-primary btn-sm rounded p-2" onclick="consultar('{{$cargo->idcargo}}')"><i data-feather="edit"></i></button>
-							<button type="button" class="btn btn-danger btn-sm rounded p-2"><i data-feather="trash"></i></button>
+							<button type="button" class="btn btn-primary btn-sm  p-2" onclick="consultar('{{$cargo->idcargo}}')"><i data-feather="edit"></i></button>
+							<button type="button" class="btn btn-danger btn-sm p-2"><i data-feather="trash"></i></button>
 						</td>
 					</tr>
 					@endforeach
@@ -124,8 +124,8 @@
 						</select>
 					</div>
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary btn-sm rounded" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
-						<button type="submit" class="btn btn-primary btn-sm rounded"><i data-feather="save"></i> Guardar</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm "><i data-feather="save"></i> Guardar</button>
 					</div>
 				</form>
 			</div>
@@ -158,8 +158,8 @@
 						</select>
 					</div>
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary btn-sm rounded" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
-						<button type="submit" class="btn btn-primary btn-sm rounded"><i data-feather="save"></i> Guardar</button>
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i data-feather="x"></i> Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm "><i data-feather="save"></i> Guardar</button>
 					</div>
 				</form>
 			</div>

@@ -2,7 +2,7 @@
 	<div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
 		<div class="me-3">
 			<button class="navbar-toggler navbar-toggler align-self-center" type="button" data-bs-toggle="minimize">
-				<i data-feather="menu"></i>
+				<i class="fas fa-bars"></i>
 			</button>
 		</div>
 		<div>
@@ -27,7 +27,7 @@
 			<!-- Search panel -->
 			<li class="nav-item">
 				<form class="search-form" action="#">
-					<i data-feather="search" class="menu-icon"></i>
+					<i class="menu-icon fas fa-search"></i>
 					<input type="search" class="form-control" placeholder="Search Here" title="Search here">
 				</form>
 			</li>
@@ -35,7 +35,7 @@
 			<!-- Messages -->
 			<li class="nav-item dropdown">
 				<a class="nav-link count-indicator" id="countDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-					<i data-feather="message-square"></i>
+					<i class="fas fa-inbox"></i>
 					<span class="count"></span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded" aria-labelledby="countDropdown">
@@ -77,7 +77,7 @@
 			<!-- Notifications -->
 			<li class="nav-item dropdown">
 				<a class="nav-link count-indicator" id="notificationDropdown" href="#" data-bs-toggle="dropdown">
-					<i data-feather="bell"></i>
+					<i class="fas fa-bell"></i>
 					<span class="count"></span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded" aria-labelledby="notificationDropdown">
@@ -126,14 +126,14 @@
 						<p class="mb-1 mt-3 font-weight-semibold">{{session('usuario')->nombre_completo}}</p>
 						<p class="fw-light text-muted mb-0">{{session('usuario')->usuario}}</p>
 					</div>
-					<a class="dropdown-item px-2" href="{{url('perfil')}}"><i data-feather="user" width="18px" height="18px" class="ms-2 me-2" wdith></i> Mi perfil</a>
-					<a class="dropdown-item px-2" href="{{url('cerrar_sesion')}}"><i data-feather="log-out" width="18px" height="18px" class="ms-2 me-2"></i> Cerrar sesión</a>
+					<a class="dropdown-item px-2" href="{{url('perfil')}}"><i class="fas fa-user ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
+					<a class="dropdown-item px-2" href="{{url('cerrar_sesion')}}"><i class="fas fa-sign-out-alt ms-2 me-2" width="18px" height="18px"></i> Cerrar sesión</a>
 				</div>
 			</li>
 		</ul>
 
 		<button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-bs-toggle="offcanvas">
-			<i data-feather="menu"></i>
+			<i class="fas fa-bars"></i>
 		</button>
 	</div>
 </nav>

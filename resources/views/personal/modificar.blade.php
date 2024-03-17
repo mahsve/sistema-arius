@@ -9,10 +9,10 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title m-0">Modificar personal</h4>
+			<h4 class="card-title text-uppercase m-0">Modificar personal</h4>
 		</div>
 		<div class="col-6 text-end">
-			<a href="{{route('personal.index')}}" class="btn btn-primary btn-sm rounded"><i data-feather="chevron-left"></i> Regresar</a>
+			<a href="{{route('personal.index')}}" class="btn btn-primary btn-sm "><i data-feather="chevron-left"></i> Regresar</a>
 		</div>
 	</div>
 </div>

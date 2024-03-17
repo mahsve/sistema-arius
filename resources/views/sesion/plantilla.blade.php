@@ -13,8 +13,8 @@
 	<!-- Libraries and plugings CSS -->
 	@yield('styles')
 	<!-- Dashboard CSS -->
-	<link rel="stylesheet" href="{{url('css/vertical-layout-light/style.css')}}">
-	<link rel="stylesheet" href="{{url('css/vertical-layout-light/theme.dark.css')}}">
+	<link rel="stylesheet" href="{{url('css/app/style.css')}}">
+	<link rel="stylesheet" href="{{url('css/app/theme.dark.css')}}">
 </head>
 
 <body>
