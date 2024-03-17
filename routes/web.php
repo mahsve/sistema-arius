@@ -25,13 +25,12 @@ Route::get('/', App\Http\Controllers\PanelControlador::class);
 // Controlador [Mapa de zona]
 Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(function () {
 	Route::get('/mapas_de_zonas', 'index')->name('mapas_de_zonas.index');
-	Route::get('/mapas_de_zonas/registrar', 'create')->name('mapas_de_zonas.create');
-	Route::post('/mapas_de_zonas', 'store')->name('mapas_de_zonas.store');
-	Route::get('/mapas_de_zonas/{id}/modificar', 'edit')->name('mapas_de_zonas.edit');
+	Route::get('/mapas_de_zonas/registrar/{id}', 'create')->name('mapas_de_zonas.create');
+	Route::post('/mapas_de_zonas/{id}', 'store')->name('mapas_de_zonas.store');
+	Route::get('/mapas_de_zonas/modificar/{id}', 'edit')->name('mapas_de_zonas.edit');
 	Route::patch('/mapas_de_zonas', 'update')->name('mapas_de_zonas.update');
-	// Route::get('/buscar-cliente/{type}/{id}', [App\Http\Controllers\MapaDeZonaControlador::class, 'search_client']);
+	Route::get('/consultar_clientes', 'consultar_clientes');
 });
-
 
 // Controlador [Maestros].
 Route::controller(App\Http\Controllers\ClienteControlador::class)->group(function () {
@@ -40,6 +39,7 @@ Route::controller(App\Http\Controllers\ClienteControlador::class)->group(functio
 	Route::post('/clientes', 'store')->name('clientes.store');							// Enviar los datos al controlador para nuevo registro.
 	Route::get('/clientes/modificar/{id}', 'edit')->name('clientes.edit');	// Mostrar formulario para modificar registro.
 	Route::put('/clientes/{id}', 'update')->name('clientes.update');				// Enviar los datos al controlador para modificar registro.
+	Route::put('/clientes/estatus/{id}', 'toggle')->name('clientes.status');			// Enviar los datos al controlador para modificar registro.
 	// Route::get('/clientes/{id}', 'show')->name('clientes.show');					// Mostrar información sin modificar.
 	// Route::delete('/clientes/{id}', 'delete')->name('clientes.delete');	// Enviar los datos al controlador para eliminar registro.
 });
@@ -49,3 +49,4 @@ Route::get('/cargos/estatus/{id}', [App\Http\Controllers\CargoControlador::class
 
 Route::resource('/departamentos', App\Http\Controllers\DepartamentoControlador::class);
 Route::resource('/personal', App\Http\Controllers\PersonalControlador::class);
+Route::resource('/roles', App\Http\Controllers\RolControlador::class);
