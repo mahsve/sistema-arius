@@ -94,7 +94,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_label">Registrar departamento</h1>
+				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_label"><i class="fas fa-folder-plus"></i> Registrar departamento</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
@@ -118,7 +118,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title text-uppercase fs-5" id="modal_modificar_label">Modificar departamento</h1>
+				<h1 class="modal-title text-uppercase fs-5" id="modal_modificar_label"><i class="fas fa-folder-open"></i> Modificar departamento</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">

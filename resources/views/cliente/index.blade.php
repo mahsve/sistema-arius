@@ -36,12 +36,10 @@
 			<h4 class="card-title text-uppercase m-0"><i class="fas fa-users"></i> Clientes</h4>
 		</div>
 		<div class="col-6 text-end">
-			<a href="{{route('clientes.create')}}" class="btn btn-primary btn-sm "><i class="fas fa-folder-plus me-2"></i>Agregar</a>
+			<a href="{{route('clientes.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-folder-plus me-2"></i>Agregar</a>
 		</div>
 	</div>
 </div>
-
-@method('PUT')
 
 <div class="card mb-4">
 	<div class="card-body">
@@ -83,7 +81,7 @@
 							</div>
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">
-							<a href="{{route('clientes.edit', ['id' => $cliente->identificacion])}}" class="btn btn-primary btn-sm  p-2"><i class="fas fa-edit"></i></a>
+							<a href="{{route('clientes.edit', ['id' => $cliente->identificacion])}}" class="btn btn-primary btn-sm p-2"><i class="fas fa-edit"></i></a>
 						</td>
 					</tr>
 					@endforeach

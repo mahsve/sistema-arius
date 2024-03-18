@@ -1,6 +1,6 @@
 (function () {
 	// Elementos HTML.
-	const btn_nuevo_departamento = document.getElementById("btn_nuevo_departamento");
+	const btn_nuevo_cargo = document.getElementById("btn_nuevo_cargo");
 	const switch_estatus = document.querySelectorAll(".switch_estatus");
 	const btn_editar = document.querySelectorAll(".btn_editar");
 	const modal_registrar = new bootstrap.Modal('#modal_registrar');
@@ -10,7 +10,7 @@
 
 	// Eventos elementos HTML.
 	// Agregar nuevo registro.
-	btn_nuevo_departamento.addEventListener("click", function (e) {
+	btn_nuevo_cargo.addEventListener("click", function (e) {
 		e.preventDefault();
 		formulario_registro.reset();
 		modal_registrar.show();
@@ -21,15 +21,19 @@
 		e.preventDefault();
 
 		// Elementos del formulario.
+		const c_cargo = document.getElementById("c_cargo_r");
 		const c_departamento = document.getElementById("c_departamento_r");
 		const btn_guardar = document.getElementById("btn_registrar");
 
 		// Validamos los campos.
-		if (c_departamento.value == "") {
-			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del departamento' });
-			c_departamento.focus();
-		} else if (c_departamento.value.length < 3) {
-			Toast.fire({ icon: 'error', title: 'El departamento debe tener al menos 3 caracteres' });
+		if (c_cargo.value == "") {
+			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del cargo' });
+			c_cargo.focus();
+		} else if (c_cargo.value.length < 3) {
+			Toast.fire({ icon: 'error', title: 'El cargo debe tener al menos 3 caracteres' });
+			c_cargo.focus();
+		} else if (c_departamento.value == "") {
+			Toast.fire({ icon: 'error', title: 'Seleccione el departamento' });
 			c_departamento.focus();
 		} else {
 			btn_guardar.classList.add("loading");
@@ -44,7 +48,7 @@
 
 				// Enviamos mensaje de exito.
 				modal_registrar.hide();
-				Swal.fire({ title: "Exito", text: "Departamento registrado exitosamente", icon: "success", timer: 2000 });
+				Swal.fire({ title: "Exito", text: "Cargo registrado exitosamente", icon: "success", timer: 2000 });
 				setTimeout(() => location.reload(), 2000);
 			});
 		}
@@ -55,15 +59,19 @@
 		e.preventDefault();
 
 		// Elementos del formulario.
+		const c_cargo = document.getElementById("c_cargo_m");
 		const c_departamento = document.getElementById("c_departamento_m");
 		const btn_guardar = document.getElementById("btn_modificar");
 
 		// Validamos los campos.
-		if (c_departamento.value == "") {
-			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del departamento' });
-			c_departamento.focus();
-		} else if (c_departamento.value.length < 3) {
-			Toast.fire({ icon: 'error', title: 'El departamento debe tener al menos 3 caracteres' });
+		if (c_cargo.value == "") {
+			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del cargo' });
+			c_cargo.focus();
+		} else if (c_cargo.value.length < 3) {
+			Toast.fire({ icon: 'error', title: 'El cargo debe tener al menos 3 caracteres' });
+			c_cargo.focus();
+		} else if (c_departamento.value == "") {
+			Toast.fire({ icon: 'error', title: 'Seleccione el departamento' });
 			c_departamento.focus();
 		} else {
 			btn_guardar.classList.add("loading");
@@ -78,7 +86,7 @@
 
 				// Enviamos mensaje de exito.
 				modal_modificar.hide();
-				Swal.fire({ title: "Exito", text: "Departamento modificado exitosamente", icon: "success", timer: 2000 });
+				Swal.fire({ title: "Exito", text: "Cargo modificado exitosamente", icon: "success", timer: 2000 });
 				setTimeout(() => location.reload(), 2000);
 			});
 		}
@@ -95,13 +103,14 @@
 
 			// Realizamos la consulta AJAX.
 			button_element.classList.add('loading');
-			fetch(`${url_}/departamentos/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
+			fetch(`${url_}/cargos/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
 				button_element.classList.remove('loading');
 
 				// Limpiamos el formulario y cargamos los datos consultados.
 				formulario_actualizacion.reset();
-				formulario_actualizacion.setAttribute('action', `${url_}/departamentos/${id_data}`);
-				document.getElementById('c_departamento_m').value = data.departamento;
+				formulario_actualizacion.setAttribute('action', `${url_}/cargos/${id_data}`);
+				document.getElementById('c_cargo_m').value = data.cargo;
+				document.getElementById('c_departamento_m').value = data.iddepartamento;
 				modal_modificar.show();
 			});
 		});
@@ -116,7 +125,7 @@
 
 			// Pedimos confirmar que desea desactivar este registro.
 			Swal.fire({
-				title: '¿Seguro que quieres cambiar el estatus de este departamento?',
+				title: '¿Seguro que quieres cambiar el estatus de este cargo?',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonText: 'Cambiar',
@@ -129,7 +138,7 @@
 					form_check.classList.add('loading');
 
 					// Realizamos la consulta AJAX.
-					fetch(`${url_}/departamentos/estatus/${this.value}`, {
+					fetch(`${url_}/cargos/estatus/${this.value}`, {
 						headers: { 'X-CSRF-TOKEN': token_ },
 						method: 'post',
 						body: form_data,

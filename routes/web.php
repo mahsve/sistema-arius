@@ -32,21 +32,27 @@ Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(func
 	Route::get('/consultar_clientes', 'consultar_clientes');
 });
 
-// Controlador [Maestros].
+// Controlador [Clientes].
 Route::controller(App\Http\Controllers\ClienteControlador::class)->group(function () {
 	Route::get('/clientes', 'index')->name('clientes.index');								// Mostrar el listado.
 	Route::get('/clientes/registrar', 'create')->name('clientes.create');		// Mostrar formulario para nuevo registro.
 	Route::post('/clientes', 'store')->name('clientes.store');							// Enviar los datos al controlador para nuevo registro.
 	Route::get('/clientes/modificar/{id}', 'edit')->name('clientes.edit');	// Mostrar formulario para modificar registro.
 	Route::put('/clientes/{id}', 'update')->name('clientes.update');				// Enviar los datos al controlador para modificar registro.
-	Route::put('/clientes/estatus/{id}', 'toggle')->name('clientes.status');			// Enviar los datos al controlador para modificar registro.
+	Route::put('/clientes/estatus/{id}', 'toggle')->name('clientes.status');// 
 	// Route::get('/clientes/{id}', 'show')->name('clientes.show');					// Mostrar información sin modificar.
 	// Route::delete('/clientes/{id}', 'delete')->name('clientes.delete');	// Enviar los datos al controlador para eliminar registro.
 });
 
+// Controlador [Cargos]
 Route::resource('/cargos', App\Http\Controllers\CargoControlador::class);
-Route::get('/cargos/estatus/{id}', [App\Http\Controllers\CargoControlador::class, 'estatus']);
+Route::put('/cargos/estatus/{id}', [App\Http\Controllers\CargoControlador::class, 'toggle'])->name('cargos.status');
 
+// Controlador [Departamentos]
 Route::resource('/departamentos', App\Http\Controllers\DepartamentoControlador::class);
+Route::put('/departamentos/estatus/{id}', [App\Http\Controllers\DepartamentoControlador::class, 'toggle'])->name('departamentos.status');
+
+// Controlador [Personal]
 Route::resource('/personal', App\Http\Controllers\PersonalControlador::class);
+
 Route::resource('/roles', App\Http\Controllers\RolControlador::class);
