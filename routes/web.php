@@ -20,6 +20,7 @@ Route::controller(App\Http\Controllers\SesionControlador::class)->group(function
 	Route::get('/cerrar_sesion', 'cerrar_sesion')->name('cerrar_sesion');
 });
 
+// Controlador [Dashboard]
 Route::get('/', App\Http\Controllers\PanelControlador::class);
 
 // Controlador [Mapa de zona]
@@ -30,6 +31,7 @@ Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(func
 	Route::get('/mapas_de_zonas/modificar/{id}', 'edit')->name('mapas_de_zonas.edit');
 	Route::patch('/mapas_de_zonas', 'update')->name('mapas_de_zonas.update');
 	Route::get('/consultar_clientes', 'consultar_clientes');
+	Route::get('/mapas_de_zonas/consultar_codigo/{id}', 'consultar_codigo');
 });
 
 // Controlador [Clientes].
@@ -54,5 +56,7 @@ Route::put('/departamentos/estatus/{id}', [App\Http\Controllers\DepartamentoCont
 
 // Controlador [Personal]
 Route::resource('/personal', App\Http\Controllers\PersonalControlador::class);
+Route::get('/personal/consultar_cargos/{id}', [App\Http\Controllers\PersonalControlador::class, 'consultar_cargos']);
+Route::put('/personal/estatus/{id}', [App\Http\Controllers\PersonalControlador::class, 'toggle'])->name('personal.status');
 
 Route::resource('/roles', App\Http\Controllers\RolControlador::class);

@@ -63,6 +63,41 @@ textarea.form-control {
 	-webkit-animation: 0.75s linear infinite spinner-border;
 }
 
+.form-group.loading {
+	position: relative;
+}
+
+.form-group.loading::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: -1px;
+	margin: 0 4px;
+	background: rgba(255, 255, 255, .8);
+	border: 1px solid #dee2e6;
+	border-radius: 4px;
+	height: 34px;
+	width: calc(100% - 8px);
+}
+
+.form-group.loading::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 4px;
+	margin: auto;
+	width: 1.5rem;
+	height: 1.5rem;
+	vertical-align: -0.125em;
+	border: 0.2rem solid var(--bs-primary);
+	border-right-color: rgba(0, 0, 0, 0);
+	border-radius: 50%;
+	animation: 0.75s linear infinite spinner-border;
+	-webkit-animation: 0.75s linear infinite spinner-border;
+}
+
 .btn.loading {
 	color: transparent !important;
 	position: relative;

@@ -61,6 +61,9 @@
 
 				<tbody>
 					@foreach ($clientes as $index => $cliente)
+					@php
+					$idrand = rand(100000,999999);
+					@endphp
 					<tr>
 						<td class="py-1 px-2">{{$tipos_identificaciones[$cliente->tipo_identificacion]}}</td>
 						<td class="py-1 px-2">{{$cliente->identificacion}}</td>
@@ -68,7 +71,7 @@
 						<td class="py-1 px-2">{{$cliente->telefono1}}</td>
 						<td class="py-1 px-2">{{$cliente->correo_electronico}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($cliente->created))}}</td>
-						<td class="py-1 px-2 text-center">
+						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
 							@if ($cliente->estatus == "A")
 								<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
 							@else
@@ -77,7 +80,7 @@
 						</td>
 						<td class="py-1 px-2 text-center">
 							<div class="form-check form-switch form-check-inline m-0">
-								<input type="checkbox" class="form-check-input mx-auto switch_estatus" role="switch" id="switch_estatus{{rand(100000,999999)}}" value="{{$cliente->identificacion}}" <?= $cliente->estatus == "A" ? "checked" : "" ?>>
+								<input type="checkbox" class="form-check-input mx-auto switch_estatus" role="switch" id="switch_estatus{{$idrand}}" data-id="{{$idrand}}" value="{{$cliente->identificacion}}" <?= $cliente->estatus == "A" ? "checked" : "" ?>>
 							</div>
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">

@@ -98,6 +98,7 @@
 			</div>
 
 			<div class="text-end">
+				<button type="reset" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Limpiar</button>
 				<button type="submit" class="btn btn-primary" id="btn_guardar"><i class="fas fa-save me-2"></i>Guardar</button>
 			</div>
 		</form>

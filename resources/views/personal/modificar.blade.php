@@ -2,70 +2,135 @@
 
 @section('title', 'Modificar personal - ' . env('TITLE'))
 
+@php
+// Separar la identificación en tipo y el número.
+$identificacion_ = explode('-', $personal->cedula);
+$tipo_identificacion_ = $identificacion_[0];
+$identificacion_ = $identificacion_[1];
+
+// Separar el teléfono 1 en prefijo y número.
+$telefono1_ = explode(' ', $personal->telefono1);
+$prefijo_telefono1_ = substr($telefono1_[0], 1, 3);
+$telefono1_ = $telefono1_[1];
+
+// Separar el teléfono 2 en prefijo y número.
+$telefono2_	= "";
+$prefijo_telefono2_ = "";
+if ($personal->telefono2 != null and $personal->telefono2 != 'null') {
+	$telefono2_ = explode(' ', $personal->telefono2);
+	$prefijo_telefono2_ = substr($telefono2_[0], 1, 3);
+	$telefono2_ = $telefono2_[1];
+}
+@endphp
+
 @section('scripts')
+<script id="contenedor_script_variables">
+	const url_ = '{{url('/')}}';
+	const token_ = '{{csrf_token()}}';
+
+	// Una vez cargado en las constantes, se elimina la etiqueta script por temas de seguridad.
+	document.getElementById('contenedor_script_variables').remove();
+</script>
+<script src="{{url('js/app/personal/modificar.js')}}"></script>
 @endsection
 
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0">Modificar personal</h4>
+			<h4 class="card-title text-uppercase m-0"><i class="fas fa-folder-open"></i> Modificar personal</h4>
 		</div>
 		<div class="col-6 text-end">
-			<a href="{{route('personal.index')}}" class="btn btn-primary btn-sm "><i data-feather="chevron-left"></i> Regresar</a>
+		<a href="{{route('personal.index')}}" class="btn btn-primary btn-sm "><i class="fas fa-chevron-left me-2"></i>Regresar</a>
 		</div>
 	</div>
 </div>
 
 <div class="card mb-4">
 	<div class="card-body">
-		<form class="forms-sample" name="form-register" id="form-register" method="POST" action="{{route('personal.update', ['personal' => $personal->cedula])}}">
+		<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('personal.update', ['personal' => $personal->cedula])}}">
 			@csrf
 			@method('PATCH')
-
 			<div class="form-row">
-				<div class="form-group col-3">
-					<label for="cedula">Cédula <span class="required">*</span></label>
-					<input type="text" class="form-control" name="cedula" id="cedula" placeholder="Ingrese la cédula" value="{{$personal->cedula}}" required>
+				<div class="form-group col-12 col-lg-2">
+					<label for="c_identificacion" class="required"><i class="fas fa-id-badge"></i> Cédula</label>
+					<div class="input-group">
+						<input type="text" class="form-control text-center" value="{{$tipo_identificacion_}}"  style="height: 33px;" readonly>
+						<input type="text" class="form-control text-uppercase" value="{{$identificacion_}}" style="width: calc(100% - 65px); height: 33px;" readonly>
+					</div>
 				</div>
-				<div class="form-group col-3">
-					<label for="firstname">Nombres <span class="required">*</span></label>
-					<input type="text" class="form-control" name="firstname" id="firstname" placeholder="Ingrese los nombres" value="{{$personal->nombres}}" required>
+				<div class="form-group col-12 col-lg-4">
+					<label for="c_nombre_completo" class="required"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
+					<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" value="{{$personal->nombre_completo}}" placeholder="Ingrese el nombre completo">
 				</div>
-				<div class="form-group col-3">
-					<label for="lastname">Apellidos <span class="required">*</span></label>
-					<input type="text" class="form-control" name="lastname" id="lastname" placeholder="Ingrese los apellidos" value="{{$personal->apellidos}}" required>
+				<div class="form-group col-6 col-lg-3">
+					<label for="c_telefono1" class="required"><i class="fas fa-phone-alt"></i> Teléfono 1</label>
+					<div class="input-group">
+						<select class="form-control text-center" name="c_prefijo_telefono1" id="c_prefijo_telefono1" style="height: 31px; margin-top: 1px;">
+							<option value="">COD.</option>
+							@foreach ($lista_prefijos as $index => $prefijo)
+								<optgroup label="{{$index}}">
+									@foreach ($prefijo as $codigos)
+									<option value="{{$codigos}}" <?= $prefijo_telefono1_ == $codigos ? "selected" : "" ?>>{{$codigos}}</option>
+									@endforeach
+								</optgroup>
+							@endforeach
+						</select>
+						<input type="text" class="form-control text-uppercase" name="c_telefono1" id="c_telefono1" value="{{$telefono1_}}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
+					</div>
 				</div>
-
-				<div class="form-group col-3">
-					<label for="phone1">Teléfono 1 <span class="required">*</span></label>
-					<input type="text" class="form-control" name="phone1" id="phone1" placeholder="Ingrese el teléfono del cliente" value="{{$personal->telefono1}}" required>
+				<div class="form-group col-6 col-lg-3">
+					<label for="c_telefono2"><i class="fas fa-phone-alt"></i> Teléfono 2</label>
+					<div class="input-group">
+						<select class="form-control text-center" name="c_prefijo_telefono2" id="c_prefijo_telefono2" style="height:31px; margin-top: 1px;">
+							<option value="">COD.</option>
+							@foreach ($lista_prefijos as $index => $prefijo)
+								<optgroup label="{{$index}}">
+									@foreach ($prefijo as $codigos)
+									<option value="{{$codigos}}" <?= $prefijo_telefono2_ == $codigos ? "selected" : "" ?>>{{$codigos}}</option>
+									@endforeach
+								</optgroup>
+							@endforeach
+						</select>
+						<input type="text" class="form-control text-uppercase" name="c_telefono2" id="c_telefono2" value="{{$telefono2_}}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
+					</div>
 				</div>
-				<div class="form-group col-3">
-					<label for="phone2">Teléfono 2</label>
-					<input type="text" class="form-control" name="phone2" id="phone2" placeholder="Ingrese el teléfono del cliente" value="{{$personal->telefono2}}">
+				<div class="form-group col-12 col-lg-6">
+					<label for="c_correo_electronico" class="required"><i class="fas fa-envelope"></i> Correo electrónico</label>
+					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" value="{{$personal->correo_electronico}}" placeholder="Ingrese el correo electrónico">
 				</div>
-				<div class="form-group col-6">
-					<label for="email">Correo electrónico <span class="required">*</span></label>
-					<input type="email" class="form-control" name="email" id="email" placeholder="Ingrese el correo electrónico" value="{{$personal->correo}}" required>
-				</div>
-				<div class="form-group col-3">
-					<label for="id_position">Cargo <span class="required">*</span></label>
-					<select class="form-control" name="id_position" id="id_position" required>
-						<option value="0">Seleccione una opción</option>
-						@foreach ($positions as $cargo)
-						<option value="{{$cargo->id_cargo}}" {{$cargo->id_cargo == $personal->id_cargo ? "selected" : ""}}>{{$cargo->cargo}}</option>
+				<div class="form-group col-6 col-lg-3">
+					<label for="c_departamento" class="required"><i class="fas fa-hotel"></i> Departamento</label>
+					<select class="form-control text-uppercase" name="c_departamento" id="c_departamento" required>
+						<option value="">Seleccione una opción</option>
+						@foreach ($departamentos as $departamento)
+						<option value="{{$departamento->iddepartamento}}" <?= $departamento->iddepartamento == $cargo_->iddepartamento ? "selected" : "" ?>>{{$departamento->departamento}}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="form-group col-12">
-					<label for="address">Dirección <span class="required">*</span></label>
-					<textarea class="form-control" name="address" id="address" placeholder="Ingrese la dirección del cliente" required style="height: initial;">{{$personal->direccion}}</textarea>
+				<div class="form-group col-6 col-lg-3">
+					<label for="c_cargo" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
+					<select class="form-control text-uppercase" name="c_cargo" id="c_cargo" required>
+						<option value="">Seleccione una opción</option>
+						@foreach ($cargos as $cargo)
+						<option value="{{$cargo->idcargo}}" <?= $cargo->idcargo == $personal->idcargo ? "selected" : "" ?>>{{$cargo->cargo}}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="col-12"></div>
+				<div class="form-group col-12 col-lg-6">
+					<label for="c_direccion" class="required"><i class="fas fa-map-marked-alt"></i> Dirección</label>
+					<textarea class="form-control text-uppercase" name="c_direccion" id="c_direccion" placeholder="Ingrese la dirección" rows="3">{{$personal->direccion}}</textarea>
+				</div>
+				<div class="form-group col-12 col-lg-6">
+					<label for="c_referencia"><i class="fas fa-sticky-note"></i> Punto de referencia</label>
+					<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3">{{$personal->puntoreferencia}}</textarea>
 				</div>
 			</div>
 
 			<div class="text-end">
-				<button type="submit" class="btn btn-primary"><i data-feather="save"></i> Guardar</button>
+				<button type="reset" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Limpiar</button>
+				<button type="submit" class="btn btn-primary" id="btn_guardar"><i class="fas fa-save me-2"></i>Guardar</button>
 			</div>
 		</form>
 	</div>

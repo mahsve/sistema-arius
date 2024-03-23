@@ -2,20 +2,33 @@
 	// Elementos HTML.
 	const tipo_contrato = document.getElementById("m_tipo_contrato");
 
+	const table_utabla_usuariosser = document.querySelector('#tabla_usuarios tbody');
+	const table_message = tabla_usuarios.innerHTML;
+	const btn_agregar_usuario = document.getElementById('btn_agregar_usuario');
+	
+	tipo_contrato.addEventListener('change', function () {
+		// Capturamos el elemento que provoco el evento.
+		const select_element = this;
+		// const id_data = button_element.getAttribute('data-id');
 
-	
-	const table_user = document.querySelector('#table-user tbody');
-	const table_message = table_user.innerHTML;
-	const btn_new_user = document.getElementById('btn-new-user');
-	
-	btn_new_user.addEventListener('click', (e) => {
+		// Realizamos la consulta AJAX.
+		select_element.parentElement.classList.add('loading');
+		fetch(`${url_}/mapas_de_zonas/consultar_codigo/${select_element.value}`, { method: 'get' }).then(response => response.json()).then((data) => {
+			select_element.parentElement.classList.remove('loading');
+
+			// Limpiamos el formulario y cargamos los datos consultados.
+			document.getElementById('m_codigo').value = data;
+		});
+	});
+
+	btn_agregar_usuario.addEventListener('click', (e) => {
 		e.preventDefault();
 	
 		// Si tiene el mensaje "Sin usuarios", eliminamos primero ese mensaje.
-		if (table_user.children.length > 0 && table_user.children[0].classList.contains('no-users')) table_user.innerHTML = '';
+		if (tabla_usuarios.children.length > 0 && tabla_usuarios.children[0].classList.contains('no-users')) tabla_usuarios.innerHTML = '';
 	
 		// Creamos una nueva fila y la agregamos a la tabla.
-		table_user.appendChild(createTrElementUser());
+		tabla_usuarios.appendChild(createTrElementUser());
 	});
 	
 	const createTrElementUser = () => {
@@ -29,7 +42,7 @@
 		// Definimos toda la estructura de la nueva fila.
 		tr_element.innerHTML = `
 			<input type="hidden" name="idcontact_[]" value="0">
-			<td class="py-2 px-2 text-end users-counter">${table_user.children.length + 1}</td>
+			<td class="py-2 px-2 text-end users-counter">${tabla_usuarios.children.length + 1}</td>
 			<td class="py-2 px-1"><input type="text" class="form-control border-0" name="fullname_[]" id="fullname_${tr_id_rand}" placeholder="Nombre completo"></td>
 			<td class="py-2 px-1"><input type="text" class="form-control border-0" name="cedula_[]" id="cedula_${tr_id_rand}" placeholder="Cédula"></td>
 			<td class="py-2 px-1"><input type="text" class="form-control border-0" name="password_[]" id="password_${tr_id_rand}" placeholder="Contraseña"></td>
@@ -56,7 +69,7 @@
 		Array.from(document.querySelectorAll('.users-counter')).forEach((element, index) => element.innerHTML = (index + 1));
 	
 		// En caso que quede vacío, cargamos un mensaje en la tabla "Sin usuarios".
-		if (table_user.children.length == 0) table_user.innerHTML = table_message;
+		if (tabla_usuarios.children.length == 0) tabla_usuarios.innerHTML = table_message;
 	};
 	
 	const table_zone = document.querySelector('#table-zone tbody');
@@ -111,25 +124,4 @@
 		// En caso que quede vacío, cargamos un mensaje en la tabla "Sin usuarios".
 		if (table_zone.children.length == 0) table_zone.innerHTML = table_message_zone;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	const kind_of_client = document.getElementById("kind_of_client");
-	const id_container = document.getElementById('id_container');
-	kind_of_client.addEventListener('change', () => {
-		if (kind_of_client.value == "N") {
-			id_container.children[0].innerHTML = 'Cédula <span class="required">*</span>';
-			id_container.children[1].setAttribute('placeholder', 'Ingrese la cédula');
-		} else {
-			id_container.children[0].innerHTML = 'RIF <span class="required">*</span>';
-			id_container.children[1].setAttribute('placeholder', 'Ingrese el RIF');
-		}
-	});
-
 })();

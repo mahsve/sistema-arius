@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\DB;
 
 class MapaDeZonaControlador extends Controller
 {
+	public $tipos_identificaciones = ["C" => "CÉDULA", "R" => "RIF"];
+	public $lista_contratos = [
+		"D"	=> "Domicilio",
+		"O"	=> "Oficina",
+	];
+
 	// Display a listing of the resource. 
 	public function index()
 	{
@@ -22,26 +28,39 @@ class MapaDeZonaControlador extends Controller
 		return view('mapa_de_zona.index', ['mapas_de_zonas' => $mapas_de_zonas]);
 	}
 
-	// Show the form for creating a new resource. 
-	public function create()
+	public function consultar_clientes()
 	{
-		return view('mapa_de_zona.registrar');
+		$clientes = Cliente::select('*')->get();
+		return json_encode($clientes);
+	}
+
+	// Show the form for creating a new resource. 
+	public function create($id)
+	{
+		$cliente = Cliente::find($id);
+		return view('mapa_de_zona.registrar', ['cliente' => $cliente, 'lista_contratos' => $this->lista_contratos, 'tipos_identificaciones' => $this->tipos_identificaciones]);
+	}
+
+	public function consultar_codigo(string $id)
+	{
+		$codigo = DB::table('tb_mapa_zonas')->select('idcodigo')->orderBy('desc')->first();
+		if (!$codigo) $codigo = '1001';
+		return json_encode($codigo);
 	}
 
 	// Store a newly created resource in storage
-	public function store(Request $request)
+	public function store(Request $request, string $id)
 	{
-		DB::transaction(function () use ($request) {
+		DB::transaction(function () use ($request, $id) {
 			$MapaDeZona = new MapaDeZona();
-			$MapaDeZona->id_codigo = $request->code_map;
-			$MapaDeZona->id_cliente = $request->identification;
+			$MapaDeZona->idcliente = $id;
+			$MapaDeZona->idcodigo = $request->code_map;
 			$MapaDeZona->direccion = $request->address;
 			$MapaDeZona->punto_referencia = $request->references;
 			$MapaDeZona->cedula_asesor = session('user')->cedula;
 			$MapaDeZona->observaciones = $request->observation;
 			$MapaDeZona->save();
 
-			/*
 			for ($var = 0; $var < count($request->cedula_); $var++) {
 				// Consultamos si ya existe el contacto registrado en la tabla de clientes.
 				if ($contact = Cliente::find($request->cedula_[$var])) {
@@ -65,7 +84,6 @@ class MapaDeZonaControlador extends Controller
 				$contact_dt->observacion = $request->note_[$var];
 				$contact_dt->save();
 			}
-			*/
 		});
 
 		return redirect()->route('mapa_de_zonaindex')->with('success', '¡Mapa de zona registrado exitosamente!');
@@ -145,17 +163,5 @@ class MapaDeZonaControlador extends Controller
 	// Remove the specified resource from storage. 
 	public function destroy(string $id)
 	{
-	}
-
-
-
-
-	public function search_client(string $type, string $id)
-	{
-		$client = Cliente::select('*')
-			->where('tipo_cliente', '=', $type)
-			->where('identificacion', '=', $id)
-			->first();
-		return json_encode($client);
 	}
 }

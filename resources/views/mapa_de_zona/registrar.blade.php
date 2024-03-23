@@ -61,7 +61,7 @@ if ($cliente->telefono2 != null and $cliente->telefono2 != 'null') {
 				</div>
 				<div class="form-group col-6 col-lg-2 mb-3">
 					<label for="m_codigo" class="required">Código</label>
-					<input type="text" class="form-control text-uppercase text-end" name="m_codigo" id="m_codigo" placeholder="AUTOMATICO" readonly>
+					<input type="text" class="form-control text-uppercase text-end" name="m_codigo" id="m_codigo" placeholder="AUTOMATICO">
 				</div>
 			</div>
 
@@ -119,7 +119,7 @@ if ($cliente->telefono2 != null and $cliente->telefono2 != 'null') {
 			</div>
 
 			<div class="table-responsive border rounded mb-4">
-				<table id="table-user" class="table table-hover m-0">
+				<table id="tabla_usuarios" class="table table-hover m-0">
 					<thead>
 						<tr>
 							<th class="px-2 text-center" width="36px">N°</th>

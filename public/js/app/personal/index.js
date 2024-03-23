@@ -11,7 +11,7 @@
 
 			// Pedimos confirmar que desea desactivar este registro.
 			Swal.fire({
-				title: '¿Seguro que quieres cambiar el estatus de este cliente?',
+				title: '¿Seguro que quieres cambiar el estatus de esta persona?',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonText: 'Cambiar',
@@ -24,7 +24,7 @@
 					form_check.classList.add('loading');
 
 					// Realizamos la consulta AJAX.
-					fetch(`${url_}/clientes/estatus/${switch_element.value}`, {
+					fetch(`${url_}/personal/estatus/${this.value}`, {
 						headers: { 'X-CSRF-TOKEN': token_ },
 						method: 'post',
 						body: form_data,
@@ -39,9 +39,9 @@
 
 						// Enviamos mensaje de exito al usuario.
 						Toast.fire({ icon: "success", title: "Estatus actualizado exitosamente" });
-						switch_element.checked = !switch_element.checked;
-						const idrand = switch_element.getAttribute('data-id');
-						if (switch_element.checked) {
+						this.checked = !this.checked;
+						const idrand = this.getAttribute('data-id');
+						if (this.checked) {
 							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>`;
 						} else {
 							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>`;

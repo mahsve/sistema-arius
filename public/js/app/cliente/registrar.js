@@ -5,7 +5,7 @@
 	const btn_guardar = document.getElementById("btn_guardar");
 
 	// Mascaras.
-	const identificacionMask = IMask(document.getElementById('c_identificacion'), { mask: '00000000' });
+	var identificacionMask = IMask(document.getElementById('c_identificacion'), { mask: '00000000' });
 	const telefono1Mask = IMask(document.getElementById('c_telefono1'), { mask: '000-0000' });
 	const telefono2Mask = IMask(document.getElementById('c_telefono2'), { mask: '000-0000' });
 
@@ -15,14 +15,17 @@
 		const input_ = document.querySelector('#contenedor_identificacion input');
 		const selec_ = document.querySelector('#contenedor_identificacion select');
 		selec_.innerHTML = '';
+		identificacionMask.destroy();
 		if (this.value == "C") {
 			label_.innerHTML = '<i class="fas fa-id-badge"></i> Cédula';
 			input_.setAttribute("placeholder", "Ingrese la cédula");
 			lista_cedula.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
+			identificacionMask = IMask(document.getElementById('c_identificacion'), { mask: '00000000' });
 		} else if (this.value == "R") {
 			label_.innerHTML = '<i class="fas fa-id-badge"></i> RIF';
 			input_.setAttribute("placeholder", "Ingrese el RIF");
 			lista_rif.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
+			identificacionMask = IMask(document.getElementById('c_identificacion'), { mask: '00000000-0' });
 		}
 	});
 

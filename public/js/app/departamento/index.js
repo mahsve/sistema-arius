@@ -129,7 +129,7 @@
 					form_check.classList.add('loading');
 
 					// Realizamos la consulta AJAX.
-					fetch(`${url_}/departamentos/estatus/${this.value}`, {
+					fetch(`${url_}/departamentos/estatus/${switch_element.value}`, {
 						headers: { 'X-CSRF-TOKEN': token_ },
 						method: 'post',
 						body: form_data,
@@ -144,9 +144,9 @@
 
 						// Enviamos mensaje de exito al usuario.
 						Toast.fire({ icon: "success", title: "Estatus actualizado exitosamente" });
-						this.checked = !this.checked;
-						const idrand = this.getAttribute('data-id');
-						if (this.checked) {
+						switch_element.checked = !switch_element.checked;
+						const idrand = switch_element.getAttribute('data-id');
+						if (switch_element.checked) {
 							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>`;
 						} else {
 							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>`;
