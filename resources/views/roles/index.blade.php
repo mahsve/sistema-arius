@@ -8,42 +8,20 @@
 
 @section('scripts')
 <script src="{{url('js/datatable/datatables.min.js')}}"></script>
-<script>
-	setTimeout(() => {
-		let table = new DataTable('#data-table', {
-			language: {
-				url: '{{url("js/datatable/datatable-languaje-ES.json")}}',
-			},
-		});
-	}, 500);
-</script>
+<script src="{{url('js/datatable/configuracion.js')}}"></script>
 @endsection
 
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0">Personal</h4>
+			<h4 class="card-title text-uppercase m-0">Roles</h4>
 		</div>
 		<div class="col-6 text-end">
 			<a href="{{route('personal.create')}}" class="btn btn-primary btn-sm "><i data-feather="plus"></i> Agregar</a>
 		</div>
 	</div>
 </div>
-
-@if (session('success'))
-<div class="alert alert-success alert-dismissible fade show" role="alert">
-	<i data-feather="check"></i> {{session('success')}}
-	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
-
-@if (session('error'))
-<div class="alert alert-danger alert-dismissible fade show" role="alert">
-	<i data-feather="x"></i> {{session('error')}}
-	<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-@endif
 
 <div class="card mb-4">
 	<div class="card-body">

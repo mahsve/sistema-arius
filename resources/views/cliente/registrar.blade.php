@@ -3,14 +3,9 @@
 @section('title', 'Registrar cliente - ' . env('TITLE'))
 
 @section('scripts')
-<script id="contenedor_script_variables">
-	const url_ = '{{url('/')}}';
-	const token_ = '{{csrf_token()}}';
+<script>
 	const lista_cedula = <?= json_encode($lista_cedula) ?>;
 	const lista_rif = <?= json_encode($lista_rif) ?>;
-
-	// Una vez cargado en las constantes, se elimina la etiqueta script por temas de seguridad.
-	document.getElementById('contenedor_script_variables').remove();
 </script>
 <script src="{{url('js/app/cliente/registrar.js')}}"></script>
 @endsection

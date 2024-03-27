@@ -8,24 +8,7 @@
 
 @section('scripts')
 <script src="{{url('js/datatable/datatables.min.js')}}"></script>
-<script>
-	const table = new DataTable('#data-table', {
-		language: {
-			url: '{{url("js/datatable/datatable-languaje-ES.json")}}',
-		},
-	});
-	table.on('draw.dt', function () {
-		let elemento1 = document.querySelector('table#data-table').parentElement;
-		elemento1.classList.add("table-responsive","p-0","mb-3");
-	});
-</script>
-<script id="contenedor_script_variables">
-	const url_ = '{{url('/')}}';
-	const token_ = '{{csrf_token()}}';
-
-	// Una vez cargado en las constantes, se elimina la etiqueta script por temas de seguridad.
-	document.getElementById('contenedor_script_variables').remove();
-</script>
+<script src="{{url('js/datatable/configuracion.js')}}"></script>
 <script src="{{url('js/app/departamento/index.js')}}"></script>
 @endsection
 

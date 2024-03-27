@@ -14795,11 +14795,12 @@ code {
 .btn.btn-icons,
 .ajax-upload-dragdrop .btn-icons.ajax-file-upload,
 .swal2-modal .swal2-buttonswrapper .btn-icons.swal2-styled {
-	width: 40px;
-	height: 40px;
-	padding: 10px;
-	text-align: center;
-	vertical-align: middle;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30px;
+	height: 30px;
+	padding: 0px;
 }
 
 .btn.btn-icons.todo-list-add-btn,
@@ -19796,14 +19797,6 @@ dl li {
 .add-items .swal2-modal .swal2-buttonswrapper .swal2-styled,
 .swal2-modal .swal2-buttonswrapper .add-items .swal2-styled {
 	margin-left: .5rem;
-}
-
-.add-items .btn i,
-.add-items .ajax-upload-dragdrop .ajax-file-upload i,
-.ajax-upload-dragdrop .add-items .ajax-file-upload i,
-.add-items .swal2-modal .swal2-buttonswrapper .swal2-styled i,
-.swal2-modal .swal2-buttonswrapper .add-items .swal2-styled i {
-	font-size: 1.25rem;
 }
 
 .todo-list-rounded .form-check .form-check-label input:checked+.input-helper:before {

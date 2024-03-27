@@ -3,13 +3,6 @@
 @section('title', 'Registrar mapa de zona - ' . env('TITLE'))
 
 @section('scripts')
-<script id="contenedor_script_variables">
-	const url_ = '{{url('/')}}';
-	const token_ = '{{csrf_token()}}';
-
-	// Una vez cargado en las constantes, se elimina la etiqueta script por temas de seguridad.
-	document.getElementById('contenedor_script_variables').remove();
-</script>
 <script src="{{url('js/app/mapa_de_zona/registrar.js')}}"></script>
 @endsection
 

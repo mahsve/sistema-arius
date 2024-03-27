@@ -8,25 +8,8 @@
 
 @section('scripts')
 <script src="{{url('js/datatable/datatables.min.js')}}"></script>
-<script id="contenedor_script_variables">
-	const url_ = '{{url('/')}}';
-	const token_ = '{{csrf_token()}}';
-
-	// Una vez cargado en las constantes, se elimina la etiqueta script por temas de seguridad.
-	document.getElementById('contenedor_script_variables').remove();
-</script>
+<script src="{{url('js/datatable/configuracion.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/index.js')}}"></script>
-<script>
-	const table = new DataTable('#data-table', {
-		language: {
-			url: '{{url("js/datatable/datatable-languaje-ES.json")}}',
-		},
-	});
-	table.on('draw.dt', function () {
-		let elemento1 = document.querySelector('table#data-table').parentElement;
-		elemento1.classList.add("table-responsive","p-0","mb-3");
-	});
-</script>
 @endsection
 
 @section('content')
@@ -36,7 +19,7 @@
 			<h4 class="card-title text-uppercase m-0"><i class="fas fa-map-marked-alt"></i> Mapas de zonas</h4>
 		</div>
 		<div class="col-6 text-end">
-			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_mapa"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
+			<a href="{{route('mapas_de_zonas.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-folder-plus me-2"></i>Agregar</a>
 		</div>
 	</div>
 </div>
@@ -86,31 +69,4 @@
 		</div>
 	</div>
 </div>
-
-<div class="modal fade" id="modal_clientes" tabindex="-1" aria-labelledby="modal_clientes_label" aria-hidden="true">
-	<div class="modal-dialog modal-lg">
-		<div class="modal-content">
-			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title fs-5" id="modal_clientes_label">Seleccione un cliente</h1>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body py-3">
-				<div class="table-responsive">
-					<table id="tabla_clientes" class="table table-hover m-0">
-						<thead>
-							<tr>
-								<th class="px-2" width="70px">Identificación</th>
-								<th class="px-2">Cliente</th>
-								<th class="px-2 text-center"><i class="fas fa-cogs"></i></th>
-							</tr>
-						</thead>
-						<tbody></tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<?php // {{route('mapas_de_zonas.create')}} ?>
 @endsection

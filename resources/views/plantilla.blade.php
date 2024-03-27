@@ -12,7 +12,8 @@
 	<link rel="stylesheet" href="{{url('vendors/css/vendor.bundle.base.css')}}">
 	<!-- Libraries and plugings CSS -->
 	<link rel="stylesheet" href="{{url('libraries/fontawesome/css/all.min.css')}}">
-	<link rel="stylesheet" href="{{url('libraries/sweetalert2/dist/sweetalert2.min.css')}}"></script>
+	<link rel="stylesheet" href="{{url('libraries/sweetalert2/dist/sweetalert2.min.css')}}">
+	</script>
 	@yield('styles')
 	<!-- Dashboard CSS -->
 	<link rel="stylesheet" href="{{url('css/app/style.css')}}">
@@ -56,6 +57,11 @@
 	<script src="{{url('js/hoverable-collapse.js')}}"></script>
 	<script src="{{url('js/template.js')}}"></script>
 	<script src="{{url('js/todolist.js')}}"></script> -->
+	<script id="contenedor_script_variables">
+		const url_ = '{{url("/")}}';
+		const token_ = '{{csrf_token()}}';
+		document.getElementById('contenedor_script_variables').remove();
+	</script>
 	<!-- Libraries and plugings JS -->
 	@yield('scripts')
 	<script>

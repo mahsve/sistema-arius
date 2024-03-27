@@ -24,13 +24,6 @@ if ($personal->telefono2 != null and $personal->telefono2 != 'null') {
 @endphp
 
 @section('scripts')
-<script id="contenedor_script_variables">
-	const url_ = '{{url('/')}}';
-	const token_ = '{{csrf_token()}}';
-
-	// Una vez cargado en las constantes, se elimina la etiqueta script por temas de seguridad.
-	document.getElementById('contenedor_script_variables').remove();
-</script>
 <script src="{{url('js/app/personal/modificar.js')}}"></script>
 @endsection
 
