@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Controlador [Sesión]
+// Controlador [Sesión].
 Route::controller(App\Http\Controllers\SesionControlador::class)->group(function () {
 	Route::get('/iniciar_sesion', 'formulario_iniciar_sesion')->name('iniciar_sesion');
 	Route::post('/iniciar_sesion', 'iniciar_sesion')->name('iniciar_sesion');
@@ -23,7 +23,7 @@ Route::controller(App\Http\Controllers\SesionControlador::class)->group(function
 // Controlador [Dashboard]
 Route::get('/', App\Http\Controllers\PanelControlador::class);
 
-// Controlador [Mapa de zona]
+// Controlador [Mapa de zona].
 Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(function () {
 	Route::get('/mapas_de_zonas', 'index')->name('mapas_de_zonas.index');
 	Route::get('/mapas_de_zonas/registrar', 'create')->name('mapas_de_zonas.create');
@@ -43,24 +43,25 @@ Route::controller(App\Http\Controllers\ClienteControlador::class)->group(functio
 	Route::get('/clientes/modificar/{id}', 'edit')->name('clientes.edit');	// Mostrar formulario para modificar registro.
 	Route::put('/clientes/{id}', 'update')->name('clientes.update');				// Enviar los datos al controlador para modificar registro.
 	Route::put('/clientes/estatus/{id}', 'toggle')->name('clientes.status');// 
-	// Route::get('/clientes/{id}', 'show')->name('clientes.show');					// Mostrar información sin modificar.
-	// Route::delete('/clientes/{id}', 'delete')->name('clientes.delete');	// Enviar los datos al controlador para eliminar registro.
 });
 
-// Controlador [Tarea]
+// Controlador [Tarea].
 Route::resource('/tareas', App\Http\Controllers\TareaControlador::class);
-// Controlador [Cargos]
+// Controlador [Cargos].
 Route::resource('/cargos', App\Http\Controllers\CargoControlador::class);
 Route::put('/cargos/estatus/{id}', [App\Http\Controllers\CargoControlador::class, 'toggle'])->name('cargos.status');
-// Controlador [Departamentos]
+// Controlador [Departamentos].
 Route::resource('/departamentos', App\Http\Controllers\DepartamentoControlador::class);
 Route::put('/departamentos/estatus/{id}', [App\Http\Controllers\DepartamentoControlador::class, 'toggle'])->name('departamentos.status');
-// Controlador [Personal]
+// Controlador [Personal].
 Route::resource('/personal', App\Http\Controllers\PersonalControlador::class);
 Route::get('/personal/consultar_cargos/{id}', [App\Http\Controllers\PersonalControlador::class, 'consultar_cargos']);
 Route::put('/personal/estatus/{id}', [App\Http\Controllers\PersonalControlador::class, 'toggle'])->name('personal.status');
-// Controlador [Roles]
+// Controlador [Roles].
 Route::resource('/roles', App\Http\Controllers\RolControlador::class);
-// Controlador [Dispositivos de zonas]
+// Controlador [Dispositivos de zonas].
 Route::resource('/dispositivos', App\Http\Controllers\DispositivoControlador::class);
 Route::put('/dispositivos/estatus/{id}', [App\Http\Controllers\DispositivoControlador::class, 'toggle'])->name('dispositivos.status');
+// Controlador [Configuración dispositivos de zonas].
+Route::resource('/dispositivo_cog', App\Http\Controllers\ConfiguracionDisControlador::class);
+Route::put('/dispositivo_cog/estatus/{id}', [App\Http\Controllers\ConfiguracionDisControlador::class, 'toggle'])->name('dispositivo_cog.status');

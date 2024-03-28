@@ -45,6 +45,7 @@
 					<li class="nav-item"> <a class="nav-link" href="{{route('cargos.index')}}">Cargos</a></li>
 					<li class="nav-item"> <a class="nav-link" href="{{route('personal.index')}}">Personal</a></li>
 					<li class="nav-item"> <a class="nav-link" href="{{route('dispositivos.index')}}">Dispositivos</a></li>
+					<li class="nav-item"> <a class="nav-link" href="{{route('dispositivo_cog.index')}}">Configuración Disp.</a></li>
 				</ul>
 			</div>
 		</li>
