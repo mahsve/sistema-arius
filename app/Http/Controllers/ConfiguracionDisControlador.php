@@ -51,7 +51,7 @@ class ConfiguracionDisControlador extends Controller
 		$configuracion = new ConfiguracionDis();
 		$configuracion->configuracion = mb_convert_case($request->c_configuracion, MB_CASE_UPPER); // Transformamos a mayuscula.
 		$configuracion->iddispositivo = $request->c_dispositivo;
-		$configuracion->descripcion = '';
+		$configuracion->descripcion = $request->c_descripcion;
 		$configuracion->save();
 		
 		return json_encode(["status" => "success", "response" => ["message" => "Configuración registrada exitosamente"]]);
@@ -96,7 +96,7 @@ class ConfiguracionDisControlador extends Controller
 		$configuracion = ConfiguracionDis::find($id);
 		$configuracion->configuracion = mb_convert_case($request->c_configuracion, MB_CASE_UPPER);
 		$configuracion->iddispositivo = $request->c_dispositivo;
-		$configuracion->descripcion = '';
+		$configuracion->descripcion = $request->c_descripcion;
 		$configuracion->save();
 		
 		return json_encode(["status" => "success", "response" => ["message" => "Configuración modificada exitosamente"]]);

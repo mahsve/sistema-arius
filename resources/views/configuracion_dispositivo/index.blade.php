@@ -84,7 +84,7 @@
 			<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('dispositivo_cog.store')}}">
 					@csrf
 					<div class="form-group">
-						<label for="c_dispositivo_r"><i class="fas fa-video"></i> Dispositivo</label>
+						<label for="c_dispositivo_r" class="required"><i class="fas fa-video"></i> Dispositivo</label>
 						<select class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_r" required>
 							<option value="">Seleccione el dispositivo</option>
 							@foreach ($dispositivos as $dispositivo)
@@ -93,8 +93,12 @@
 						</select>
 					</div>
 					<div class="form-group mb-3">
-						<label for="c_configuracion_r"><i class="fas fa-laptop-code"></i> Configuración</label>
+						<label for="c_configuracion_r" class="required"><i class="fas fa-laptop-code"></i> Configuración</label>
 						<input type="text" class="form-control text-uppercase" name="c_configuracion" id="c_configuracion_r" placeholder="Ingrese el nombre del configuración" minlength="3" required>
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_descripcion_r"><i class="fas fa-sticky-note"></i> Descripción</label>
+						<textarea class="form-control text-uppercase" name="c_descripcion" id="c_descripcion_r" placeholder="Ingrese la descripción del configuración (Opcional)" rows="3"></textarea>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -129,6 +133,10 @@
 					<div class="form-group">
 						<label for="c_configuracion_m"><i class="fas fa-laptop-code"></i> Configuración</label>
 						<input type="text" class="form-control text-uppercase" name="c_configuracion" id="c_configuracion_m" placeholder="Ingrese el nombre del configuración" minlength="3" required>
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_descripcion_m"><i class="fas fa-sticky-note"></i> Descripción</label>
+						<textarea class="form-control text-uppercase" name="c_descripcion" id="c_descripcion_m" placeholder="Ingrese la descripción del configuración (Opcional)" rows="3"></textarea>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

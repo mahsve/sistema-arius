@@ -116,57 +116,28 @@
 						<div class="d-flex justify-content-between align-items-center">
 							<h4 class="card-title card-title-dash">Lista de tareas</h4>
 							<div class="add-items d-flex mb-0">
-								<button class="btn btn-primary btn-icons todo-list-add-btn"><i class="fas fa-plus"></i></button>
+								<button class="btn btn-primary btn-icons todo-list-add-btn" id="btn_modal_tarea"><i class="fas fa-plus"></i></button>
 							</div>
 						</div>
 
 						<div class="list-wrapper">
 							<ul class="todo-list todo-list-rounded">
-								<li class="d-block">
-									<div class="form-check w-100">
-										<label class="form-check-label">
-											<input class="checkbox" type="checkbox"> Lorem Ipsum is simply dummy text of the printing <i class="input-helper rounded"></i>
-										</label>
-										<div class="d-flex mt-2">
-											<div class="ps-4 text-small me-3">24 June 2020</div>
-											<div class="badge badge-opacity-warning me-3">Due tomorrow</div>
-											<i class="mdi mdi-flag ms-2 flag-color"></i>
+								@if (count($tareas) > 0)
+									@foreach($tareas as $tarea)
+									<li class="d-block">
+										<div class="form-check w-100">
+											<label class="form-check-label">
+												<input class="checkbox" type="checkbox"> Lorem Ipsum is simply dummy text of the printing <i class="input-helper rounded"></i>
+											</label>
+											<div class="d-flex mt-2">
+												<div class="ps-4 text-small me-3">24 June 2020</div>
+												<div class="badge badge-opacity-warning me-3">Due tomorrow</div>
+												<i class="mdi mdi-flag ms-2 flag-color"></i>
+											</div>
 										</div>
-									</div>
-								</li>
-								<li class="d-block">
-									<div class="form-check w-100">
-										<label class="form-check-label">
-											<input class="checkbox" type="checkbox"> Lorem Ipsum is simply dummy text of the printing <i class="input-helper rounded"></i>
-										</label>
-										<div class="d-flex mt-2">
-											<div class="ps-4 text-small me-3">23 June 2020</div>
-											<div class="badge badge-opacity-success me-3">Done</div>
-										</div>
-									</div>
-								</li>
-								<li>
-									<div class="form-check w-100">
-										<label class="form-check-label">
-											<input class="checkbox" type="checkbox"> Lorem Ipsum is simply dummy text of the printing <i class="input-helper rounded"></i>
-										</label>
-										<div class="d-flex mt-2">
-											<div class="ps-4 text-small me-3">24 June 2020</div>
-											<div class="badge badge-opacity-success me-3">Done</div>
-										</div>
-									</div>
-								</li>
-								<li class="border-bottom-0">
-									<div class="form-check w-100">
-										<label class="form-check-label">
-											<input class="checkbox" type="checkbox"> Lorem Ipsum is simply dummy text of the printing <i class="input-helper rounded"></i>
-										</label>
-										<div class="d-flex mt-2">
-											<div class="ps-4 text-small me-3">24 June 2020</div>
-											<div class="badge badge-opacity-danger me-3">Expired</div>
-										</div>
-									</div>
-								</li>
+									</li>
+									@endforeach
+								@endif
 							</ul>
 						</div>
 					</div>

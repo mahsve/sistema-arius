@@ -117,6 +117,7 @@
 				formulario_actualizacion.setAttribute('action', `${url_}/dispositivo_cog/${id_data}`);
 				document.getElementById('c_configuracion_m').value = data.configuracion;
 				document.getElementById('c_dispositivo_m').value = data.iddispositivo;
+				document.getElementById('c_descripcion_m').value = data.descripcion;
 				modal_modificar.show();
 			});
 		});

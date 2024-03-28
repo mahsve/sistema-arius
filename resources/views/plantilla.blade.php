@@ -48,15 +48,53 @@
 		</div>
 	</div>
 
+	<!-- REGISTRAR TAREA -->
+	<div class="modal fade" id="modal_tarea" tabindex="-1" aria-labelledby="modal_tarea_label" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header border-0 pb-0">
+					<h1 class="modal-title text-uppercase fs-5" id="modal_tarea_label"><i class="fas fa-tasks"></i> Nueva tarea</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body py-3">
+					<form class="forms-sample" name="formulario_registrar_tarea" id="formulario_registrar_tarea" method="POST" action="{{route('tareas.store')}}">
+						@csrf
+						<div class="form-group mb-2">
+							<label for="c_titulo_r" class="required"><i class="fas fa-heading"></i> Titulo</label>
+							<input type="text" class="form-control text-uppercase" name="c_titulo_r" id="c_titulo_r" placeholder="Ingrese el titulo de la tarea" minlength="3" required>
+						</div>
+						<div class="form-group mb-2">
+							<label for="c_fecha_r"><i class="fas fa-calendar-day"></i> Fecha tope</label>
+							<input type="date" class="form-control text-uppercase" name="c_fecha" id="c_fecha_r">
+						</div>
+						<div class="form-group">
+							<label for="c_descripcion_r" class="required"><i class="fas fa-sticky-note"></i> Descripción</label>
+							<textarea class="form-control text-uppercase" name="c_descripcion" id="c_descripcion_r" placeholder="Ingrese la descripción"></textarea>
+						</div>
+						<input type="hidden" name="id_usuario" value="{{session('usuario')->idusuario}}">
+						<div class="text-end">
+							<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+							<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar_tarea"><i class="fas fa-save me-2"></i>Guardar</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
 	<!-- Base JS -->
 	<script src="{{url('vendors/js/vendor.bundle.base.js')}}"></script>
 	<script src="{{url('vendors/imask/dist/imask.min.js')}}"></script>
 	<script src="{{url('libraries/sweetalert2/dist/sweetalert2.min.js')}}"></script>
+	<script src="{{url('js/app/tareas/gestion.js')}}"></script>
 	<!-- Default plugins JS -->
-	<!-- <script src="{{url('js/off-canvas.js')}}"></script>
-	<script src="{{url('js/hoverable-collapse.js')}}"></script>
-	<script src="{{url('js/template.js')}}"></script>
-	<script src="{{url('js/todolist.js')}}"></script> -->
+	<?php /*
+		<script src="{{url('js/off-canvas.js')}}"></script>
+		<script src="{{url('js/hoverable-collapse.js')}}"></script>
+		<script src="{{url('js/template.js')}}"></script>
+		<script src="{{url('js/todolist.js')}}"></script> */
+	?>
+
 	<script id="contenedor_script_variables">
 		const url_ = '{{url("/")}}';
 		const token_ = '{{csrf_token()}}';

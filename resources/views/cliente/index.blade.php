@@ -50,9 +50,9 @@
 					<tr>
 						<td class="py-1 px-2">{{$tipos_identificaciones[$cliente->tipo_identificacion]}}</td>
 						<td class="py-1 px-2">{{$cliente->identificacion}}</td>
-						<td class="py-1 px-2">{{$cliente->nombre_completo}}</td>
+						<td class="py-1 px-2">{{$cliente->nombre}}</td>
 						<td class="py-1 px-2">{{$cliente->telefono1}}</td>
-						<td class="py-1 px-2">{{$cliente->correo_electronico}}</td>
+						<td class="py-1 px-2">{{$cliente->correo}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($cliente->created))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
 							@if ($cliente->estatus == "A")

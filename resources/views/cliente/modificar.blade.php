@@ -62,7 +62,7 @@ if ($cliente->telefono2 != null and $cliente->telefono2 != 'null') {
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_nombre_completo" class="required"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
-					<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" value="{{$cliente->nombre_completo}}" placeholder="Ingrese el nombre completo">
+					<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" value="{{$cliente->nombre}}" placeholder="Ingrese el nombre completo">
 				</div>
 				<div class="form-group col-6 col-lg-3">
 					<label for="c_telefono1" class="required"><i class="fas fa-phone-alt"></i> Teléfono 1</label>
@@ -98,7 +98,7 @@ if ($cliente->telefono2 != null and $cliente->telefono2 != 'null') {
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_correo_electronico" class="required"><i class="fas fa-envelope"></i> Correo electrónico</label>
-					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" value="{{$cliente->correo_electronico}}" placeholder="Ingrese el correo electrónico">
+					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" value="{{$cliente->correo}}" placeholder="Ingrese el correo electrónico">
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_direccion" class="required"><i class="fas fa-map-marked-alt"></i> Dirección</label>
@@ -106,7 +106,7 @@ if ($cliente->telefono2 != null and $cliente->telefono2 != 'null') {
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_referencia"><i class="fas fa-sticky-note"></i> Punto de referencia</label>
-					<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3">{{$cliente->puntoreferencia}}</textarea>
+					<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3">{{$cliente->referencia}}</textarea>
 				</div>
 			</div>
 

@@ -37,6 +37,10 @@ textarea.form-control {
 	height: initial;
 }
 
+.form-check-input {
+	cursor: pointer;
+}
+
 .form-check.loading {
 	position: relative;
 }

@@ -159,12 +159,12 @@ class PersonalControlador extends Controller
 			DB::transaction(function () use ($request, $identificacion, $telefono1, $telefono2) {
 				$personal = new Personal();
 				$personal->cedula = $identificacion;
-				$personal->nombre_completo = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
+				$personal->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
 				$personal->telefono1 = $telefono1;
 				$personal->telefono2 = $telefono2;
-				$personal->correo_electronico = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
+				$personal->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
 				$personal->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
-				$personal->puntoreferencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
+				$personal->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
 				$personal->idcargo = $request->c_cargo;
 				$personal->save();
 	

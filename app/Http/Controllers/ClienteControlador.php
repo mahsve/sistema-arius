@@ -148,12 +148,12 @@ class ClienteControlador extends Controller
 		$cliente = new Cliente();
 		$cliente->identificacion = $identificacion;
 		$cliente->tipo_identificacion = $request->c_tipo_identificacion;
-		$cliente->nombre_completo = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
+		$cliente->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
 		$cliente->telefono1 = $telefono1;
 		$cliente->telefono2 = $telefono2;
-		$cliente->correo_electronico = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
+		$cliente->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
 		$cliente->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
-		$cliente->puntoreferencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
+		$cliente->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
 		$cliente->save();
 
 		return json_encode(["status" => "success", "response" => ["message" => "Cliente registrado exitosamente"]]);
@@ -205,12 +205,12 @@ class ClienteControlador extends Controller
 
 		// Consultamos y modificamos el registro del cliente.
 		$cliente = Cliente::find($id);
-		$cliente->nombre_completo = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
+		$cliente->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
 		$cliente->telefono1 = $telefono1;
 		$cliente->telefono2 = $telefono2;
-		$cliente->correo_electronico = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
+		$cliente->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
 		$cliente->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
-		$cliente->puntoreferencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
+		$cliente->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
 		$cliente->save();
 
 		return json_encode(["status" => "success", "response" => ["message" => "Cliente modificado exitosamente"]]);
