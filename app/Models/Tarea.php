@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Rol extends Model
+class Tarea extends Model
 {
 	use HasFactory;
 
 	const CREATED_AT = 'created';
 	const UPDATED_AT = 'updated';
 
-	protected $table = 'tb_departamentos';
-	protected $primaryKey = 'iddepartamento';
+	protected $table = 'tb_notas';
+	protected $primaryKey = 'idnota';
 }
