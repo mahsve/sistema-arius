@@ -26,12 +26,13 @@ Route::get('/', App\Http\Controllers\PanelControlador::class);
 // Controlador [Mapa de zona]
 Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(function () {
 	Route::get('/mapas_de_zonas', 'index')->name('mapas_de_zonas.index');
-	Route::get('/mapas_de_zonas/registrar/{id}', 'create')->name('mapas_de_zonas.create');
-	Route::post('/mapas_de_zonas/{id}', 'store')->name('mapas_de_zonas.store');
+	Route::get('/mapas_de_zonas/registrar', 'create')->name('mapas_de_zonas.create');
+	Route::get('/mapas_de_zonas/codigo/{id}', 'codigo')->name('mapas_de_zonas.code');
+	Route::get('/mapas_de_zonas/clientes/{string}', 'clientes')->name('mapas_de_zonas.client'); // Buscar clientes.
+	Route::get('/mapas_de_zonas/cliente/{id}', 'cliente')->name('mapas_de_zonas.selected'); // Consultar cliente seleccionado por ID.
+	Route::post('/mapas_de_zonas', 'store')->name('mapas_de_zonas.store');
 	Route::get('/mapas_de_zonas/modificar/{id}', 'edit')->name('mapas_de_zonas.edit');
 	Route::patch('/mapas_de_zonas', 'update')->name('mapas_de_zonas.update');
-	Route::get('/consultar_clientes', 'consultar_clientes');
-	Route::get('/mapas_de_zonas/consultar_codigo/{id}', 'consultar_codigo');
 });
 
 // Controlador [Clientes].
@@ -46,17 +47,20 @@ Route::controller(App\Http\Controllers\ClienteControlador::class)->group(functio
 	// Route::delete('/clientes/{id}', 'delete')->name('clientes.delete');	// Enviar los datos al controlador para eliminar registro.
 });
 
+// Controlador [Tarea]
+Route::resource('/tareas', App\Http\Controllers\TareaControlador::class);
 // Controlador [Cargos]
 Route::resource('/cargos', App\Http\Controllers\CargoControlador::class);
 Route::put('/cargos/estatus/{id}', [App\Http\Controllers\CargoControlador::class, 'toggle'])->name('cargos.status');
-
 // Controlador [Departamentos]
 Route::resource('/departamentos', App\Http\Controllers\DepartamentoControlador::class);
 Route::put('/departamentos/estatus/{id}', [App\Http\Controllers\DepartamentoControlador::class, 'toggle'])->name('departamentos.status');
-
 // Controlador [Personal]
 Route::resource('/personal', App\Http\Controllers\PersonalControlador::class);
 Route::get('/personal/consultar_cargos/{id}', [App\Http\Controllers\PersonalControlador::class, 'consultar_cargos']);
 Route::put('/personal/estatus/{id}', [App\Http\Controllers\PersonalControlador::class, 'toggle'])->name('personal.status');
-
+// Controlador [Roles]
 Route::resource('/roles', App\Http\Controllers\RolControlador::class);
+// Controlador [Dispositivos de zonas]
+Route::resource('/dispositivos', App\Http\Controllers\DispositivoControlador::class);
+Route::put('/dispositivos/estatus/{id}', [App\Http\Controllers\DispositivoControlador::class, 'toggle'])->name('dispositivos.status');
