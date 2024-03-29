@@ -110,7 +110,7 @@
 					@method('PATCH')
 					<div class="form-group">
 						<label for="c_departamento_m" class="required"><i class="fas fa-hotel"></i> Departamento</label>
-						<input type="text" class="form-control" name="c_departamento" id="c_departamento_m" placeholder="Ingrese el nombre del departamento" minlength="3" required>
+						<input type="text" class="form-control text-uppercase" name="c_departamento" id="c_departamento_m" placeholder="Ingrese el nombre del departamento" minlength="3" required>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

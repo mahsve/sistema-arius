@@ -33,7 +33,7 @@ class ConfiguracionDisControlador extends Controller
 			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el dispositivo"]]);
 		} else if ($request->c_configuracion == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre de la configuración"]]);
-		} else if (strlen($request->c_configuracion) < 3) {
+		} else if (strlen($request->c_configuracion) < 2) {
 			return json_encode(["status" => "error", "response" => ["message" => "La configuración debe tener al menos 3 caracteres"]]);
 		}
 
@@ -77,7 +77,7 @@ class ConfiguracionDisControlador extends Controller
 			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el dispositivo"]]);
 		} else if ($request->c_configuracion == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre de la configuración"]]);
-		} else if (strlen($request->c_configuracion) < 3) {
+		} else if (strlen($request->c_configuracion) < 2) {
 			return json_encode(["status" => "error", "response" => ["message" => "La configuración debe tener al menos 3 caracteres"]]);
 		}
 

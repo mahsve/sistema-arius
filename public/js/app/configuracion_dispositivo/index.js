@@ -32,8 +32,8 @@
 		} else if (c_configuracion.value == "") {
 			Toast.fire({ icon: 'error', title: 'Ingrese el nombre de la configuración' });
 			c_configuracion.focus();
-		} else if (c_configuracion.value.length < 3) {
-			Toast.fire({ icon: 'error', title: 'La configuración debe tener al menos 3 caracteres' });
+		} else if (c_configuracion.value.length < 2) {
+			Toast.fire({ icon: 'error', title: 'La configuración debe tener al menos 2 caracteres' });
 			c_configuracion.focus();
 		} else {
 			btn_guardar.classList.add("loading");
@@ -73,8 +73,8 @@
 		} else if (c_configuracion.value == "") {
 			Toast.fire({ icon: 'error', title: 'Ingrese el nombre de la configuración' });
 			c_configuracion.focus();
-		} else if (c_configuracion.value.length < 3) {
-			Toast.fire({ icon: 'error', title: 'La configuración debe tener al menos 3 caracteres' });
+		} else if (c_configuracion.value.length < 2) {
+			Toast.fire({ icon: 'error', title: 'La configuración debe tener al menos 2 caracteres' });
 			c_configuracion.focus();
 		} else {
 			btn_guardar.classList.add("loading");

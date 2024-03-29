@@ -30,6 +30,8 @@ Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(func
 	Route::get('/mapas_de_zonas/codigo/{id}', 'codigo')->name('mapas_de_zonas.code');
 	Route::get('/mapas_de_zonas/clientes/{string}', 'clientes')->name('mapas_de_zonas.client'); // Buscar clientes.
 	Route::get('/mapas_de_zonas/cliente/{id}', 'cliente')->name('mapas_de_zonas.selected'); // Consultar cliente seleccionado por ID.
+	Route::get('/mapas_de_zonas/cedula/{id}', 'cedula')->name('mapas_de_zonas.cedula'); // Consultar usuario por cédula.
+	Route::get('/mapas_de_zonas/configuracion/{id}', 'configuraciones')->name('mapas_de_zonas.cogs'); // Consultar la configuración del equipos seleccionado en la tabla ZONAS.
 	Route::post('/mapas_de_zonas', 'store')->name('mapas_de_zonas.store');
 	Route::get('/mapas_de_zonas/modificar/{id}', 'edit')->name('mapas_de_zonas.edit');
 	Route::patch('/mapas_de_zonas', 'update')->name('mapas_de_zonas.update');

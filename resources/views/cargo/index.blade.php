@@ -84,10 +84,6 @@
 			<div class="modal-body py-3">
 			<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('cargos.store')}}">
 					@csrf
-					<div class="form-group mb-3">
-						<label for="c_cargo_r"><i class="fas fa-briefcase"></i> Cargo</label>
-						<input type="text" class="form-control text-uppercase" name="c_cargo" id="c_cargo_r" placeholder="Ingrese el nombre del cargo" minlength="3" required>
-					</div>
 					<div class="form-group">
 						<label for="c_departamento_r"><i class="fas fa-hotel"></i> Departamento</label>
 						<select class="form-control text-uppercase" name="c_departamento" id="c_departamento_r" required>
@@ -96,6 +92,10 @@
 							<option value="{{$departamento->iddepartamento}}">{{$departamento->departamento}}</option>
 							@endforeach
 						</select>
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_cargo_r"><i class="fas fa-briefcase"></i> Cargo</label>
+						<input type="text" class="form-control text-uppercase" name="c_cargo" id="c_cargo_r" placeholder="Ingrese el nombre del cargo" minlength="3" required>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -119,10 +119,6 @@
 					@csrf
 					@method('PATCH')
 					<div class="form-group">
-						<label for="c_cargo_m"><i class="fas fa-briefcase"></i> Cargo</label>
-						<input type="text" class="form-control text-uppercase" name="c_cargo" id="c_cargo_m" placeholder="Ingrese el nombre del cargo" minlength="3" required>
-					</div>
-					<div class="form-group">
 						<label for="c_departamento"><i class="fas fa-hotel"></i> Departamento</label>
 						<select class="form-control text-uppercase" name="c_departamento" id="c_departamento_m" required>
 							<option value="">Seleccione el departamento</option>
@@ -130,6 +126,10 @@
 							<option value="{{$departamento->iddepartamento}}">{{$departamento->departamento}}</option>
 							@endforeach
 						</select>
+					</div>
+					<div class="form-group">
+						<label for="c_cargo_m"><i class="fas fa-briefcase"></i> Cargo</label>
+						<input type="text" class="form-control text-uppercase" name="c_cargo" id="c_cargo_m" placeholder="Ingrese el nombre del cargo" minlength="3" required>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

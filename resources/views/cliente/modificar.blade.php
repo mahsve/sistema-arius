@@ -4,9 +4,8 @@
 
 @php
 // Separar la identificación en tipo y el número.
-$identificacion_ = explode('-', $cliente->identificacion);
-$tipo_identificacion_ = $identificacion_[0];
-$identificacion_ = $identificacion_[1];
+$identificacion_ = substr($cliente->identificacion, 2);
+$tipo_identificacion_ = substr($cliente->identificacion, 0, 1);
 
 // Separar el teléfono 1 en prefijo y número.
 $telefono1_ = explode(' ', $cliente->telefono1);

@@ -72,16 +72,22 @@ textarea.form-control {
 }
 
 .form-group.loading::before {
+	height: 34px;
+	width: calc(100% + 3px);
 	content: "";
 	position: absolute;
 	left: 0;
 	right: 0;
 	bottom: -1px;
-	margin: 0 4px;
+	margin: 0 -2px;
 	background: rgba(255, 255, 255, .8);
 	border: 1px solid #dee2e6;
 	border-radius: 4px;
-	height: 34px;
+	z-index: 1;
+}
+
+div.form-row>.form-group.loading::before {
+	margin: 0 4px;
 	width: calc(100% - 8px);
 }
 
@@ -100,6 +106,7 @@ textarea.form-control {
 	border-radius: 50%;
 	animation: 0.75s linear infinite spinner-border;
 	-webkit-animation: 0.75s linear infinite spinner-border;
+	z-index: 2;
 }
 
 .btn.loading {
