@@ -90,14 +90,14 @@
 							<label for="cl_tipo_identificacion"><i class="fas fa-id-badge"></i> Tipo ID.</label>
 							<input type="text" class="form-control text-uppercase" id="cl_tipo_identificacion" placeholder="TIPO ID." readonly>
 						</div>
-						<div id="contenedor_identificacion" class="form-group col-6 col-lg-3 mb-2">
+						<div class="form-group col-6 col-lg-3 mb-2">
 							<label for="cl_identificacion"><i class="fas fa-id-badge"></i> Número ID.</label>
 							<div class="input-group">
 								<input type="text" class="form-control text-center" id="cl_prefijo_identificacion" placeholder="V" readonly>
 								<input type="text" class="form-control text-uppercase" id="cl_identificacion" placeholder="Número" style="width: calc(100% - 65px);" readonly>
 							</div>
 						</div>
-						<div id="nm_container" class="form-group col-12 col-lg-6 mb-2">
+						<div class="form-group col-12 col-lg-6 mb-2">
 							<label for="cl_nombre_completo"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
 							<input type="text" class="form-control text-uppercase" id="cl_nombre_completo" placeholder="Ingrese el nombre completo" readonly>
 						</div>
@@ -119,6 +119,7 @@
 							<label for="cl_correo_electronico"><i class="fas fa-envelope"></i> Correo electrónico</label>
 							<input type="email" class="form-control text-uppercase" id="cl_correo_electronico" placeholder="Ingrese el correo electrónico" readonly>
 						</div>
+						<input type="hidden" name="id_cliente" id="id_cliente">
 					</div>
 
 					<!-- TITULOS DIRECCION -->
@@ -273,7 +274,7 @@
 								@endforeach
 							</select>
 						</div>
-						<div id="contenedor_identificacion" class="form-group col-6 col-lg-3">
+						<div class="form-group col-6 col-lg-4" id="contenedor_identificacion">
 							<label for="c_identificacion" class="required"></label>
 							<div class="input-group">
 								<select class="form-control text-center" name="c_prefijo_identificacion" id="c_prefijo_identificacion" style="height: 31px; margin-top: 1px;"></select>
@@ -328,11 +329,12 @@
 							<label for="c_referencia"><i class="fas fa-sticky-note"></i> Punto de referencia</label>
 							<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3"></textarea>
 						</div>
+						<input type="hidden" name="modulo" value="mapa_de_zona">
 					</div>
 
 					<div class="text-end">
 						<button type="reset" class="btn btn-secondary"><i class="fas fa-times me-2"></i>Limpiar</button>
-						<button type="submit" class="btn btn-primary" id="btn_guardar"><i class="fas fa-save me-2"></i>Guardar</button>
+						<button type="submit" class="btn btn-primary" id="btn_registrar_cliente"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
 				</form>
 			</div>

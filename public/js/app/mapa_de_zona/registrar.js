@@ -242,13 +242,12 @@
 	/**
 	 * REGISTRAR CLIENTE
 	 */
-	// const btn_abrir_registrar_cliente = document.getElementById("btn_abrir_registrar_cliente");
-	// const modal_registrar_cliente = new bootstrap.Modal(document.getElementById("modal_registrar_cliente"));
-
 	// Elementos HTML.
+	const btn_abrir_registrar_cliente = document.getElementById("btn_abrir_registrar_cliente");
+	const modal_registrar_cliente = new bootstrap.Modal(document.getElementById("modal_registrar_cliente"));
 	const formulario_registro_cl = document.getElementById("formulario_registro_cl");
 	const c_tipo_identificacion_ = document.getElementById("c_tipo_identificacion");
-	const btn_guardar_cl = document.getElementById("btn_guardar_cl");
+	const btn_registrar_cliente = document.getElementById("btn_registrar_cliente");
 
 	// Mascaras.
 	var identificacionMask = IMask(document.getElementById('c_identificacion'), { mask: '00000000' });
@@ -256,6 +255,17 @@
 	const telefono2Mask = IMask(document.getElementById('c_telefono2'), { mask: '000-0000' });
 
 	// Eventos elementos HTML.
+	// Abrir la modal para registrar un nuevo cliente.
+	btn_abrir_registrar_cliente.addEventListener('click', function (e) {
+		e.preventDefault();
+
+		// Limpiamos el formulario y abrimos la ventana para registrar nuevo cliente.
+		formulario_registro_cl.reset();
+		c_tipo_identificacion_.dispatchEvent(new Event('change')); // Disparamos el evento change para restablecer el tipo de identificacion.
+		modal_registrar_cliente.show();
+	});
+
+	// Cambiar el tipo de identificación de manera dinamica.
 	c_tipo_identificacion_.addEventListener("change", function () {
 		const label_ = document.querySelector('#contenedor_identificacion label');
 		const input_ = document.querySelector('#contenedor_identificacion input');
@@ -293,37 +303,50 @@
 		if (false) {
 
 		} else {
-			btn_guardar_cl.classList.add("loading");
+			btn_registrar_cliente.classList.add("loading");
 			fetch(`${formulario_registro_cl.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro_cl) }).then(response => response.json()).then(data => {
-				btn_guardar_cl.classList.remove("loading");
-				console.log(data);
+				btn_registrar_cliente.classList.remove("loading");
 
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
-					Toast.fire({
-						icon: data.status,
-						title: data.response.message
-					});
-					return false;
+					Toast.fire({ icon: data.status, title: data.response.message });
+					return;
 				}
 
 				// Enviamos mensaje de exito.
-				Swal.fire({
-					title: "Exito",
-					text: "Cliente registrado exitosamente",
-					icon: "success",
-					timer: 2000
-				});
+				Swal.fire({ title: "Exito", text: "Cliente registrado exitosamente", icon: "success", timer: 2000 });
 
-				setTimeout(() => location.href = `${url_}/clientes`, 2000);
+				// Capturamos y gestionamos la información.
+				let prefijo_id = data.identificacion.substring(0, 1);
+				let identificacion = data.identificacion.substring(2);
+				let prefijo_tel1 = data.telefono1.substring(1, 4);
+				let telefono1 = data.telefono1.substring(6);
+				let prefijo_tel2 = "";
+				let telefono2 = "";
+				if (data.telefono2 != null && data.telefono2 != "null" && data.telefono2 != "") {
+					prefijo_tel2 = data.telefono2.substring(1, 4);
+					telefono2 = data.telefono2.substring(6);
+				}
+
+				// Ingresamos la información del cliente en el formulario.
+				document.getElementById("cl_tipo_identificacion").value = tipos_identificaciones[data.tipo_identificacion];
+				document.getElementById("cl_prefijo_identificacion").value = prefijo_id;
+				document.getElementById("cl_identificacion").value = identificacion;
+				document.getElementById("cl_nombre_completo").value = data.nombre;
+				document.getElementById("cl_prefijo_telefono1").value = prefijo_tel1;
+				document.getElementById("cl_telefono1").value = telefono1;
+				document.getElementById("cl_prefijo_telefono2").value = prefijo_tel2;
+				document.getElementById("cl_telefono2").value = telefono2;
+				document.getElementById("cl_correo_electronico").value = data.correo;
+				document.getElementById("id_cliente").value = data.identificacion;
+
+				// Cerramos la modal.
+				modal_registrar_cliente.hide();
 			});
 		}
 	});
 
-	// Ejecutamos los eventos necesarios [Una sola vez].
-	c_tipo_identificacion_.dispatchEvent(new Event('change'));
 
-	
 
 	/**
 	 * BUSCAR CLIENTE
@@ -435,6 +458,7 @@
 			document.getElementById("cl_prefijo_telefono2").value = prefijo_tel2;
 			document.getElementById("cl_telefono2").value = telefono2;
 			document.getElementById("cl_correo_electronico").value = data.correo;
+			document.getElementById("id_cliente").value = data.identificacion;
 
 			// Cerramos la modal.
 			modal_buscar_cliente.hide();

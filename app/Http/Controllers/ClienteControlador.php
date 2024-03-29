@@ -106,7 +106,7 @@ class ClienteControlador extends Controller
 		// Validamos.
 		if ($request->c_identificacion == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número de " . ($request->c_tipo_identificacion == "C" ? "Cédula" : "RIF")]]);
-		} else if ($request->c_tipo_identificacion == "C" and strlen($request->c_identificacion) != 8) {
+		} else if ($request->c_tipo_identificacion == "C" and strlen($request->c_identificacion) < 7) {
 			return json_encode(["status" => "error", "response" => ["message" => "La cédula está incompleta"]]);
 		} else if ($request->c_tipo_identificacion == "R" and strlen($request->c_identificacion) != 10) {
 			return json_encode(["status" => "error", "response" => ["message" => "El RIF está incompleto"]]);
@@ -156,7 +156,15 @@ class ClienteControlador extends Controller
 		$cliente->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
 		$cliente->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => "Cliente registrado exitosamente"]]);
+		// Válidamos si viene la solicitud desde otro módulo o el módulo de cliente.
+		if (isset($request->modulo)) {
+			$cliente = Cliente::select('*')
+				->where('identificacion', '=', $identificacion)
+				->first();
+			return response($cliente, 200)->header('Content-Type', 'text/json');
+		} else {
+			return json_encode(["status" => "success", "response" => ["message" => "Cliente registrado exitosamente"]]);
+		}
 	}
 
 	// Display the specified resource. 
