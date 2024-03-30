@@ -80,6 +80,14 @@ Route::middleware('auth')->group(function () {
 	Route::resource('/dispositivo_cog', App\Http\Controllers\ConfiguracionDisControlador::class);
 	Route::put('/dispositivo_cog/estatus/{id}', [App\Http\Controllers\ConfiguracionDisControlador::class, 'toggle'])->name('dispositivo_cog.status');
 
+	// Controlador [Gestionar perfil del usuario].
+	Route::controller(App\Http\Controllers\PerfilControlador::class)->group(function () {
+		Route::get('/perfil', 'formulario_perfil')->name('profile.index');
+		Route::post('/actualizar_contrasena', 'actualizar_contrasena')->name('profile.update');
+		Route::get('/seguridad', 'formulario_seguridad')->name('security.index');
+		Route::post('/actualizar_preguntas', 'actualizar_preguntas')->name('security.update');
+	});
+
 	// Controlador [Sesión].
 	Route::get('/cerrar_sesion', [App\Http\Controllers\SesionControlador::class, 'cerrar_sesion'])->name('session.logout');
 });
