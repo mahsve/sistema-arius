@@ -11,10 +11,13 @@
 	<!-- Base CSS -->
 	<link rel="stylesheet" href="{{url('vendors/css/vendor.bundle.base.css')}}">
 	<!-- Libraries and plugings CSS -->
+	<link rel="stylesheet" href="{{url('libraries/fontawesome/css/all.min.css')}}">
+	<link rel="stylesheet" href="{{url('libraries/sweetalert2/dist/sweetalert2.min.css')}}">
 	@yield('styles')
 	<!-- Dashboard CSS -->
 	<link rel="stylesheet" href="{{url('css/app/style.css')}}">
 	<link rel="stylesheet" href="{{url('css/app/theme.dark.css')}}">
+	<link rel="stylesheet" href="{{url('css/personalizacion.css')}}">
 </head>
 
 <body>
@@ -24,12 +27,14 @@
 				<div class="row w-100 mx-0">
 					<div class="col-lg-4 mx-auto">
 						<div class="auth-form-light py-5 px-4 px-sm-5 border rounded">
+							<!-- LOGO -->
 							<div class="brand-logo text-center">
-								<a href="{{url('iniciar-sesion')}}" class="d-block">
+								<a href="{{route('session.login')}}" class="d-block">
 									<img src="{{url('images/' . env('LOGO_DARK'))}}" alt="Logo {{env('TITLE')}}" class="w-50">
 								</a>
 							</div>
 
+							<!-- CONTENIDO -->
 							@yield('content')
 						</div>
 					</div>
@@ -40,12 +45,26 @@
 
 	<!-- Base JS -->
 	<script src="{{url('vendors/js/vendor.bundle.base.js')}}"></script>
+	<script src="{{url('libraries/sweetalert2/dist/sweetalert2.min.js')}}"></script>
+	<script id="contenedor_script_variables">
+		const url_ = '{{url("/")}}';
+		const token_ = '{{csrf_token()}}';
+		document.getElementById('contenedor_script_variables').remove();
+	</script>
 	<!-- Libraries and plugings JS -->
 	@yield('scripts')
-	<!-- Icon JS -->
-	<script src="{{url('icons/feather.min.js')}}"></script>
 	<script>
-		feather.replace();
+		const Toast = Swal.mixin({
+			toast: true,
+			position: "top-end",
+			showConfirmButton: false,
+			timer: 3000,
+			timerProgressBar: true,
+			didOpen: (toast) => {
+				toast.onmouseenter = Swal.stopTimer;
+				toast.onmouseleave = Swal.resumeTimer;
+			}
+		});
 	</script>
 </body>
 

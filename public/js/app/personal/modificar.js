@@ -41,8 +41,6 @@
 			fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
 				btn_guardar.classList.remove("loading");
 
-				console.log(data);
-
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
 					Toast.fire({ icon: data.status, title: data.response.message });

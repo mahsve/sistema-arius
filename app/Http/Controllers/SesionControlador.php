@@ -2,44 +2,56 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Sesion;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SesionControlador extends Controller
 {
 	public function formulario_iniciar_sesion()
 	{
-		return view('sesion.index');
+		return view('sesion.iniciar_sesion');
 	}
 
 	public function iniciar_sesion(Request $request)
 	{
 		// Consultamos la información del usuario en la base de datos.
-		$usuario	= DB::table('tb_usuarios')
+		$usuario = Usuario::select('tb_personal.*', 'tb_usuarios.usuario', 'tb_usuarios.idusuario', 'tb_usuarios.estatus', 'tb_usuarios.contrasena')
 			->join('tb_personal', 'tb_usuarios.cedula', '=', 'tb_personal.cedula')
-			->select('tb_personal.*', 'tb_usuarios.usuario', 'tb_usuarios.idusuario', 'tb_usuarios.estatus', 'tb_usuarios.contrasena')
-			->where('tb_usuarios.usuario', $request->usuario)->first();
+			->where('usuario', '=', $request->usuario)
+			->first();
 
 		// Validamos si encontró el usuario solicitado.
-		if (!$usuario) return redirect('iniciar_sesion')->with('error', '¡El usuario no se encuentra registrado!');
+		if (!$usuario) {
+			return json_encode(["status" => "error", "response" => ["message" => "¡El usuario no se encuentra registrado!"]]);
+		}
 
 		// Comprobamos que la contraseña sea correcta.
-		if (!password_verify($request->contrasena, $usuario->contrasena)) return redirect('iniciar_sesion')->with('error', '¡La contraseña ingresada es incorrecta!');
+		if (!password_verify($request->contrasena, $usuario->contrasena)) {
+			return json_encode(["status" => "error", "response" => ["message" => "¡La contraseña ingresada es incorrecta!"]]);
+		}
 
-		// Guardamos la sesión y redireccionamos al panel principal.
-		session(['usuario' => $usuario]);
-		return redirect('/');
+		// Iniciamos la sesión.
+		Auth::login($usuario);
+		$request->session()->regenerate();
+		session(['datos_personales', $usuario]);
+		$response = ["status" => "success", "response" => ["message" => "¡Sesión iniciada exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
-	public function cerrar_sesion()
+	public function cerrar_sesion(Request $request)
 	{
-		session(['usuario' => null]);
-		return redirect('/');
+		// Finalizamos la sesión.
+		Auth::logout();
+		$request->session()->invalidate();
+		$request->session()->regenerateToken();
+		$response = ["status" => "success", "response" => ["message" => "¡Sesión cerrada exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
-	public function showRecover()
+	public function formulario_recuperar()
 	{
-		return view('session.recover');
+		return view('sesion.recuperar_cuenta');
 	}
 }

@@ -177,7 +177,7 @@ class MapaDeZonaControlador extends Controller
 			$MapaDeZona->idcliente = $request->id_cliente;
 			$MapaDeZona->direccion = $request->c_direccion;
 			$MapaDeZona->referencia = $request->c_referencia;
-			$MapaDeZona->cedula_asesor = session('usuario')->cedula;
+			$MapaDeZona->cedula_asesor = auth()->user()->cedula;
 			$MapaDeZona->estatus_monitoreo = "";
 			$MapaDeZona->observaciones = $request->m_observacion;
 			$MapaDeZona->save();

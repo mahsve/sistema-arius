@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\User;
 
-class Sesion extends Model
+class Usuario extends User
 {
 	use HasFactory;
 
@@ -13,5 +14,5 @@ class Sesion extends Model
 	const UPDATED_AT = 'updated';
 
 	protected $table = 'tb_usuarios';
-	protected $primaryKey = 'id_usuario';
+	protected $primaryKey = 'idusuario';
 }

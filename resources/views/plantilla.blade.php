@@ -13,7 +13,6 @@
 	<!-- Libraries and plugings CSS -->
 	<link rel="stylesheet" href="{{url('libraries/fontawesome/css/all.min.css')}}">
 	<link rel="stylesheet" href="{{url('libraries/sweetalert2/dist/sweetalert2.min.css')}}">
-	</script>
 	@yield('styles')
 	<!-- Dashboard CSS -->
 	<link rel="stylesheet" href="{{url('css/app/style.css')}}">
@@ -71,7 +70,7 @@
 							<label for="c_descripcion_r" class="required"><i class="fas fa-sticky-note"></i> Descripción</label>
 							<textarea class="form-control text-uppercase" name="c_descripcion" id="c_descripcion_r" placeholder="Ingrese la descripción"></textarea>
 						</div>
-						<input type="hidden" name="id_usuario" value="{{session('usuario')->idusuario}}">
+						<input type="hidden" name="id_usuario" value="{{auth()->user()->idusuario}}">
 						<div class="text-end">
 							<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
 							<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar_tarea"><i class="fas fa-save me-2"></i>Guardar</button>
@@ -94,7 +93,6 @@
 		<script src="{{url('js/template.js')}}"></script>
 		<script src="{{url('js/todolist.js')}}"></script> */
 	?>
-
 	<script id="contenedor_script_variables">
 		const url_ = '{{url("/")}}';
 		const token_ = '{{csrf_token()}}';
@@ -118,6 +116,31 @@
 		document.getElementById('dropdown-user-menu').addEventListener('click', (e) => {
 			e.stopPropagation();
 		})
+
+		document.getElementById('btn_cerrar_sesion').addEventListener('click', function(e) {
+			e.preventDefault();
+
+			const btn_sesion = this;
+
+			btn_sesion.classList.add("loading");
+			fetch(`${url_}/cerrar_sesion`).then(response => response.json()).then(data => {
+				btn_sesion.classList.remove("loading");
+
+				// Verificamos si ocurrió algún error.
+				if (data.status == "error") {
+					Toast.fire({ icon: data.status, title: data.response.message });
+					return false;
+				}
+
+				// Enviamos mensaje de exito.
+				Swal.fire({
+					title: "Exito",
+					text: "¡Sesión cerrada exitosamente!",
+					icon: "success", timer: 2000,
+					willClose: () => location.reload(),
+				});
+			});
+		});
 	</script>
 </body>
 

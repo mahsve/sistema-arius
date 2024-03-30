@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departamento;
 use App\Models\Personal;
 use App\Models\Cargo;
-use App\Models\Sesion;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
@@ -168,7 +168,7 @@ class PersonalControlador extends Controller
 				$personal->idcargo = $request->c_cargo;
 				$personal->save();
 	
-				$usuario = new Sesion();
+				$usuario = new Usuario();
 				$usuario->cedula = $identificacion;
 				$usuario->usuario = explode(' ', $request->c_nombre_completo)[0] . rand(100000, 999999);
 				$usuario->contrasena = password_hash($request->c_identificacion, PASSWORD_DEFAULT);
