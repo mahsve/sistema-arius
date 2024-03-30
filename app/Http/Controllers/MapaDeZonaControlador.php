@@ -3,11 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
-use App\Models\Contacto;
 use App\Models\Dispositivo;
 use App\Models\MapaDeZona;
-use GuzzleHttp\Client;
-use Hamcrest\Type\IsObject;
+use App\Models\Contacto;
+use App\Models\Zona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -90,10 +89,10 @@ class MapaDeZonaControlador extends Controller
 	// Display a listing of the resource. 
 	public function index()
 	{
-		$mapas_de_zonas	= DB::table('tb_clientes')
-			->join('tb_mapa_zonas', 'tb_clientes.identificacion', '=', 'tb_mapa_zonas.idcliente')
+		$mapas_de_zonas	= DB::table('tb_mapa_zonas')
+			->select('tb_mapa_zonas.*', 'tb_clientes.nombre AS cliente', 'tb_personal.nombre AS asesor')
+			->join('tb_clientes', 'tb_mapa_zonas.idcliente', '=', 'tb_clientes.identificacion')
 			->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', '=', 'tb_personal.cedula')
-			->select('tb_clientes.*', 'tb_mapa_zonas.idcodigo', 'tb_personal.nombre')
 			->get();
 		return view('mapa_de_zona.index', ['mapas_de_zonas' => $mapas_de_zonas]);
 	}
@@ -162,49 +161,84 @@ class MapaDeZonaControlador extends Controller
 			->select('*')
 			->where('iddispositivo', '=', $id)
 			->get();
-			if (count($configuraciones) == 0) $configuraciones = "null";
+		if (count($configuraciones) == 0) $configuraciones = "null";
 		return response($configuraciones, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
-		// DB::transaction(function () use ($request, $id) {
-		// 	$MapaDeZona = new MapaDeZona();
-		// 	$MapaDeZona->idcliente = $id;
-		// 	$MapaDeZona->idcodigo = $request->code_map;
-		// 	$MapaDeZona->direccion = $request->address;
-		// 	$MapaDeZona->punto_referencia = $request->references;
-		// 	$MapaDeZona->cedula_asesor = session('user')->cedula;
-		// 	$MapaDeZona->observaciones = $request->observation;
-		// 	$MapaDeZona->save();
+		// PENDIENTE [BUSCAR Client]
+		DB::transaction(function () use ($request) {
+			$MapaDeZona = new MapaDeZona();
+			$MapaDeZona->idcodigo = $request->m_codigo;
+			$MapaDeZona->registro = $request->m_registro;
+			$MapaDeZona->tipocontracto = $request->m_tipo_contrato;
+			$MapaDeZona->idcliente = $request->id_cliente;
+			$MapaDeZona->direccion = $request->c_direccion;
+			$MapaDeZona->referencia = $request->c_referencia;
+			$MapaDeZona->cedula_asesor = session('usuario')->cedula;
+			$MapaDeZona->estatus_monitoreo = "";
+			$MapaDeZona->observaciones = $request->m_observacion;
+			$MapaDeZona->save();
 
-		// 	// for ($var = 0; $var < count($request->cedula_); $var++) {
-		// 	// 	// Consultamos si ya existe el contacto registrado en la tabla de clientes.
-		// 	// 	if ($contact = Cliente::find($request->cedula_[$var])) {
-		// 	// 	} else {
-		// 	// 		$contact = new Client();
-		// 	// 		$contact->identificacion = $request->cedula_[$var];
-		// 	// 		$contact->tipo_cliente = "N";
-		// 	// 		$contact->estatus = "A";
-		// 	// 	}
+			// Registramos los usuarios de contacto.
+			for ($var = 0; $var < count($request->usuario_prefijo_id); $var++) {
+				// Capturamos los datos del usuario.
+				$prefijo		= $request->usuario_prefijo_id[$var];
+				$cedula			= $request->usuario_cedula[$var];
+				$nombre			= $request->usuario_nombre[$var];
+				$contrasena	= $request->usuarios_contrasena[$var];
+				$prefijo_t	= $request->usuario_prefijotl[$var];
+				$telefono		= $request->usuarios_telefono[$var];
+				$nota				= $request->usuarios_nota[$var];
 
-		// 	// 	// [Registramos|Actualizamos] los datos del contacto.
-		// 	// 	$contact->nombre_completo = $request->fullname_[$var];
-		// 	// 	$contact->telefono1 = $request->phone_[$var];
-		// 	// 	$contact->save();
+				// Concatenamos los valores.
+				$identificacion	= $prefijo . "-" . $cedula;
+				$telefono = "(" . $prefijo_t . ") " . $telefono;
 
-		// 	// 	// Lo agregamos como contacto del cliente en el mapa de zona.
-		// 	// 	$contact_dt = new Contacts();
-		// 	// 	$contact_dt->id_cliente = $request->cedula_[$var];
-		// 	// 	$contact_dt->id_codigo = $request->code_map;
-		// 	// 	$contact_dt->contrasena = $request->password_[$var];
-		// 	// 	$contact_dt->observacion = $request->note_[$var];
-		// 	// 	$contact_dt->save();
-		// 	// }
-		// });
+				// Verificamos si existe registrado en la base de datos.
+				$existe	= Cliente::find($identificacion);
+				if (!$existe) {
+					// Realizamos el registro del usuario en la tabla cliente.
+					$usuario = new Cliente();
+					$usuario->identificacion = $identificacion;
+					$usuario->tipo_identificacion = "C"; // CÉDULA POR DEFECTO.
+					$usuario->nombre = mb_convert_case($nombre, MB_CASE_UPPER);
+					$usuario->telefono1 = $telefono;
+					$usuario->direccion = "-";
+					$usuario->save();
+				}
 
-		// return redirect()->route('mapa_de_zonaindex')->with('success', '¡Mapa de zona registrado exitosamente!');
+				// Agregamos como contacto del cliente en el mapa de zona.
+				$contacto = new Contacto();
+				$contacto->idcliente = $identificacion;
+				$contacto->contrasena = $contrasena;
+				$contacto->nota = mb_convert_case($nota, MB_CASE_UPPER);
+				$contacto->idcodigo = $request->m_codigo;
+				$contacto->save();
+			}
+
+			// Registramos las zonas en el mapa.
+			for ($var = 0; $var < count($request->zona_descripcion); $var++) {
+				// Capturamos los datos de la usuario.
+				$descripcion = $request->zona_descripcion[$var];
+				$equipo = $request->zona_equipos[$var];
+				$configuracion = $request->zona_configuracion[$var];
+				$nota = $request->zona_nota[$var];
+
+				// Agregamos la zona en el mapa de zona.
+				$zona = new Zona();
+				$zona->zona = mb_convert_case($descripcion, MB_CASE_UPPER);
+				$zona->iddispositivo = $equipo;
+				$zona->idconfiguracion = $configuracion;
+				$zona->nota = mb_convert_case($nota, MB_CASE_UPPER);
+				$zona->idcodigo = $request->m_codigo;
+				$zona->save();
+			}
+		});
+
+		return json_encode(["status" => "success", "response" => ["message" => "Mapa de zona registrado exitosamente"]]);
 	}
 
 	// Display the specified resource. 

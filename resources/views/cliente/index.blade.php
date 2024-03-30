@@ -67,7 +67,7 @@
 							</div>
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">
-							<a href="{{route('clientes.edit', ['id' => $cliente->identificacion])}}" class="btn btn-primary btn-sm p-2"><i class="fas fa-edit"></i></a>
+							<a href="{{route('clientes.edit', ['id' => $cliente->identificacion])}}" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
 						</td>
 					</tr>
 					@endforeach

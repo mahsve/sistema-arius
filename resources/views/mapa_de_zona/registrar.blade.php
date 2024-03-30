@@ -230,23 +230,25 @@
 
 				<!-- OTROS -->
 				<div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
+					<!-- TITULO -->
 					<div class="row align-items-center mb-3">
 						<div class="col-6 text-start">
 							<h5 class="m-0">Otros datos</h5>
 						</div>
 					</div>
 
+					<!-- CAMPOS -->
 					<div class="form-row">
 						<div class="form-group col-12">
-							<label for="observation">Observación: </label>
-							<textarea class="form-control" name="observation" id="observation" placeholder="Ingrese las observaciones (Opcional)" rows="5" style="height: initial;"></textarea>
+							<label for="m_observacion">Observación: </label>
+							<textarea class="form-control" name="m_observacion" id="m_observacion" placeholder="Ingrese las observaciones (Opcional)" rows="5" style="height: initial;"></textarea>
 						</div>
 					</div>
 
 					<!-- BOTONES -->
 					<div class="d-flex align-items-center justify-content-end">
 						<button type="button" class="btn btn-primary mx-1" id="asd"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
-						<button type="button" class="btn btn-primary mx-1" id="asd"><i class="fas fa-save ms-2"></i>Guardar</button>
+						<button type="submit" class="btn btn-primary mx-1" id="asd"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
 				</div>
 			</div>

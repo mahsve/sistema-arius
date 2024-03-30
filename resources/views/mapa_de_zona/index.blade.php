@@ -27,40 +27,48 @@
 <div class="card mb-4">
 	<div class="card-body">
 		<div class="table-responsive">
-			<table id="data-table" class="table table-hover m-0">
+			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="px-2" width="70px">Código</th>
-						<th class="px-2">Cliente</th>
-						<th class="px-2" width="100px">Tipo cliente</th>
-						<th class="px-2">Registrado</th>
-						<th class="px-2">Asesor</th>
-						<th class="px-2">Estatus</th>
-						<th class="px-2 text-center"><i data-feather="settings" width="14px" height="14px"></i></th>
+						<th class="ps-2" width="40px"><i class="fas fa-qrcode"></i> Código</th>
+						<th class="ps-2"><i class="fas fa-id-badge"></i> Identificación</th>
+						<th class="ps-2"><i class="fas fa-address-card"></i> Cliente</th>
+						<th class="ps-2"><i class="fas fa-address-card"></i> Asesor</th>
+						<th class="ps-2"><i class="fas fa-calendar-day"></i> Registrado</th>
+						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
+						<th class="ps-2 text-center"><i class="fas fa-cogs"></i></th>
 					</tr>
 				</thead>
 
 				<tbody>
 					@foreach ($mapas_de_zonas as $index => $mapa_de_zona)
 					<tr>
-						<td class="px-2 text-center">{{$mapa_de_zona->id_codigo}}</td>
-						<td class="px-2">{{$mapa_de_zona->nombre_completo}}</td>
-						<td class="px-2">{{$mapa_de_zona->tipo_cliente == "N" ? "Natural" : "Jurídico"}}</td>
-						<td class="px-2">{{date('h:i:s A d/m/y', strtotime($mapa_de_zona->created))}}</td>
-						<td class="px-2">{{$mapa_de_zona->nombres . " " . $mapa_de_zona->apellidos}}</td>
-						<td class="p-2">
+						<td class="py-1 px-2 text-center">{{$mapa_de_zona->idcodigo}}</td>
+						<td class="py-1 px-2">{{$mapa_de_zona->idcliente}}</td>
+						<td class="py-1 px-2">{{$mapa_de_zona->cliente}}</td>
+						<td class="py-1 px-2">{{$mapa_de_zona->asesor}}</td>
+						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($mapa_de_zona->created))}}</td>
+						<td class="py-1 px-2">
 							@if ($mapa_de_zona->estatus == "A")
-								<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
+							<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
 							@elseif ($mapa_de_zona->estatus == "R")
-								<span class="badge badge-success"><i class="fas fa-check"></i> Registrado</span>
+							<span class="badge badge-success"><i class="fas fa-check"></i> Registrado</span>
 							@elseif ($mapa_de_zona->estatus == "I")
-								<span class="badge badge-success"><i class="fas fa-check"></i> Instalado</span>
+							<span class="badge badge-success"><i class="fas fa-check"></i> Instalado</span>
 							@else
-								<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
+							<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
 							@endif
 						</td>
-						<td class="p-2" style="width: 20px;">
-							<a href="{{route('mapas_de_zonas.modificar', ['id' => $mapa_de_zona->idcodigo])}}" class="btn btn-primary btn-sm  p-2"><i data-feather="edit"></i></a>
+						<td class="py-1 px-2" width="63px">
+							<a href="{{route('mapas_de_zonas.edit', ['id' => $mapa_de_zona->idcodigo])}}" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
+							<div class="d-inline dropdown no_arrow">
+								<button class="btn btn-secondary btn-sm btn-icon dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+									<i class="fas fa-ellipsis-v px-1"></i>
+								</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="{{route('mapas_de_zonas.pdf', ['id' => $mapa_de_zona->idcodigo])}}"><i class="fas fa-print"></i> Imprimir</a></li>
+								</ul>
+							</div>
 						</td>
 					</tr>
 					@endforeach
