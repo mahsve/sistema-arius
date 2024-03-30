@@ -18,7 +18,7 @@
 	<div class="navbar-menu-wrapper d-flex align-items-top border-bottom px-4 bg-white">
 		<ul class="navbar-nav">
 			<li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
-				<h1 class="welcome-text">Bienvenido <span class="text-black fw-bold">{{auth()->user()->usuario}}</span></h1>
+				<h1 class="welcome-text">Bienvenido <span class="text-black fw-bold">{{session('personal')->nombre}}</span></h1>
 				<h3 class="welcome-sub-text">Su resumen de desempeño esta semana</h3>
 			</li>
 		</ul>
@@ -123,10 +123,11 @@
 				<div id="dropdown-user-menu" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded mt-3" aria-labelledby="dropdown-user" style="min-width: 220px;">
 					<div class="dropdown-header text-center mb-2">
 						<img class="img-md rounded-circle w-50 mt-2" src="{{url('images/faces/face8.jpg')}}" alt="Imagen usuario">
-						<p class="mb-1 mt-3 font-weight-semibold">{{auth()->user()->usuario}}</p>
-						<p class="fw-light text-muted mb-0">{{auth()->user()->usuario}}</p>
+						<p class="mb-1 mt-3 fw-bold">{{session('personal')->nombre}}</p>
+						<p class="fw-bold text-muted mb-0">{{auth()->user()->usuario}}</p>
 					</div>
-					<a class="dropdown-item px-2" href="{{url('perfil')}}"><i class="fas fa-user ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
+					<a class="dropdown-item px-2" href="{{route('profile.index')}}"><i class="fas fa-user ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
+					<a class="dropdown-item px-2" href="{{route('security.index')}}"><i class="fas fa-user ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
 					<button type="button" class="dropdown-item px-2" id="btn_cerrar_sesion"><i class="fas fa-sign-out-alt ms-2 me-2" width="18px" height="18px"></i> Cerrar sesión</button>
 				</div>
 			</li>

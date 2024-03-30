@@ -35,7 +35,6 @@ class SesionControlador extends Controller
 		// Iniciamos la sesión.
 		Auth::login($usuario);
 		$request->session()->regenerate();
-		session(['datos_personales', $usuario]);
 		$response = ["status" => "success", "response" => ["message" => "¡Sesión iniciada exitosamente!"]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
