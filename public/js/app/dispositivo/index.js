@@ -28,7 +28,7 @@
 		if (c_dispositivo.value == "") {
 			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del dispositivo' });
 			c_dispositivo.focus();
-		} else if (c_dispositivo.value.length < 3) {
+		} else if (c_dispositivo.value.length < 2) {
 			Toast.fire({ icon: 'error', title: 'El dispositivo debe tener al menos 3 caracteres' });
 			c_dispositivo.focus();
 		} else {
@@ -62,7 +62,7 @@
 		if (c_dispositivo.value == "") {
 			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del dispositivo' });
 			c_dispositivo.focus();
-		} else if (c_dispositivo.value.length < 3) {
+		} else if (c_dispositivo.value.length < 2) {
 			Toast.fire({ icon: 'error', title: 'El dispositivo debe tener al menos 3 caracteres' });
 			c_dispositivo.focus();
 		} else {

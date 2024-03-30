@@ -26,7 +26,7 @@ class DispositivoControlador extends Controller
 		// Validamos.
 		if ($request->c_dispositivo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del dispositivo"]]);
-		} else if (strlen($request->c_dispositivo) < 3) {
+		} else if (strlen($request->c_dispositivo) < 2) {
 			return json_encode(["status" => "error", "response" => ["message" => "El dispositivo debe tener al menos 3 caracteres"]]);
 		}
 
@@ -66,7 +66,7 @@ class DispositivoControlador extends Controller
 		// Validamos.
 		if ($request->c_dispositivo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del dispositivo"]]);
-		} else if (strlen($request->c_dispositivo) < 3) {
+		} else if (strlen($request->c_dispositivo) < 2) {
 			return json_encode(["status" => "error", "response" => ["message" => "El dispositivo debe tener al menos 3 caracteres"]]);
 		}
 

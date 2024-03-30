@@ -83,7 +83,7 @@
 					@csrf
 					<div class="form-group">
 						<label for="c_dispositivo_r" class="required"><i class="fas fa-video"></i> Dispositivo</label>
-						<input type="text" class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_r" placeholder="Ingrese el nombre del dispositivo" minlength="3" required>
+						<input type="text" class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_r" placeholder="Ingrese el nombre del dispositivo" minlength="2" required>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -108,7 +108,7 @@
 					@method('PATCH')
 					<div class="form-group">
 						<label for="c_dispositivo_m" class="required"><i class="fas fa-video"></i> Dispositivo</label>
-						<input type="text" class="form-control" name="c_dispositivo" id="c_dispositivo_m" placeholder="Ingrese el nombre del dispositivo" minlength="3" required>
+						<input type="text" class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_m" placeholder="Ingrese el nombre del dispositivo" minlength="2" required>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

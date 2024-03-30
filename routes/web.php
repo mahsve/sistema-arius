@@ -35,6 +35,7 @@ Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(func
 	Route::post('/mapas_de_zonas', 'store')->name('mapas_de_zonas.store');
 	Route::get('/mapas_de_zonas/modificar/{id}', 'edit')->name('mapas_de_zonas.edit');
 	Route::patch('/mapas_de_zonas', 'update')->name('mapas_de_zonas.update');
+	Route::patch('/mapas_de_zonas/pdf/{id}', 'update')->name('mapas_de_zonas.pdf');
 });
 
 // Controlador [Clientes].
