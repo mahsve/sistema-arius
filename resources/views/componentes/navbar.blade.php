@@ -126,8 +126,8 @@
 						<p class="mb-1 mt-3 fw-bold">{{session('personal')->nombre}}</p>
 						<p class="fw-bold text-muted mb-0">{{auth()->user()->usuario}}</p>
 					</div>
-					<a class="dropdown-item px-2" href="{{route('profile.index')}}"><i class="fas fa-user ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
-					<a class="dropdown-item px-2" href="{{route('security.index')}}"><i class="fas fa-user ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
+					<a class="dropdown-item px-2" href="{{route('profile.index')}}"><i class="far fa-user-circle ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
+					<a class="dropdown-item px-2" href="{{route('security.index')}}"><i class="fas fa-user-cog ms-2 me-2" width="18px" height="18px"></i> Mi perfil</a>
 					<button type="button" class="dropdown-item px-2" id="btn_cerrar_sesion"><i class="fas fa-sign-out-alt ms-2 me-2" width="18px" height="18px"></i> Cerrar sesión</button>
 				</div>
 			</li>

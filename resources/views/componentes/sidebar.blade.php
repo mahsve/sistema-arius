@@ -51,7 +51,7 @@
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" data-bs-toggle="collapse" href="#ui-seguridad" aria-expanded="false" aria-controls="ui-seguridad">
-				<i class="menu-icon fas fa-user-shield"></i>
+				<i class="menu-icon fas fa-unlock-alt"></i>
 				<span class="menu-title">Seguridad</span>
 				<i class="menu-arrow fas fa-chevron-right"></i>
 			</a>
