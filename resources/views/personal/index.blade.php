@@ -48,7 +48,7 @@
 					@endphp
 					<tr>
 						<td class="py-1 px-2">{{$persona->cedula}}</td>
-						<td class="py-1 px-2">{{$persona->nombre_completo}}</td>
+						<td class="py-1 px-2">{{$persona->nombre}}</td>
 						<td class="py-1 px-2">{{$persona->usuario}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($persona->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($persona->updated))}}</td>

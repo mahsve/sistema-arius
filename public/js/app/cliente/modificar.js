@@ -38,8 +38,13 @@
 				}
 
 				// Enviamos mensaje de exito.
-				Swal.fire({ title: "Exito", text: "Cliente modificado exitosamente", icon: "success", timer: 2000 });
-				setTimeout(() => location.href = `${url_}/clientes`, 2000);
+				Swal.fire({
+					title: "Exito",
+					text: "Cliente modificado exitosamente",
+					icon: "success",
+					timer: 2000,
+					willClose: () => location.href = `${url_}/clientes`,
+				});
 			});
 		}
 	});

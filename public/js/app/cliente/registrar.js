@@ -66,10 +66,9 @@
 					title: "Exito",
 					text: "Cliente registrado exitosamente",
 					icon: "success",
-					timer: 2000
+					timer: 2000,
+					willClose: () => location.href = `${url_}/clientes`,
 				});
-
-				setTimeout(() => location.href = `${url_}/clientes`, 2000);
 			});
 		}
 	});

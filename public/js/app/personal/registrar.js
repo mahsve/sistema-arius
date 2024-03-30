@@ -66,10 +66,9 @@
 					title: "Exito",
 					text: "Personal registrado exitosamente",
 					icon: "success",
-					timer: 2000
+					timer: 2000,
+					willClose: () => location.href = `${url_}/personal`,
 				});
-
-				setTimeout(() => location.href = `${url_}/personal`, 2000);
 			});
 		}
 	});

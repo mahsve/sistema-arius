@@ -33,7 +33,8 @@
 				Swal.fire({
 					title: "Exito",
 					text: "¡Sesión iniciada exitosamente!",
-					icon: "success", timer: 2000,
+					icon: "success",
+					timer: 2000,
 					willClose: () => location.reload(),
 				});
 			});

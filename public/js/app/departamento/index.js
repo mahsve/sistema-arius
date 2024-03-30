@@ -44,8 +44,13 @@
 
 				// Enviamos mensaje de exito.
 				modal_registrar.hide();
-				Swal.fire({ title: "Exito", text: "Departamento registrado exitosamente", icon: "success", timer: 2000 });
-				setTimeout(() => location.reload(), 2000);
+				Swal.fire({
+					title: "Exito",
+					text: "Departamento registrado exitosamente",
+					icon: "success",
+					timer: 2000,
+					willClose: () => location.reload(),
+				});
 			});
 		}
 	});
@@ -78,8 +83,13 @@
 
 				// Enviamos mensaje de exito.
 				modal_modificar.hide();
-				Swal.fire({ title: "Exito", text: "Departamento modificado exitosamente", icon: "success", timer: 2000 });
-				setTimeout(() => location.reload(), 2000);
+				Swal.fire({
+					title: "Exito",
+					text: "Departamento modificado exitosamente",
+					icon: "success",
+					timer: 2000,
+					willClose: () => location.reload(),
+				});
 			});
 		}
 	});

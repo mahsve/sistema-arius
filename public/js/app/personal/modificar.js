@@ -18,7 +18,7 @@
 				c_cargo_.parentElement.classList.remove("loading");
 				if (data.length == 0) {
 					c_cargo_.innerHTML = '<option value="">Sin cargos registrados</option>';
-					return ;
+					return;
 				}
 				for (let i = 0; i < data.length; i++) {
 					c_cargo_.innerHTML += `<option value="${data[i].idcargo}">${data[i].cargo}</option>`;
@@ -48,8 +48,13 @@
 				}
 
 				// Enviamos mensaje de exito.
-				Swal.fire({ title: "Exito", text: "Cliente modificado exitosamente", icon: "success", timer: 2000 });
-				setTimeout(() => location.href = `${url_}/personal`, 2000);
+				Swal.fire({
+					title: "Exito",
+					text: "Cliente modificado exitosamente",
+					icon: "success",
+					timer: 2000,
+					willClose: () => location.href = `${url_}/personal`,
+				});
 			});
 		}
 	});
