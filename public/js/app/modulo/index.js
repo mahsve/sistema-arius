@@ -1,6 +1,6 @@
 (function () {
 	// Elementos HTML.
-	const btn_nuevo_cargo = document.getElementById("btn_nuevo_cargo");
+	const btn_nuevo_modulo = document.getElementById("btn_nuevo_modulo");
 	const switch_estatus = document.querySelectorAll(".switch_estatus");
 	const btn_editar = document.querySelectorAll(".btn_editar");
 	const modal_registrar = new bootstrap.Modal('#modal_registrar');
@@ -10,7 +10,7 @@
 
 	// Eventos elementos HTML.
 	// Agregar nuevo registro.
-	btn_nuevo_cargo.addEventListener("click", function (e) {
+	btn_nuevo_modulo.addEventListener("click", function (e) {
 		e.preventDefault();
 		formulario_registro.reset();
 		modal_registrar.show();
@@ -21,20 +21,16 @@
 		e.preventDefault();
 
 		// Elementos del formulario.
-		const c_departamento = document.getElementById("c_departamento_r");
-		const c_cargo = document.getElementById("c_cargo_r");
+		const c_modulo = document.getElementById("c_modulo_r");
 		const btn_guardar = document.getElementById("btn_registrar");
 
 		// Validamos los campos.
-		if (c_departamento.value == "") {
-			Toast.fire({ icon: 'error', title: 'Seleccione el departamento' });
-			c_departamento.focus();
-		} else if (c_cargo.value == "") {
-			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del cargo' });
-			c_cargo.focus();
-		} else if (c_cargo.value.length < 3) {
-			Toast.fire({ icon: 'error', title: 'El cargo debe tener al menos 3 caracteres' });
-			c_cargo.focus();
+		if (c_modulo.value == "") {
+			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del módulo' });
+			c_modulo.focus();
+		} else if (c_modulo.value.length < 3) {
+			Toast.fire({ icon: 'error', title: 'El módulo debe tener al menos 3 caracteres' });
+			c_modulo.focus();
 		} else {
 			btn_guardar.classList.add("loading");
 			fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
@@ -50,7 +46,7 @@
 				modal_registrar.hide();
 				Swal.fire({
 					title: "Exito",
-					text: "Cargo registrado exitosamente",
+					text: "Módulo registrado exitosamente",
 					icon: "success",
 					timer: 2000,
 					willClose: () => location.reload(),
@@ -64,20 +60,16 @@
 		e.preventDefault();
 
 		// Elementos del formulario.
-		const c_departamento = document.getElementById("c_departamento_m");
-		const c_cargo = document.getElementById("c_cargo_m");
+		const c_modulo = document.getElementById("c_modulo_m");
 		const btn_guardar = document.getElementById("btn_modificar");
 
 		// Validamos los campos.
-		if (c_departamento.value == "") {
-			Toast.fire({ icon: 'error', title: 'Seleccione el departamento' });
-			c_departamento.focus();
-		} else if (c_cargo.value == "") {
-			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del cargo' });
-			c_cargo.focus();
-		} else if (c_cargo.value.length < 3) {
-			Toast.fire({ icon: 'error', title: 'El cargo debe tener al menos 3 caracteres' });
-			c_cargo.focus();
+		if (c_modulo.value == "") {
+			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del módulo' });
+			c_modulo.focus();
+		} else if (c_modulo.value.length < 3) {
+			Toast.fire({ icon: 'error', title: 'El módulo debe tener al menos 3 caracteres' });
+			c_modulo.focus();
 		} else {
 			btn_guardar.classList.add("loading");
 			fetch(`${formulario_actualizacion.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_actualizacion) }).then(response => response.json()).then(data => {
@@ -93,7 +85,7 @@
 				modal_modificar.hide();
 				Swal.fire({
 					title: "Exito",
-					text: "Cargo modificado exitosamente",
+					text: "Módulo modificado exitosamente",
 					icon: "success",
 					timer: 2000,
 					willClose: () => location.reload(),
@@ -113,14 +105,13 @@
 
 			// Realizamos la consulta AJAX.
 			button_element.classList.add('loading');
-			fetch(`${url_}/cargos/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
+			fetch(`${url_}/modulos/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
 				button_element.classList.remove('loading');
 
 				// Limpiamos el formulario y cargamos los datos consultados.
 				formulario_actualizacion.reset();
-				formulario_actualizacion.setAttribute('action', `${url_}/cargos/${id_data}`);
-				document.getElementById('c_departamento_m').value = data.iddepartamento;
-				document.getElementById('c_cargo_m').value = data.cargo;
+				formulario_actualizacion.setAttribute('action', `${url_}/modulos/${id_data}`);
+				document.getElementById('c_modulo_m').value = data.modulo;
 				modal_modificar.show();
 			});
 		});
@@ -135,7 +126,7 @@
 
 			// Pedimos confirmar que desea desactivar este registro.
 			Swal.fire({
-				title: '¿Seguro que quieres cambiar el estatus de este cargo?',
+				title: '¿Seguro que quieres cambiar el estatus de este módulo?',
 				icon: 'warning',
 				showCancelButton: true,
 				confirmButtonText: 'Cambiar',
@@ -148,7 +139,7 @@
 					form_check.classList.add('loading');
 
 					// Realizamos la consulta AJAX.
-					fetch(`${url_}/cargos/estatus/${switch_element.value}`, {
+					fetch(`${url_}/modulos/estatus/${switch_element.value}`, {
 						headers: { 'X-CSRF-TOKEN': token_ },
 						method: 'post',
 						body: form_data,

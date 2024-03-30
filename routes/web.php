@@ -80,6 +80,20 @@ Route::middleware('auth')->group(function () {
 	Route::resource('/dispositivo_cog', App\Http\Controllers\ConfiguracionDisControlador::class);
 	Route::put('/dispositivo_cog/estatus/{id}', [App\Http\Controllers\ConfiguracionDisControlador::class, 'toggle'])->name('dispositivo_cog.status');
 
+	/**
+	 * SEGURIDAD
+	 */
+	// Controlador [Módulos].
+	Route::resource('/modulos', App\Http\Controllers\ModuloControlador::class);
+	Route::put('/modulos/estatus/{id}', [App\Http\Controllers\ModuloControlador::class, 'toggle'])->name('modulos.status');
+
+	// Controlador [Servicios].
+	Route::resource('/servicios', App\Http\Controllers\ServicioControlador::class);
+	Route::put('/servicios/estatus/{id}', [App\Http\Controllers\ServicioControlador::class, 'toggle'])->name('servicios.status');
+
+	/**
+	 * PERFIL
+	 */
 	// Controlador [Gestionar perfil del usuario].
 	Route::controller(App\Http\Controllers\PerfilControlador::class)->group(function () {
 		Route::get('/perfil', 'formulario_perfil')->name('profile.index');

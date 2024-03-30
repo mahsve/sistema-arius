@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Rol;
+use App\Models\Modulo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class RolControlador extends Controller
+class ModuloControlador extends Controller
 {
 	// Display a listing of the resource. 
 	public function index()
 	{
-		$roles = Rol::all();
-		return view('roles.index', ["roles" => $roles]);
+		$modulos = Modulo::all();
+		return view('modulo.index', ["modulos" => $modulos]);
 	}
 
 	// Show the form for creating a new resource. 
@@ -24,25 +24,25 @@ class RolControlador extends Controller
 	public function store(Request $request)
 	{
 		// Validamos.
-		if ($request->c_rol == "") {
+		if ($request->c_modulo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
-		} else if (strlen($request->c_rol) < 3) {
+		} else if (strlen($request->c_modulo) < 3) {
 			return json_encode(["status" => "error", "response" => ["message" => "El módulo debe tener al menos 3 caracteres"]]);
 		}
 
 		// Validamos que no este ya registrado.
-		$existente = DB::table('tb_roles')
-			->select('rol')
-			->where('rol', '=', mb_convert_case($request->c_rol, MB_CASE_UPPER))
+		$existente = DB::table('tb_modulos')
+			->select('modulo')
+			->where('modulo', '=', mb_convert_case($request->c_modulo, MB_CASE_UPPER))
 			->first();
 		if ($existente) {
 			return json_encode(["status" => "error", "response" => ["message" => "Este módulo ya se encuentra registrado"]]);
 		}
 
 		// Creamos el nuevo registro del módulo.
-		$rol = new Rol();
-		$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
-		$rol->save();
+		$modulo = new Modulo();
+		$modulo->modulo = mb_convert_case($request->c_modulo, MB_CASE_UPPER);
+		$modulo->save();
 
 		// Enviamos mensaje de existo al usuario.
 		return json_encode(["status" => "success", "response" => ["message" => "Módulo registrado exitosamente"]]);
@@ -56,34 +56,34 @@ class RolControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
-		$rol = Rol::find($id);
-		return json_encode($rol);
+		$modulo = Modulo::find($id);
+		return json_encode($modulo);
 	}
 
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
 		// Validamos.
-		if ($request->c_rol == "") {
+		if ($request->c_modulo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
-		} else if (strlen($request->c_rol) < 3) {
+		} else if (strlen($request->c_modulo) < 3) {
 			return json_encode(["status" => "error", "response" => ["message" => "El módulo debe tener al menos 3 caracteres"]]);
 		}
 
 		// Validamos que no este ya registrado.
-		$existente = DB::table('tb_roles')
-			->select('rol')
-			->where('rol', '=', mb_convert_case($request->c_rol, MB_CASE_UPPER))
-			->where('idrol', '!=', $id)
+		$existente = DB::table('tb_modulos')
+			->select('modulo')
+			->where('modulo', '=', mb_convert_case($request->c_modulo, MB_CASE_UPPER))
+			->where('idmodulo', '!=', $id)
 			->first();
 		if ($existente) {
 			return json_encode(["status" => "error", "response" => ["message" => "Este módulo ya se encuentra registrado"]]);
 		}
 
 		// Consultamos y modificamos el registro del módulo.
-		$rol = Rol::find($id);
-		$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
-		$rol->save();
+		$modulo = Modulo::find($id);
+		$modulo->modulo = mb_convert_case($request->c_modulo, MB_CASE_UPPER);
+		$modulo->save();
 
 		// Enviamos mensaje de existo al usuario.
 		return json_encode(["status" => "success", "response" => ["message" => "Módulo modificado exitosamente"]]);
@@ -97,9 +97,9 @@ class RolControlador extends Controller
 	// Update status.
 	public function toggle(string $id)
 	{
-		$rol = Rol::find($id);
-		$rol->estatus = $rol->estatus != "A" ? "A" : "I";
-		$rol->save();
+		$modulo = Modulo::find($id);
+		$modulo->estatus = $modulo->estatus != "A" ? "A" : "I";
+		$modulo->save();
 
 		return json_encode(["status" => "success", "response" => ["message" => ""]]);
 	}

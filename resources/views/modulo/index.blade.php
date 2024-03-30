@@ -1,6 +1,6 @@
 @extends('plantilla')
 
-@section('title', 'Roles - ' . env('TITLE'))
+@section('title', 'Módulos - ' . env('TITLE'))
 
 @section('styles')
 <link href="{{url('css/datatable/datatables.min.css')}}" rel="stylesheet">
@@ -9,17 +9,17 @@
 @section('scripts')
 <script src="{{url('js/datatable/datatables.min.js')}}"></script>
 <script src="{{url('js/datatable/configuracion.js')}}"></script>
-<script src="{{url('js/app/rol/index.js')}}"></script>
+<script src="{{url('js/app/modulo/index.js')}}"></script>
 @endsection
 
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-briefcase"></i> Roles</h4>
+			<h4 class="card-title text-uppercase m-0"><i class="fas fa-briefcase"></i> Módulos</h4>
 		</div>
 		<div class="col-6 text-end">
-			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_rol"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
+			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_modulo"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
 		</div>
 	</div>
 </div>
@@ -30,7 +30,7 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2"><i class="fas fa-briefcase"></i> Rol</th>
+						<th class="ps-2"><i class="fas fa-briefcase"></i> Módulo</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -39,16 +39,16 @@
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($roles as $index => $rol)
+					@foreach($modulos as $index => $modulo)
 					@php
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$rol->rol}}</td>
-						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($rol->created))}}</td>
-						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($rol->updated))}}</td>
+						<td class="py-1 px-2">{{$modulo->modulo}}</td>
+						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($modulo->created))}}</td>
+						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($modulo->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
-							@if ($rol->estatus == "A")
+							@if ($modulo->estatus == "A")
 							<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
 							@else
 							<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
@@ -56,11 +56,11 @@
 						</td>
 						<td class="py-1 px-2 text-center">
 							<div class="form-check form-switch form-check-inline m-0">
-								<input type="checkbox" class="form-check-input mx-auto switch_estatus" role="switch" id="switch_estatus{{$idrand}}" data-id="{{$idrand}}" value="{{$rol->idrol}}" <?= $rol->estatus == "A" ? "checked" : "" ?>>
+								<input type="checkbox" class="form-check-input mx-auto switch_estatus" role="switch" id="switch_estatus{{$idrand}}" data-id="{{$idrand}}" value="{{$modulo->idmodulo}}" <?= $modulo->estatus == "A" ? "checked" : "" ?>>
 							</div>
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">
-							<button type="button" class="btn btn-primary btn-sm p-2 btn_editar" data-id="{{$rol->idrol}}"><i class="fas fa-edit"></i></button>
+							<button type="button" class="btn btn-primary btn-sm p-2 btn_editar" data-id="{{$modulo->idmodulo}}"><i class="fas fa-edit"></i></button>
 						</td>
 					</tr>
 					@endforeach
@@ -74,15 +74,15 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_label"><i class="fas fa-folder-plus"></i> Registrar rol</h1>
+				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_label"><i class="fas fa-folder-plus"></i> Registrar módulo</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
-				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('roles.store')}}">
+				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('modulos.store')}}">
 					@csrf
 					<div class="form-group mb-3">
-						<label for="c_rol_r"><i class="fas fa-briefcase"></i> Rol</label>
-						<input type="text" class="form-control text-uppercase" name="c_rol" id="c_rol_r" placeholder="Ingrese el nombre del rol" minlength="3" required>
+						<label for="c_modulo_r"><i class="fas fa-briefcase"></i> Módulo</label>
+						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_r" placeholder="Ingrese el nombre del módulo" minlength="3" required>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -98,7 +98,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
-				<h1 class="modal-title text-uppercase fs-5" id="modal_modificar_label"><i class="fas fa-folder-open"></i> Modificar rol</h1>
+				<h1 class="modal-title text-uppercase fs-5" id="modal_modificar_label"><i class="fas fa-folder-open"></i> Modificar módulo</h1>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
@@ -106,8 +106,8 @@
 					@csrf
 					@method('PATCH')
 					<div class="form-group">
-						<label for="c_rol_m"><i class="fas fa-briefcase"></i> Rol</label>
-						<input type="text" class="form-control text-uppercase" name="c_rol" id="c_rol_m" placeholder="Ingrese el nombre del rol" minlength="3" required>
+						<label for="c_modulo_m"><i class="fas fa-briefcase"></i> Módulo</label>
+						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_m" placeholder="Ingrese el nombre del módulo" minlength="3" required>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

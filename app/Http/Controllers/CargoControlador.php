@@ -29,12 +29,12 @@ class CargoControlador extends Controller
 	public function store(Request $request)
 	{
 		// Validamos.
-		if ($request->c_cargo == "") {
+		if ($request->c_departamento == "") {
+			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
+		} else if ($request->c_cargo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del cargo"]]);
 		} else if (strlen($request->c_cargo) < 3) {
 			return json_encode(["status" => "error", "response" => ["message" => "El cargo debe tener al menos 3 caracteres"]]);
-		} else if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
@@ -72,12 +72,12 @@ class CargoControlador extends Controller
 	public function update(Request $request, string $id)
 	{
 		// Validamos.
-		if ($request->c_cargo == "") {
+		if ($request->c_departamento == "") {
+			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
+		} else if ($request->c_cargo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del cargo"]]);
 		} else if (strlen($request->c_cargo) < 3) {
 			return json_encode(["status" => "error", "response" => ["message" => "El cargo debe tener al menos 3 caracteres"]]);
-		} else if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
