@@ -27,8 +27,7 @@
 			<div class="collapse" id="ui-monitoreo">
 				<ul class="nav flex-column sub-menu">
 					<li class="nav-item"> <a class="nav-link" href="#">Servicio Técnico Solicitdado</a></li>
-					<li class="nav-item"> <a class="nav-link" href="#">Servicio Técnico Solicitdado</a></li>
-					<li class="nav-item"> <a class="nav-link" href="#">Servicio Técnico Solicitdado</a></li>
+					<li class="nav-item"> <a class="nav-link" href="{{route('reportes_diarios.index')}}">Reportes diarios de operadores</a></li>
 				</ul>
 			</div>
 		</li>

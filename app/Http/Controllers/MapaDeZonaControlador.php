@@ -9,6 +9,7 @@ use App\Models\Contacto;
 use App\Models\Zona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spipu\Html2Pdf\Html2Pdf;
 
 class MapaDeZonaControlador extends Controller
 {
@@ -310,6 +311,19 @@ class MapaDeZonaControlador extends Controller
 		});
 
 		return redirect()->route('mapa_de_zonaindex')->with('success', '¡Mapa de zona actualizado exitosamente!');
+	}
+
+	// Generar pdf.
+	public function generar_pdf(string $id)
+	{
+		$variable	= "Ejemplo";
+		
+		// Generamos el nuevo PDF.
+		$pdf			= view('pdfs.mapa_de_zona', ["variable" => $variable]);
+		$html2pdf = new Html2Pdf();
+		$html2pdf->pdf->SetTitle('Mapa de zona ' . $id);
+		$html2pdf->writeHTML($pdf);
+		$html2pdf->output('mapa_de_zona.pdf');
 	}
 
 	// Remove the specified resource from storage. 

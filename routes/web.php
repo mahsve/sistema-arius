@@ -40,9 +40,25 @@ Route::middleware('auth')->group(function () {
 		Route::post('/mapas_de_zonas', 'store')->name('mapas_de_zonas.store');
 		Route::get('/mapas_de_zonas/modificar/{id}', 'edit')->name('mapas_de_zonas.edit');
 		Route::patch('/mapas_de_zonas', 'update')->name('mapas_de_zonas.update');
-		Route::patch('/mapas_de_zonas/pdf/{id}', 'update')->name('mapas_de_zonas.pdf');
+		Route::get('/mapas_de_zonas/pdf/{id}', 'generar_pdf')->name('mapas_de_zonas.pdf');
 	});
 
+	/**
+	 * MONITOREO
+	 */
+	// Controlador [Reportes diarios de operador].
+	Route::controller(App\Http\Controllers\ReporteDiarioControlador::class)->group(function () {
+		Route::get('/reportes_diarios', 'index')->name('reportes_diarios.index');
+		Route::get('/reportes_diarios/registrar', 'create')->name('reportes_diarios.create');
+		Route::post('/reportes_diarios', 'store')->name('reportes_diarios.store');
+		Route::get('/reportes_diarios/modificar/{id}', 'edit')->name('reportes_diarios.edit');
+		Route::patch('/reportes_diarios', 'update')->name('reportes_diarios.update');
+		Route::get('/reportes_diarios/pdf/{id}', 'generar_pdf')->name('reportes_diarios.pdf');
+	});
+
+	/**
+	 * CONFIGURACION
+	 */
 	// Controlador [Clientes].
 	Route::controller(App\Http\Controllers\ClienteControlador::class)->group(function () {
 		Route::get('/clientes', 'index')->name('clientes.index');								// Mostrar el listado.
