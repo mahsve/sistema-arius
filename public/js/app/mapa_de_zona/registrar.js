@@ -3,6 +3,10 @@
 	const tipo_contrato = document.getElementById("m_tipo_contrato");
 	const codigo_manual = document.getElementById("codigo_manual");
 	const input_codigo = document.getElementById("m_codigo");
+	const cl_tipo_identificacion_ = document.getElementById("cl_tipo_identificacion");
+
+	// Activar plugins
+	new TomSelect("#m_instaladores",{ create: true});
 
 	// Eventos elementos HTML.
 	// Consultar el código según el tipo de contrato a realizar.
@@ -28,6 +32,26 @@
 		}
 	});
 
+	// Cambiar el tipo de identificación de manera dinamica.
+	cl_tipo_identificacion_.addEventListener("change", function () {
+		const label_ = document.querySelector('#contenedor_identificacion_f label');
+		const input_ = document.querySelector('#contenedor_identificacion_f input');
+		const selec_ = document.querySelector('#contenedor_identificacion_f select');
+		selec_.innerHTML = '';
+		if (this.value == "C") {
+			label_.innerHTML = '<i class="fas fa-id-badge"></i> Cédula';
+			input_.setAttribute("placeholder", "Ingrese la cédula");
+			lista_cedula.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
+		} else if (this.value == "R") {
+			label_.innerHTML = '<i class="fas fa-id-badge"></i> RIF';
+			input_.setAttribute("placeholder", "Ingrese el RIF");
+			lista_rif.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
+		}
+	});
+
+	// Disparamos el evento change para restablecer el tipo de identificacion [Solo una vez al abrir el formulario].
+	cl_tipo_identificacion_.dispatchEvent(new Event('change'));
+
 
 
 	/**
@@ -37,6 +61,16 @@
 	const btn_agregar_usuario = document.getElementById('btn_agregar_usuario');
 	const tabla_usuarios = document.querySelector('#tabla_usuarios tbody');
 	const tabla_usuarios_vacio = tabla_usuarios.innerHTML;
+	const listaUsuarios = new Sortable(tabla_usuarios, {
+		handle: '.h_usuarios',
+		onUpdate: function (evt) {
+			Array.from(document.querySelectorAll('.usuario_orden')).forEach((input, index) => {
+				const idrand = input.getAttribute('data-id');
+				document.querySelector(`#usuario_norden_${idrand}`).innerHTML = (index + 1);
+				input.value = (index + 1);
+			});
+		}
+	});
 
 	// Eventos elementos HTML.
 	// Agregar nuevo fila para contactos del cliente.
@@ -53,8 +87,11 @@
 
 		// Definimos toda la estructura de la nueva fila.
 		elemento.innerHTML = `
-			<td class="py-1 px-2 text-center n_usuarios">${tabla_usuarios.children.length + 1}</td>
+			<td class="py-1 px-2 text-center h_usuarios"><i class="fas fa-arrows-alt"></i></td>
+			<td class="py-1 px-2 text-center n_usuarios" id="usuario_norden_${idrand}">${tabla_usuarios.children.length + 1}</td>
 			<td class="py-1 px-2">
+				<input type="hidden" name="usuario_registro[]" id="usuario_registro_${idrand}">
+				<input type="hidden" name="usuario_orden[]" id="usuario_orden_${idrand}" value="${tabla_usuarios.children.length + 1}" class="usuario_orden" data-id="${idrand}">
 				<div class="form-group input-group m-0">
 					<select class="form-control text-uppercase text-center" name="usuario_prefijo_id[]" id="usuario_prefijoid_${idrand}" data-id="${idrand}" style="height: 31px; margin-top: 1px;">
 						${lista_cedula.map(cd => `<option value="${cd}">${cd}</option>`).join('')}
@@ -80,7 +117,7 @@
 			</td>
 			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuarios_nota[]" id="usuarios_nota_${idrand}" placeholder="Nota (Opcional)"></td>
 			<td class="py-1 px-2" style="width: 20px;">
-				<button type="button" class="btn btn-danger btn-sm" id="btn_eliminar_usuario_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
+				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_usuario_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
 			</td>
 		`;
 		tabla_usuarios.appendChild(elemento);
@@ -116,6 +153,7 @@
 					let prefijo_tel1 = data.telefono1.substring(1, 4);
 					let telefono1 = data.telefono1.substring(6);
 					// Llenamos los campos con la información obtenida.
+					document.getElementById(`usuario_registro_${idrand}`).value = data.identificacion;
 					document.getElementById(`usuario_nombre_${idrand}`).value = data.nombre;
 					document.getElementById(`usuario_prefijotl_${idrand}`).value = prefijo_tel1;
 					document.getElementById(`usuarios_telefono_${idrand}`).value = telefono1;
@@ -138,11 +176,18 @@
 		const idrand = this.getAttribute('data-id');
 		document.getElementById(`tr_usuario_${idrand}`).remove();
 
-		// Reordenamos la enumeración del listado.
-		Array.from(document.querySelectorAll('.n_usuarios')).forEach((contador, index) => contador.innerHTML = (index + 1));
-
 		// En caso que quede vacío, cargamos un mensaje en la tabla "Sin usuarios".
-		if (tabla_usuarios.children.length == 0) tabla_usuarios.innerHTML = tabla_usuarios_vacio;
+		if (tabla_usuarios.children.length == 0) {
+			tabla_usuarios.innerHTML = tabla_usuarios_vacio;
+			return;
+		}
+
+		// Reordenamos la enumeración del listado.
+		Array.from(document.querySelectorAll('.usuario_orden')).forEach((input, index) => {
+			const idrand = input.getAttribute('data-id');
+			document.querySelector(`#usuario_norden_${idrand}`).innerHTML = (index + 1);
+			input.value = (index + 1);
+		});
 	};
 
 
@@ -154,6 +199,16 @@
 	const btn_agregar_zona = document.getElementById('btn_agregar_zona');
 	const tabla_zonas = document.querySelector('#tabla_zonas tbody');
 	const tabla_zonas_vacio = tabla_zonas.innerHTML;
+	const listaZonas = new Sortable(tabla_zonas, {
+		handle: '.h_zonas',
+		onUpdate: function (evt) {
+			Array.from(document.querySelectorAll('.zona_orden')).forEach((input, index) => {
+				const idrand = input.getAttribute('data-id');
+				document.querySelector(`#zona_norden_${idrand}`).innerHTML = (index + 1);
+				input.value = (index + 1);
+			});
+		}
+	});
 
 	// Eventos elementos HTML.
 	// Agregar nuevo fila para contactos del cliente.
@@ -170,8 +225,12 @@
 
 		// Definimos toda la estructura de la nueva fila.
 		elemento.innerHTML = `
-			<td class="py-1 px-2 text-center n_zonas">${tabla_zonas.children.length + 1}</td>
-			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="zona_descripcion[]" id="zona_descripcion_${idrand}" placeholder="Descripción de la zona"></td>
+			<td class="py-1 px-2 text-center h_zonas"><i class="fas fa-arrows-alt"></i></td>
+			<td class="py-1 px-2 text-center n_zonas" id="zona_norden_${idrand}">${tabla_zonas.children.length + 1}</td>
+			<td class="py-1 px-2">
+				<input type="hidden" name="zona_orden[]" id="zona_orden_${idrand}" value="${tabla_zonas.children.length + 1}" class="zona_orden" data-id="${idrand}">
+				<input type="text" class="form-control text-uppercase" name="zona_descripcion[]" id="zona_descripcion_${idrand}" placeholder="Descripción de la zona">
+			</td>
 			<td class="py-1 px-2">
 				<div class="form-group m-0">
 					<select class="form-control text-uppercase" name="zona_equipos[]" id="zona_equipos_${idrand}" data-id=${idrand}>
@@ -187,7 +246,7 @@
 			</td>
 			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="zona_nota[]" id="zona_nota_${idrand}" placeholder="Observación (opcional)"></td>
 			<td class="py-1 px-2" style="width: 20px;">
-				<button type="button" class="btn btn-danger btn-sm" id="btn_eliminar_zona_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
+				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_zona_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
 			</td>
 		`;
 		tabla_zonas.appendChild(elemento);
@@ -230,11 +289,18 @@
 		const idrand = this.getAttribute('data-id');
 		document.getElementById(`tr_zona_${idrand}`).remove();
 
-		// Reordenamos la enumeración del listado.
-		Array.from(document.querySelectorAll('.n_zonas')).forEach((contador, index) => contador.innerHTML = (index + 1));
-
 		// En caso que quede vacío, cargamos un mensaje en la tabla "Sin zonas".
-		if (tabla_zonas.children.length == 0) tabla_zonas.innerHTML = tabla_zonas_vacio;
+		if (tabla_zonas.children.length == 0) {
+			tabla_zonas.innerHTML = tabla_zonas_vacio;
+			return;
+		}
+
+		// Reordenamos la enumeración del listado.
+		Array.from(document.querySelectorAll('.zona_orden')).forEach((input, index) => {
+			const idrand = input.getAttribute('data-id');
+			document.querySelector(`#zona_norden_${idrand}`).innerHTML = (index + 1);
+			input.value = (index + 1);
+		});
 	}
 
 
@@ -329,7 +395,7 @@
 				}
 
 				// Ingresamos la información del cliente en el formulario.
-				document.getElementById("cl_tipo_identificacion").value = tipos_identificaciones[data.tipo_identificacion];
+				document.getElementById("cl_tipo_identificacion").value = data.tipo_identificacion;
 				document.getElementById("cl_prefijo_identificacion").value = prefijo_id;
 				document.getElementById("cl_identificacion").value = identificacion;
 				document.getElementById("cl_nombre_completo").value = data.nombre;
@@ -339,6 +405,9 @@
 				document.getElementById("cl_telefono2").value = telefono2;
 				document.getElementById("cl_correo_electronico").value = data.correo;
 				document.getElementById("id_cliente").value = data.identificacion;
+				// Ejecutamos la función change del tipo de identificación del formulario principal una vez cargado los datos al formulario.
+				cl_tipo_identificacion_.dispatchEvent(new Event('change'));
+
 
 				// Cerramos la modal.
 				modal_registrar_cliente.hide();
@@ -449,7 +518,7 @@
 			}
 
 			// Ingresamos la información del cliente en el formulario.
-			document.getElementById("cl_tipo_identificacion").value = tipos_identificaciones[data.tipo_identificacion];
+			document.getElementById("cl_tipo_identificacion").value = data.tipo_identificacion;
 			document.getElementById("cl_prefijo_identificacion").value = prefijo_id;
 			document.getElementById("cl_identificacion").value = identificacion;
 			document.getElementById("cl_nombre_completo").value = data.nombre;
@@ -459,6 +528,8 @@
 			document.getElementById("cl_telefono2").value = telefono2;
 			document.getElementById("cl_correo_electronico").value = data.correo;
 			document.getElementById("id_cliente").value = data.identificacion;
+			// Ejecutamos la función change del tipo de identificación del formulario principal una vez cargado los datos al formulario.
+			cl_tipo_identificacion_.dispatchEvent(new Event('change'));
 
 			// Cerramos la modal.
 			modal_buscar_cliente.hide();

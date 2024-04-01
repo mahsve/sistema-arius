@@ -30,7 +30,7 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2" width="40px"><i class="fas fa-qrcode"></i> Código</th>
+						<th class="ps-2" width="40px"><i class="fas fa-barcode"></i> Código</th>
 						<th class="ps-2"><i class="fas fa-id-badge"></i> Identificación</th>
 						<th class="ps-2"><i class="fas fa-address-card"></i> Cliente</th>
 						<th class="ps-2"><i class="fas fa-address-card"></i> Asesor</th>

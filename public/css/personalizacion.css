@@ -41,6 +41,26 @@ textarea.form-control {
 	height: initial;
 }
 
+.ts-wrapper.form-control {
+	padding: 0px;
+	border: 0px;
+}
+
+.ts-control {
+	padding: 5px 10px;
+	font-weight: 400;
+	font-size: 0.875rem;
+	border-radius: 4px;
+	height: 2rem;
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position-y: center;
+	background-position-x: calc(100% - 5px);
+	background-size: 16px 12px;
+	padding-right: 25px;
+	cursor: pointer;
+}
+
 .form-check-input {
 	cursor: pointer;
 }

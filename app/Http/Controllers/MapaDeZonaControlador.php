@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\Dispositivo;
 use App\Models\MapaDeZona;
 use App\Models\Contacto;
+use App\Models\Personal;
 use App\Models\Zona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -13,10 +14,39 @@ use Spipu\Html2Pdf\Html2Pdf;
 
 class MapaDeZonaControlador extends Controller
 {
-	public $lista_contratos = ["1" => "Domicilio", "2" => "Oficina", "3" => "Empresas", "7" => "Almacen"];
-	public $tipos_identificaciones = ["C" => "CÉDULA", "R" => "RIF"];
-	public $lista_cedula = ["V", "E"];
-	public $lista_rif = ["V", "E", "J", "P", "G"];
+	public $lista_contratos = [
+		"Comercios" => [
+			"1" => "Comercios - Cantv|Telular|Inter",
+			"5" => "Comercios - Radio",
+		],
+		"Residencias" => [
+			"2" => "Residencias - Cantv|Telular|Inter",
+			"6" => "Residencias - Radio",
+		],
+		"Oficinas" => [
+			"3" => "Oficinas - Cantv|Telular|Inter",
+			"7" => "Oficinas - Radio",
+		],
+		"Industrias" => [
+			"4" => "Industrias - Cantv|Telular|Inter",
+			"8" => "Industrias - Radio",
+		],
+	];
+	public $tipos_identificaciones = [
+		"C" => "CÉDULA",
+		"R" => "RIF"
+	];
+	public $lista_cedula = [
+		"V",
+		"E"
+	];
+	public $lista_rif = [
+		"V",
+		"E",
+		"J",
+		"P",
+		"G"
+	];
 	public $lista_prefijos = [
 		"Móvil" => [
 			"412",
@@ -86,6 +116,12 @@ class MapaDeZonaControlador extends Controller
 			"295",
 		],
 	];
+	public $canales_reportes = [
+		"Cantv",
+		"Telular",
+		"Inter",
+		"Radio"
+	];
 
 	// Display a listing of the resource. 
 	public function index()
@@ -102,6 +138,7 @@ class MapaDeZonaControlador extends Controller
 	public function create()
 	{
 		$dispositivos	= Dispositivo::all();
+		$personal = Personal::all();
 		return view('mapa_de_zona.registrar', [
 			'lista_contratos' => $this->lista_contratos,
 			'tipos_identificaciones' => $this->tipos_identificaciones,
@@ -109,20 +146,61 @@ class MapaDeZonaControlador extends Controller
 			'lista_rif' => $this->lista_rif,
 			'lista_prefijos' => $this->lista_prefijos,
 			'dispositivos' => $dispositivos,
+			'canales_reportes' => $this->canales_reportes,
+			'personal' => $personal,
 		]);
 	}
 
 	// Consultamos el código que continua para el registro del mapa de zona según el tipo de contrato.
 	public function codigo(string $id)
 	{
-		// Consultamos el ultimo código registrado según el tipo de contrato [1000, 2000, 3000, 7000];
-		$codigo = DB::table('tb_mapa_zonas')->select('idcodigo')->where('idcodigo', 'like', $id . '%')->orderBy('idcodigo', 'desc')->first();
-		// Verificamos si existe un ultimo número o sumamos uno si ya existe.
-		if ($codigo) {
-			$codigo = intval($codigo) + 1;
-		} else {
-			$codigo = $id . "001";
+		// Establecemos el inicio y el fin por defecto de 1000 números [1000-1999, 2000-2900]
+		// [Excepciones Oficinas Radio [7000-7399]|Industria Radio [7400-7999]].
+		$inicio	= $id . "000";
+		$final	= $id . "999";
+		if ($id == 7) { // Oficina radio [hasta el 7399].
+			$final	= "7399";
+		} else if ($id == 8) { // Industria radio [desde el 7400 hasta el 7999].
+			$id = 7;
+			$inicio	= "7400";
+			$final	= "7999";
 		}
+	
+		// Consultamos el ultimo código registrado según el tipo de contrato [1000, 2000, 3000, 7000];
+		$resultado = DB::table('tb_mapa_zonas')
+			->select('idcodigo')
+			->where('idcodigo', '>=', $inicio)
+			->where('idcodigo', '<=', $final)
+			->orderBy('idcodigo', 'asc')
+			->get();
+
+		// Verificamos si existe un ultimo número o sumamos uno si ya existe.
+		if ($resultado) {
+			// Recorremos todos los código que ya se encuentran registrados y los guardamos en un arreglo.
+			$lista_codigos = [];
+			foreach ($resultado as $data) {
+				$lista_codigos[] = intval($data->idcodigo);
+			}
+
+			// Realizamos un for desde el inicio del código hasta su tope [1000-1999].
+			for ($var = intval($inicio); $var < intval($final); $var++) {
+				// Verificamos si ya se encuentra en el arreglo para validar si esta disponible o ya se encuentra ocupado por otro cliente.
+				if (!in_array($var, $lista_codigos)) {
+					$codigo = $var;
+					break; // Rompemos el for para evitar que siga si ya encontro un numero disponible.
+				}
+			}
+		} else {
+			// Si no hay un solo código registrado por este tipo de contrato, establecemos uno por defecto para iniciar.
+			$codigo = $id . "000";
+			if ($id == 7) { // Oficina radio [hasta el 7399].
+				$codigo = "7000";
+			} else if ($id == 8) { // Industria radio [desde el 7400 hasta el 7999].
+				$codigo = "7400";
+			}
+		}
+
+		// Retornamos el código capturado.
 		return json_encode($codigo);
 	}
 
@@ -173,7 +251,7 @@ class MapaDeZonaControlador extends Controller
 		DB::transaction(function () use ($request) {
 			$MapaDeZona = new MapaDeZona();
 			$MapaDeZona->idcodigo = $request->m_codigo;
-			$MapaDeZona->registro = $request->m_registro;
+			$MapaDeZona->registro = $request->m_ingreso;
 			$MapaDeZona->tipocontracto = $request->m_tipo_contrato;
 			$MapaDeZona->idcliente = $request->id_cliente;
 			$MapaDeZona->direccion = $request->c_direccion;
@@ -317,7 +395,7 @@ class MapaDeZonaControlador extends Controller
 	public function generar_pdf(string $id)
 	{
 		$variable	= "Ejemplo";
-		
+
 		// Generamos el nuevo PDF.
 		$pdf			= view('pdfs.mapa_de_zona', ["variable" => $variable]);
 		$html2pdf = new Html2Pdf();
