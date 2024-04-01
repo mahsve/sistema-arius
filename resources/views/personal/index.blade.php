@@ -33,6 +33,7 @@
 						<th class="ps-2"><i class="fas fa-id-badge"></i> Cédula</th>
 						<th class="ps-2"><i class="fas fa-address-card"></i> Nombre completo</th>
 						<th class="ps-2"><i class="fas fa-user"></i> Usuario</th>
+						<th class="ps-2"><i class="fas fa-id-card-alt"></i> Rol</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Registrado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -50,6 +51,7 @@
 						<td class="py-1 px-2">{{$persona->cedula}}</td>
 						<td class="py-1 px-2">{{$persona->nombre}}</td>
 						<td class="py-1 px-2">{{$persona->usuario}}</td>
+						<td class="py-1 px-2">{{$persona->rol}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($persona->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($persona->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
@@ -65,7 +67,7 @@
 							</div>
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">
-							<a href="{{route('personal.edit', ['personal' => $persona->cedula])}}" class="btn btn-primary btn-sm p-2"><i class="fas fa-edit"></i></a>
+							<a href="{{route('personal.edit', ['personal' => $persona->cedula])}}" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
 						</td>
 					</tr>
 					@endforeach

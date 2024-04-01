@@ -16,7 +16,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-briefcase"></i> Roles</h4>
+			<h4 class="card-title text-uppercase m-0"><i class="fas fa-id-card-alt"></i> Roles</h4>
 		</div>
 		<div class="col-6 text-end">
 			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_rol"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
@@ -30,7 +30,7 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2"><i class="fas fa-briefcase"></i> Rol</th>
+						<th class="ps-2"><i class="fas fa-id-card-alt"></i> Rol</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -60,7 +60,7 @@
 							</div>
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">
-							<button type="button" class="btn btn-primary btn-sm p-2 btn_editar" data-id="{{$rol->idrol}}"><i class="fas fa-edit"></i></button>
+							<button type="button" class="btn btn-primary btn-sm btn-icon btn_editar" data-id="{{$rol->idrol}}"><i class="fas fa-edit"></i></button>
 						</td>
 					</tr>
 					@endforeach

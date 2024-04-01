@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Departamento;
 use App\Models\Personal;
 use App\Models\Cargo;
+use App\Models\Rol;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -87,8 +88,9 @@ class PersonalControlador extends Controller
 	public function index()
 	{
 		$personal = DB::table('tb_personal')
+			->select('tb_personal.*', 'tb_usuarios.usuario', 'tb_roles.rol')
 			->join('tb_usuarios', 'tb_personal.cedula', '=', 'tb_usuarios.cedula')
-			->select('tb_personal.*', 'tb_usuarios.usuario')
+			->join('tb_roles', 'tb_usuarios.idrol', '=', 'tb_roles.idrol')
 			->get();
 		return view('personal.index', ['personal' => $personal]);
 	}
@@ -97,7 +99,13 @@ class PersonalControlador extends Controller
 	public function create()
 	{
 		$departamentos = Departamento::all();
-		return view('personal.registrar', ['lista_cedula' => $this->lista_cedula, 'lista_prefijos' => $this->lista_prefijos, 'departamentos' => $departamentos]);
+		$roles	= Rol::all();
+		return view('personal.registrar', [
+			'lista_cedula' => $this->lista_cedula,
+			'lista_prefijos' => $this->lista_prefijos,
+			'departamentos' => $departamentos,
+			'roles' => $roles,
+		]);
 	}
 
 	public function consultar_cargos(string $id)
@@ -140,6 +148,8 @@ class PersonalControlador extends Controller
 			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
 		} else if ($request->c_cargo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el cargo"]]);
+		} else if ($request->c_rol == "") {
+			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el rol"]]);
 		} else if ($request->c_direccion == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese la dirección física"]]);
 		}
@@ -157,6 +167,7 @@ class PersonalControlador extends Controller
 		// Ejecutamos una nueva transacción.
 		try {
 			DB::transaction(function () use ($request, $identificacion, $telefono1, $telefono2) {
+				// Registramos el trabajador.
 				$personal = new Personal();
 				$personal->cedula = $identificacion;
 				$personal->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
@@ -168,10 +179,12 @@ class PersonalControlador extends Controller
 				$personal->idcargo = $request->c_cargo;
 				$personal->save();
 	
+				// Registramos los datos del usuario.
 				$usuario = new Usuario();
 				$usuario->cedula = $identificacion;
 				$usuario->usuario = explode(' ', $request->c_nombre_completo)[0] . rand(100000, 999999);
 				$usuario->contrasena = password_hash($request->c_identificacion, PASSWORD_DEFAULT);
+				$usuario->idrol = $request->c_rol;
 				$usuario->save();
 			});
 		} catch (\Throwable $th) {
@@ -188,13 +201,24 @@ class PersonalControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
-		$personal = Personal::find($id);
+		$personal = Personal::select('tb_personal.*', 'tb_cargos.iddepartamento', 'tb_usuarios.idrol')
+			->join('tb_cargos', 'tb_personal.idcargo', 'tb_cargos.idcargo')
+			->join('tb_usuarios', 'tb_personal.cedula', 'tb_usuarios.cedula')
+			->where('tb_personal.cedula', '=', $id)
+			->first();
 		$departamentos = Departamento::all();
-		$cargo = Cargo::find($personal->idcargo);
-		$cargos = DB::table('tb_cargos')
-			->where('iddepartamento', '=', $cargo->iddepartamento)
+		$cargos = Cargo::select('*')
+			->where('iddepartamento', '=', $personal->iddepartamento)
 			->get();
-		return view('personal.modificar', ['personal' => $personal, "cargo_" => $cargo, 'lista_cedula' => $this->lista_cedula, 'lista_prefijos' => $this->lista_prefijos, 'departamentos' => $departamentos, "cargos" => $cargos]);
+		$roles	= Rol::all();
+		return view('personal.modificar', [
+			'personal' => $personal,
+			'lista_cedula' => $this->lista_cedula,
+			'lista_prefijos' => $this->lista_prefijos,
+			'departamentos' => $departamentos,
+			'cargos' => $cargos,
+			'roles' => $roles,
+		]);
 	}
 
 	// Update the specified resource in storage. 
@@ -225,6 +249,8 @@ class PersonalControlador extends Controller
 			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
 		} else if ($request->c_cargo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el cargo"]]);
+		} else if ($request->c_rol == "") {
+			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el rol"]]);
 		} else if ($request->c_direccion == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese la dirección física"]]);
 		}
@@ -236,16 +262,22 @@ class PersonalControlador extends Controller
 		// Ejecutamos una nueva transacción.
 		try {
 			DB::transaction(function () use ($request, $id, $telefono1, $telefono2) {
+				// Actualizamos los datos del trabajador.
 				$personal = Personal::find($id);
 				$personal->cedula = $id;
-				$personal->nombre_completo = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
+				$personal->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
 				$personal->telefono1 = $telefono1;
 				$personal->telefono2 = $telefono2;
-				$personal->correo_electronico = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
+				$personal->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
 				$personal->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
-				$personal->puntoreferencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
+				$personal->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
 				$personal->idcargo = $request->c_cargo;
 				$personal->save();
+
+				// Actualizamos los datos del usuario.
+				$usuario = Usuario::where('cedula', '=', $id)->first();
+				$usuario->idrol = $request->c_rol;
+				$usuario->save();
 			});
 		} catch (\Throwable $th) {
 			return json_encode(["status" => "error", "response" => ["message" => "Ocurrió un error al modificar el personal", "error" => $th]]);

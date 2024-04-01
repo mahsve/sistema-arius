@@ -57,7 +57,7 @@
 			<div class="collapse" id="ui-seguridad">
 				<ul class="nav flex-column sub-menu">
 					<li class="nav-item"><a class="nav-link" href="{{route('modulos.index')}}">Módulos</a></li>
-					<li class="nav-item"><a class="nav-link" href="{{route('servicios.index')}}">servicios</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{route('servicios.index')}}">Servicios</a></li>
 					<li class="nav-item"><a class="nav-link" href="{{route('roles.index')}}">Roles</a></li>
 					<li class="nav-item"><a class="nav-link" href="{{route('roles.index')}}">Bitácora</a></li>
 				</ul>

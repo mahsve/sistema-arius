@@ -64,7 +64,7 @@
 							</div>
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">
-							<button type="button" class="btn btn-primary btn-sm p-2 btn_editar" data-id="{{$cargo->idcargo}}"><i class="fas fa-edit"></i></button>
+							<button type="button" class="btn btn-primary btn-sm btn-icon btn_editar" data-id="{{$cargo->idcargo}}"><i class="fas fa-edit"></i></button>
 						</td>
 					</tr>
 					@endforeach

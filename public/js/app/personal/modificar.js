@@ -44,6 +44,9 @@
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
 					Toast.fire({ icon: data.status, title: data.response.message });
+					if (data.response.error) {
+						console.error(data.response.error)
+					}
 					return false;
 				}
 

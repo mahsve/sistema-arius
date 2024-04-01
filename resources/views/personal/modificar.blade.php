@@ -54,7 +54,7 @@ if ($personal->telefono2 != null and $personal->telefono2 != 'null') {
 				</div>
 				<div class="form-group col-12 col-lg-4">
 					<label for="c_nombre_completo" class="required"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
-					<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" value="{{$personal->nombre_completo}}" placeholder="Ingrese el nombre completo">
+					<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" value="{{$personal->nombre}}" placeholder="Ingrese el nombre completo">
 				</div>
 				<div class="form-group col-6 col-lg-3">
 					<label for="c_telefono1" class="required"><i class="fas fa-phone-alt"></i> Teléfono 1</label>
@@ -90,23 +90,32 @@ if ($personal->telefono2 != null and $personal->telefono2 != 'null') {
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_correo_electronico" class="required"><i class="fas fa-envelope"></i> Correo electrónico</label>
-					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" value="{{$personal->correo_electronico}}" placeholder="Ingrese el correo electrónico">
+					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" value="{{$personal->correo}}" placeholder="Ingrese el correo electrónico">
 				</div>
-				<div class="form-group col-6 col-lg-3">
+				<div class="form-group col-6 col-lg-2">
 					<label for="c_departamento" class="required"><i class="fas fa-hotel"></i> Departamento</label>
 					<select class="form-control text-uppercase" name="c_departamento" id="c_departamento" required>
 						<option value="">Seleccione una opción</option>
 						@foreach ($departamentos as $departamento)
-						<option value="{{$departamento->iddepartamento}}" <?= $departamento->iddepartamento == $cargo_->iddepartamento ? "selected" : "" ?>>{{$departamento->departamento}}</option>
+						<option value="{{$departamento->iddepartamento}}" <?= $departamento->iddepartamento == $personal->iddepartamento ? "selected" : "" ?>>{{$departamento->departamento}}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="form-group col-6 col-lg-3">
+				<div class="form-group col-6 col-lg-2">
 					<label for="c_cargo" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
 					<select class="form-control text-uppercase" name="c_cargo" id="c_cargo" required>
 						<option value="">Seleccione una opción</option>
 						@foreach ($cargos as $cargo)
 						<option value="{{$cargo->idcargo}}" <?= $cargo->idcargo == $personal->idcargo ? "selected" : "" ?>>{{$cargo->cargo}}</option>
+						@endforeach
+					</select>
+				</div>
+				<div class="form-group col-6 col-lg-2">
+					<label for="c_rol" class="required"><i class="fas fa-id-card-alt"></i> Rol</label>
+					<select class="form-control text-uppercase" name="c_rol" id="c_rol" required>
+						<option value="">Seleccione</option>
+						@foreach ($roles as $rol)
+						<option value="{{$rol->idrol}}" <?= $rol->idrol == $personal->idrol ? "selected" : "" ?>>{{$rol->rol}}</option>
 						@endforeach
 					</select>
 				</div>
@@ -117,7 +126,7 @@ if ($personal->telefono2 != null and $personal->telefono2 != 'null') {
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_referencia"><i class="fas fa-sticky-note"></i> Punto de referencia</label>
-					<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3">{{$personal->puntoreferencia}}</textarea>
+					<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3">{{$personal->referencia}}</textarea>
 				</div>
 			</div>
 

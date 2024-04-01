@@ -28,7 +28,7 @@
 					<div class="input-group">
 						<select class="form-control text-center" name="c_prefijo_identificacion" id="c_prefijo_identificacion" style="height: 31px; margin-top: 1px;">
 							@foreach ($lista_cedula as $index => $cedula)
-								<option value="{{$cedula}}">{{$cedula}}</option>
+							<option value="{{$cedula}}">{{$cedula}}</option>
 							@endforeach
 						</select>
 						<input type="text" class="form-control text-uppercase" name="c_identificacion" id="c_identificacion" placeholder="Ingrese la cédula" style="width: calc(100% - 65px); height: 33px;">
@@ -44,11 +44,11 @@
 						<select class="form-control text-center" name="c_prefijo_telefono1" id="c_prefijo_telefono1" style="height: 31px; margin-top: 1px;">
 							<option value="">COD.</option>
 							@foreach ($lista_prefijos as $index => $prefijo)
-								<optgroup label="{{$index}}">
-									@foreach ($prefijo as $codigos)
-									<option value="{{$codigos}}">{{$codigos}}</option>
-									@endforeach
-								</optgroup>
+							<optgroup label="{{$index}}">
+								@foreach ($prefijo as $codigos)
+								<option value="{{$codigos}}">{{$codigos}}</option>
+								@endforeach
+							</optgroup>
 							@endforeach
 						</select>
 						<input type="text" class="form-control text-uppercase" name="c_telefono1" id="c_telefono1" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
@@ -60,11 +60,11 @@
 						<select class="form-control text-center" name="c_prefijo_telefono2" id="c_prefijo_telefono2" style="height: 31px; margin-top: 1px;">
 							<option value="">COD.</option>
 							@foreach ($lista_prefijos as $index => $prefijo)
-								<optgroup label="{{$index}}">
-									@foreach ($prefijo as $codigos)
-									<option value="{{$codigos}}">{{$codigos}}</option>
-									@endforeach
-								</optgroup>
+							<optgroup label="{{$index}}">
+								@foreach ($prefijo as $codigos)
+								<option value="{{$codigos}}">{{$codigos}}</option>
+								@endforeach
+							</optgroup>
 							@endforeach
 						</select>
 						<input type="text" class="form-control text-uppercase" name="c_telefono2" id="c_telefono2" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
@@ -74,19 +74,28 @@
 					<label for="c_correo_electronico" class="required"><i class="fas fa-envelope"></i> Correo electrónico</label>
 					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" placeholder="Ingrese el correo electrónico">
 				</div>
-				<div class="form-group col-6 col-lg-3">
+				<div class="form-group col-6 col-lg-2">
 					<label for="c_departamento" class="required"><i class="fas fa-hotel"></i> Departamento</label>
 					<select class="form-control text-uppercase" name="c_departamento" id="c_departamento" required>
-						<option value="">Seleccione una opción</option>
+						<option value="">Seleccione</option>
 						@foreach ($departamentos as $departamento)
 						<option value="{{$departamento->iddepartamento}}">{{$departamento->departamento}}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="form-group col-6 col-lg-3">
+				<div class="form-group col-6 col-lg-2">
 					<label for="c_cargo" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
 					<select class="form-control text-uppercase" name="c_cargo" id="c_cargo" required>
-						<option value="">Seleccione una opción</option>
+						<option value="">Seleccione</option>
+					</select>
+				</div>
+				<div class="form-group col-6 col-lg-2">
+					<label for="c_rol" class="required"><i class="fas fa-id-card-alt"></i> Rol</label>
+					<select class="form-control text-uppercase" name="c_rol" id="c_rol" required>
+						<option value="">Seleccione</option>
+						@foreach ($roles as $rol)
+						<option value="{{$rol->idrol}}">{{$rol->rol}}</option>
+						@endforeach
 					</select>
 				</div>
 				<div class="col-12"></div>
