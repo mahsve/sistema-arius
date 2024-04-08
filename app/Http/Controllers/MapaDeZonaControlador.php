@@ -6,7 +6,9 @@ use App\Models\Cliente;
 use App\Models\Dispositivo;
 use App\Models\MapaDeZona;
 use App\Models\Contacto;
+use App\Models\Instaladores;
 use App\Models\Personal;
+use App\Models\Usuario;
 use App\Models\Zona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -281,6 +283,12 @@ class MapaDeZonaControlador extends Controller
 			$MapaDeZona->save();
 
 			// m_instaladores
+			// Instalamos los tecnicos encargados de instalar.
+			for ($var = 0; $var < count($request->m_instaladores); $var++) {
+				$instalador = new Instaladores();
+				$instalador->cedula = $request->m_instaladores[$var];
+				$instalador->idcodigo = $request->m_codigo;
+			}
 
 			// Registramos los usuarios de contacto.
 			for ($var = 0; $var < count($request->usuario_prefijo_id); $var++) {
@@ -416,10 +424,33 @@ class MapaDeZonaControlador extends Controller
 	// Generar pdf.
 	public function generar_pdf(string $id)
 	{
-		$variable	= "Ejemplo";
+		// Consultamos los datos de todo el mapa de zona.
+		$mapa = MapaDeZona::find($id);
+		$cliente = Cliente::find($mapa->idcliente);
+		$asesor = Personal::find($mapa->cedula_asesor);
+		$usuarios = Contacto::select('tb_contactos.*', 'tb_clientes.nombre', 'tb_clientes.telefono1', 'tb_clientes.telefono2')
+			->join('tb_clientes', 'tb_contactos.idcliente', 'tb_clientes.identificacion')
+			->where('idcodigo', '=', $id)
+			->get();
+		$zonas = Zona::select('tb_zonas.*', 'tb_dispositivos.dispositivo', 'tb_config_disp.configuracion')
+			->join('tb_dispositivos', 'tb_zonas.iddispositivo', 'tb_dispositivos.iddispositivo')
+			->join('tb_config_disp', 'tb_zonas.idconfiguracion', 'tb_config_disp.idconfiguracion')
+			->where('tb_zonas.idcodigo', '=', $id)
+			->get();
+		$instaladores = Instaladores::select('tb_instalacion_tecnicos.*', 'tb_personal.nombre')
+			->join('tb_personal', 'tb_instalacion_tecnicos.idcodigo', 'tb_personal.cedula')
+			->where('idcodigo', '=', $id)
+			->get();
 
 		// Generamos el nuevo PDF.
-		$pdf			= view('mapa_de_zona/pdf_mapa_de_zona', ["variable" => $variable]);
+		$pdf	= view('mapa_de_zona/pdf_mapa_de_zona', [
+			"mapa" => $mapa,
+			"cliente" => $cliente,
+			"asesor" => $asesor,
+			"usuarios" => $usuarios,
+			"zonas" => $zonas,
+			"instaladores" => $instaladores,
+		]);
 		$html2pdf = new Html2Pdf('P', 'LETTER', 'es'); // Orientación [P=Vertical|L=Horizontal] | TAMAÑO [LETTER = CARTA] | Lenguaje [es]
 		$html2pdf->pdf->SetTitle('Mapa de zona');
 		$html2pdf->writeHTML($pdf);

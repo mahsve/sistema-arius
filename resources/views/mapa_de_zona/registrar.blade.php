@@ -158,7 +158,7 @@
 
 					<!-- BOTONES -->
 					<div class="d-flex align-items-center justify-content-end">
-						<button type="button" class="btn btn-secondary mx-1" id="asd">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
+						<button type="button" class="btn btn-secondary mx-1" id="btn_next_1" data-tab="pills-usuarios-tab">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
 					</div>
 				</div>
 
@@ -199,8 +199,8 @@
 
 					<!-- BOTONES -->
 					<div class="d-flex align-items-center justify-content-end">
-						<button type="button" class="btn btn-secondary mx-1" id="asd"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
-						<button type="button" class="btn btn-secondary mx-1" id="asd">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
+						<button type="button" class="btn btn-secondary mx-1" id="btn_prev_2" data-tab="pills-cliente-tab"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
+						<button type="button" class="btn btn-secondary mx-1" id="btn_next_2" data-tab="pills-zonas-tab">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
 					</div>
 				</div>
 
@@ -240,8 +240,8 @@
 
 					<!-- BOTONES -->
 					<div class="d-flex align-items-center justify-content-end">
-						<button type="button" class="btn btn-secondary mx-1" id="asd"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
-						<button type="button" class="btn btn-secondary mx-1" id="asd">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
+						<button type="button" class="btn btn-secondary mx-1" id="btn_prev_3" data-tab="pills-usuarios-tab"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
+						<button type="button" class="btn btn-secondary mx-1" id="btn_next_3" data-tab="pills-tecnicos-tab">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
 					</div>
 				</div>
 
@@ -280,9 +280,9 @@
 							</select>
 						</div>
 						<div class="form-group col-6 col-lg-3 mb-3">
-							<label for="c_telefono2"><i class="fas fa-phone-alt"></i> N° de telefono asig.</label>
+							<label for="c_telefono_assig"><i class="fas fa-phone-alt"></i> N° de telefono asig.</label>
 							<div class="input-group">
-								<select class="form-control text-center" name="c_prefijo_telefono2" id="c_prefijo_telefono2" style="height: 31px; margin-top: 1px;">
+								<select class="form-control text-center" name="c_prefijo_telefono_asg" id="c_prefijo_telefono_asg" style="height: 31px; margin-top: 1px;">
 									<option value="">COD.</option>
 									@foreach ($lista_prefijos as $index => $prefijo)
 									<optgroup label="{{$index}}">
@@ -292,7 +292,7 @@
 									</optgroup>
 									@endforeach
 								</select>
-								<input type="text" class="form-control text-uppercase" name="c_telefono2" id="c_telefono2" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
+								<input type="text" class="form-control text-uppercase" name="c_telefono_assig" id="c_telefono_assig" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
 							</div>
 						</div>
 
@@ -364,8 +364,8 @@
 
 					<!-- BOTONES -->
 					<div class="d-flex align-items-center justify-content-end">
-						<button type="button" class="btn btn-secondary mx-1" id="asd"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
-						<button type="submit" class="btn btn-primary mx-1" id="asd"><i class="fas fa-save ms-2"></i> Guardar</button>
+						<button type="button" class="btn btn-secondary mx-1" id="btn_prev_4" data-tab="pills-zonas-tab"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
+						<button type="submit" class="btn btn-primary mx-1" id="btn_save"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
 				</div>
 

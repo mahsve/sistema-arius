@@ -6,7 +6,8 @@
 	const cl_tipo_identificacion_ = document.getElementById("cl_tipo_identificacion");
 
 	// Activar plugins
-	new TomSelect("#m_instaladores",{ create: true});
+	new TomSelect("#m_instaladores", { create: true });
+	const telefonoAsigMask = IMask(document.getElementById('c_telefono_assig'), { mask: '000-0000' });
 
 	// Eventos elementos HTML.
 	// Consultar el código según el tipo de contrato a realizar.
@@ -48,6 +49,22 @@
 			lista_rif.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
 		}
 	});
+	
+	// Botones step [Avanzar y retroceder en el formulario].
+	document.getElementById("btn_next_1").addEventListener("click", cambiar_vista);
+	document.getElementById("btn_prev_2").addEventListener("click", cambiar_vista);
+	document.getElementById("btn_next_2").addEventListener("click", cambiar_vista);
+	document.getElementById("btn_prev_3").addEventListener("click", cambiar_vista);
+	document.getElementById("btn_next_3").addEventListener("click", cambiar_vista);
+	document.getElementById("btn_prev_4").addEventListener("click", cambiar_vista);
+
+	// Avanzar el formulario.
+	function cambiar_vista(e) {
+		e.preventDefault();
+
+		const tab = this.getAttribute('data-tab');
+		document.querySelector(`#${tab}`).click();
+	}
 
 	// Disparamos el evento change para restablecer el tipo de identificacion [Solo una vez al abrir el formulario].
 	cl_tipo_identificacion_.dispatchEvent(new Event('change'));
