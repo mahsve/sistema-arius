@@ -47,13 +47,22 @@ Route::middleware('auth')->group(function () {
 	 * MONITOREO
 	 */
 	// Controlador [Reportes diarios de operador].
-	Route::controller(App\Http\Controllers\ReporteDiarioControlador::class)->group(function () {
-		Route::get('/reportes_diarios', 'index')->name('reportes_diarios.index');
-		Route::get('/reportes_diarios/registrar', 'create')->name('reportes_diarios.create');
-		Route::post('/reportes_diarios', 'store')->name('reportes_diarios.store');
-		Route::get('/reportes_diarios/modificar/{id}', 'edit')->name('reportes_diarios.edit');
-		Route::patch('/reportes_diarios', 'update')->name('reportes_diarios.update');
-		Route::get('/reportes_diarios/pdf/{id}', 'generar_pdf')->name('reportes_diarios.pdf');
+	Route::controller(App\Http\Controllers\ReporteDiarioOperadorControlador::class)->group(function () {
+		Route::get('/reportes_diarios_operador', 'index')->name('reportes_diarios_operador.index');
+		Route::get('/reportes_diarios_operador/registrar', 'create')->name('reportes_diarios_operador.create');
+		Route::post('/reportes_diarios_operador', 'store')->name('reportes_diarios_operador.store');
+		Route::get('/reportes_diarios_operador/modificar/{id}', 'edit')->name('reportes_diarios_operador.edit');
+		Route::patch('/reportes_diarios_operador', 'update')->name('reportes_diarios_operador.update');
+		Route::get('/reportes_diarios_operador/pdf/{id}', 'generar_pdf')->name('reportes_diarios_operador.pdf');
+	});
+	// Controlador [Reportes diarios de operador].
+	Route::controller(App\Http\Controllers\ServicioTecnicoSolicitadoControlador::class)->group(function () {
+		Route::get('/servicios_tecnico_solicitados', 'index')->name('servicios_tecnico_solicitados.index');
+		Route::get('/servicios_tecnico_solicitados/registrar', 'create')->name('servicios_tecnico_solicitados.create');
+		Route::post('/servicios_tecnico_solicitados', 'store')->name('servicios_tecnico_solicitados.store');
+		Route::get('/servicios_tecnico_solicitados/modificar/{id}', 'edit')->name('servicios_tecnico_solicitados.edit');
+		Route::patch('/servicios_tecnico_solicitados', 'update')->name('servicios_tecnico_solicitados.update');
+		Route::get('/servicios_tecnico_solicitados/pdf/{id}', 'generar_pdf')->name('servicios_tecnico_solicitados.pdf');
 	});
 
 	/**
@@ -85,9 +94,6 @@ Route::middleware('auth')->group(function () {
 	Route::get('/personal/consultar_cargos/{id}', [App\Http\Controllers\PersonalControlador::class, 'consultar_cargos']);
 	Route::put('/personal/estatus/{id}', [App\Http\Controllers\PersonalControlador::class, 'toggle'])->name('personal.status');
 
-	// Controlador [Roles].
-	Route::resource('/roles', App\Http\Controllers\RolControlador::class);
-
 	// Controlador [Dispositivos de zonas].
 	Route::resource('/dispositivos', App\Http\Controllers\DispositivoControlador::class);
 	Route::put('/dispositivos/estatus/{id}', [App\Http\Controllers\DispositivoControlador::class, 'toggle'])->name('dispositivos.status');
@@ -106,6 +112,12 @@ Route::middleware('auth')->group(function () {
 	// Controlador [Servicios].
 	Route::resource('/servicios', App\Http\Controllers\ServicioControlador::class);
 	Route::put('/servicios/estatus/{id}', [App\Http\Controllers\ServicioControlador::class, 'toggle'])->name('servicios.status');
+
+	// Controlador [Roles].
+	Route::resource('/roles', App\Http\Controllers\RolControlador::class);
+
+	// Controlador [Roles].
+	Route::get('/bitacora', App\Http\Controllers\BitacoraControlador::class)->name('bitacora');
 
 	/**
 	 * PERFIL

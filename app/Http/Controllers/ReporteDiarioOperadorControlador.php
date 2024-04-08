@@ -3,22 +3,22 @@
 namespace App\Http\Controllers;
 
 use Spipu\Html2Pdf\Html2Pdf;
-use App\Models\ReporteDiario;
+use App\Models\ReporteDiarioOperador;
 use Illuminate\Http\Request;
 
-class ReporteDiarioControlador extends Controller
+class ReporteDiarioOperadorControlador extends Controller
 {
 	// Display a listing of the resource. 
 	public function index()
 	{
-		$reportes = ReporteDiario::all();
-		return view('reporte_diario.index', ['reportes' => $reportes]);
+		$reportes = ReporteDiarioOperador::all();
+		return view('reporte_diario_operador.index', ['reportes' => $reportes]);
 	}
 
 	// Show the form for creating a new resource. 
 	public function create()
 	{
-		return view('reporte_diario.registrar');
+		return view('reporte_diario_operador.registrar');
 	}
 
 	// Store a newly created resource in storage
@@ -47,11 +47,11 @@ class ReporteDiarioControlador extends Controller
 		$variable	= "Ejemplo";
 
 		// Generamos el nuevo PDF.
-		$pdf			= view('pdfs.reporte_diario', ["variable" => $variable]);
+		$pdf			= view('pdfs.reporte_diario_operador', ["variable" => $variable]);
 		$html2pdf = new Html2Pdf();
 		$html2pdf->pdf->SetTitle('Reporte diario de operador ' . $id);
 		$html2pdf->writeHTML($pdf);
-		$html2pdf->output('reporte_diario.pdf');
+		$html2pdf->output('reporte_diario_operador.pdf');
 	}
 
 	// Remove the specified resource from storage. 

@@ -263,21 +263,16 @@
 					<!-- CAMPOS -->
 					<div class="form-row">
 						<div class="form-group col-3 mb-3">
-							<label for="m_tipo_contrato" class="required"><i class="fas fa-file-contract"></i> Panel y versión del sistema</label>
-							<select class="form-control text-uppercase" name="m_tipo_contrato" id="m_tipo_contrato">
-								<option value="">Seleccione</option>
-								<option value="1">SP4000 TECLADO K636</option>
-								<option value="1">SP4000 K636</option>
-								<option value="1">SP4000 G4567</option>
-							</select>
+							<label for="m_panel_version"><i class="fas fa-file-contract"></i> Panel y versión del sistema</label>
+							<input class="form-control text-uppercase" name="m_panel_version" id="m_panel_version" placeholder="Ingrese el panel y la versión del sistema">
 						</div>
 						<div class="form-group col-3 mb-3">
 							<label for="m_modelo"><i class="fas fa-file-contract"></i> Modelo </label>
-							<input type="date" class="form-control text-uppercase" name="m_modelo" id="m_modelo">
+							<input type="text" class="form-control text-uppercase" name="m_modelo" id="m_modelo">
 						</div>
 						<div class="form-group col-3 mb-3">
-							<label for="m_tipo_contrato" class="required"><i class="fas fa-file-contract"></i> Reporta por</label>
-							<select class="form-control text-uppercase" name="m_tipo_contrato" id="m_tipo_contrato">
+							<label for="m_reporta"><i class="fas fa-file-contract"></i> Reporta por</label>
+							<select class="form-control text-uppercase" name="m_reporta" id="m_reporta">
 								<option value="">Seleccione</option>
 								@foreach ($canales_reportes as $index => $canal)
 								<option value="{{$index}}">{{$canal}}</option>
@@ -302,7 +297,7 @@
 						</div>
 
 						<div class="form-group col-6 mb-3">
-							<label for="m_instaladores" class="required"><i class="fas fa-file-contract"></i> Técnico instalador </label>
+							<label for="m_instaladores"><i class="fas fa-file-contract"></i> Técnico instalador </label>
 							<select class="form-control text-uppercase" name="m_instaladores[]" id="m_instaladores" data-placeholder="Seleccione un técnico" multiple>
 								@foreach($personal as $persona)
 								<option value="{{$persona->cedula}}">{{$persona->nombre}}</option>
@@ -310,39 +305,39 @@
 							</select>
 						</div>
 						<div class="form-group col-3 mb-3">
-							<label for="instalacion" class="required"><i class="fas fa-file-contract"></i> Fecha instalación </label>
-							<input type="date" class="form-control text-uppercase" name="instalacion" id="instalacion">
+							<label for="m_instalacion"><i class="fas fa-file-contract"></i> Fecha de instalación </label>
+							<input type="date" class="form-control text-uppercase" name="m_instalacion" id="m_instalacion">
 						</div>
 						<div class="form-group col-3 mb-3">
-							<label for="m_entrega" class="required"><i class="fas fa-file-contract"></i> Asesor </label>
-							<select class="form-control text-uppercase" name="m_entrega" id="m_entrega">
+							<label for="m_entrega"><i class="fas fa-file-contract"></i> Fecha de entrega </label>
+							<input type="date" class="form-control text-uppercase" name="m_entrega" id="m_entrega">
+						</div>
+						<div class="form-group col-3 mb-3">
+							<label for="m_asesor"><i class="fas fa-file-contract"></i> Asesor </label>
+							<select class="form-control text-uppercase" name="m_asesor" id="m_asesor">
 								<option value="">Seleccione</option>
 								@foreach($personal as $persona)
 								<option value="{{$persona->cedula}}">{{$persona->nombre}}</option>
 								@endforeach
 							</select>
 						</div>
-						<div class="form-group col-3 mb-3">
-							<label for="instalacion" class="required"><i class="fas fa-file-contract"></i> Fecha instalación </label>
-							<input type="date" class="form-control text-uppercase" name="instalacion" id="instalacion">
-						</div>
 
 						<div class="form-group col-9 mb-3">
-							<label for="instalacion" class="required"><i class="fas fa-file-contract"></i> Ubicación del panel</label>
-							<input type="input" class="form-control text-uppercase" name="instalacion" id="instalacion">
+							<label for="m_ubicacion_panel"><i class="fas fa-file-contract"></i> Ubicación del panel</label>
+							<input type="input" class="form-control text-uppercase" name="m_ubicacion_panel" id="m_ubicacion_panel">
 						</div>
 
 						<div class="form-group col-3 mb-3">
-							<label for="instalacion" class="required"><i class="fas fa-file-contract"></i> Particiones del sistema</label>
-							<input type="input" class="form-control text-uppercase" name="instalacion" id="instalacion">
+							<label for="m_particiones"><i class="fas fa-file-contract"></i> Particiones del sistema</label>
+							<input type="input" class="form-control text-uppercase" name="m_particiones" id="m_particiones">
 						</div>
 						<div class="form-group col-3 mb-3">
-							<label for="instalacion" class="required"><i class="fas fa-file-contract"></i> imei</label>
-							<input type="input" class="form-control text-uppercase" name="instalacion" id="instalacion">
+							<label for="m_imei"><i class="fas fa-file-contract"></i> imei</label>
+							<input type="input" class="form-control text-uppercase" name="m_imei" id="m_imei">
 						</div>
 						<div class="form-group col-3 mb-3">
-							<label for="instalacion" class="required"><i class="fas fa-file-contract"></i> Linea principal</label>
-							<select class="form-control text-uppercase" name="m_tipo_contrato" id="m_tipo_contrato">
+							<label for="m_linea_principal"><i class="fas fa-file-contract"></i> Linea principal</label>
+							<select class="form-control text-uppercase" name="m_linea_principal" id="m_linea_principal">
 								<option value="">Seleccione</option>
 								<option value="1">L1</option>
 								<option value="2">L2</option>
@@ -351,8 +346,8 @@
 							</select>
 						</div>
 						<div class="form-group col-3 mb-3">
-							<label for="instalacion" class="required"><i class="fas fa-file-contract"></i> Linea de respaldo</label>
-							<select class="form-control text-uppercase" name="m_tipo_contrato" id="m_tipo_contrato">
+							<label for="m_linea_respaldo"><i class="fas fa-file-contract"></i> Linea de respaldo</label>
+							<select class="form-control text-uppercase" name="m_linea_respaldo" id="m_linea_respaldo">
 								<option value="">Seleccione</option>
 								<option value="1">L1</option>
 								<option value="2">L2</option>
@@ -370,7 +365,7 @@
 					<!-- BOTONES -->
 					<div class="d-flex align-items-center justify-content-end">
 						<button type="button" class="btn btn-secondary mx-1" id="asd"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
-						<button type="button" class="btn btn-secondary mx-1" id="asd">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
+						<button type="submit" class="btn btn-primary mx-1" id="asd"><i class="fas fa-save ms-2"></i> Guardar</button>
 					</div>
 				</div>
 

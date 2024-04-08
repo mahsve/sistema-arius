@@ -13,7 +13,7 @@
 			<h4 class="card-title text-uppercase m-0"><i class="fas fa-folder-plus"></i> Registrar reporte de operadores</h4>
 		</div>
 		<div class="col-6 text-end">
-			<a href="{{route('clientes.index')}}" class="btn btn-primary btn-sm "><i class="fas fa-chevron-left me-2"></i>Regresar</a>
+			<a href="{{route('reportes_diarios_operador.index')}}" class="btn btn-primary btn-sm "><i class="fas fa-chevron-left me-2"></i>Regresar</a>
 		</div>
 	</div>
 </div>
@@ -23,7 +23,7 @@
 		<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('clientes.store')}}">
 			@csrf
 			<div class="form-row">
-				
+
 				<div id="contenedor_identificacion" class="form-group col-6 col-lg-3">
 					<label for="c_identificacion" class="required"></label>
 					<div class="input-group">
@@ -37,12 +37,12 @@
 				</div>
 				<div class="form-group col-6 col-lg-3">
 					<label for="c_telefono1" class="required"><i class="fas fa-phone-alt"></i> Teléfono 1</label>
-					
+
 				</div>
 				<div class="form-group col-6 col-lg-3">
 					<label for="c_telefono2"><i class="fas fa-phone-alt"></i> Teléfono 2</label>
 					<div class="input-group">
-						
+
 						<input type="text" class="form-control text-uppercase" name="c_telefono2" id="c_telefono2" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
 					</div>
 				</div>

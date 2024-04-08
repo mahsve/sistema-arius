@@ -13,10 +13,16 @@
 			</a>
 		</li>
 		<li class="nav-item">
-			<a class="nav-link" href="{{route('mapas_de_zonas.index')}}">
+			<a class="nav-link" data-bs-toggle="collapse" href="#ui-mapa-zona" aria-expanded="false" aria-controls="ui-mapa-zona">
 				<i class="menu-icon fas fa-map-marked-alt"></i>
 				<span class="menu-title">Mapas de zonas</span>
+				<i class="menu-arrow fas fa-chevron-right"></i>
 			</a>
+			<div class="collapse" id="ui-mapa-zona">
+				<ul class="nav flex-column sub-menu">
+					<li class="nav-item"> <a class="nav-link" href="{{route('mapas_de_zonas.index')}}">Mapas de zonas</a></li>
+				</ul>
+			</div>
 		</li>
 		<li class="nav-item">
 			<a class="nav-link" data-bs-toggle="collapse" href="#ui-monitoreo" aria-expanded="false" aria-controls="ui-monitoreo">
@@ -26,8 +32,8 @@
 			</a>
 			<div class="collapse" id="ui-monitoreo">
 				<ul class="nav flex-column sub-menu">
-					<li class="nav-item"> <a class="nav-link" href="#">Servicio Técnico Solicitdado</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('reportes_diarios.index')}}">Reportes diarios de operadores</a></li>
+					<li class="nav-item"> <a class="nav-link" href="{{route('reportes_diarios_operador.index')}}">Reportes diarios de operadores</a></li>
+					<!-- <li class="nav-item"> <a class="nav-link" href="{{route('servicios_tecnico_solicitados.index')}}">Servicio Técnico Solicitdado</a></li> -->
 				</ul>
 			</div>
 		</li>
@@ -59,7 +65,7 @@
 					<li class="nav-item"><a class="nav-link" href="{{route('modulos.index')}}">Módulos</a></li>
 					<li class="nav-item"><a class="nav-link" href="{{route('servicios.index')}}">Servicios</a></li>
 					<li class="nav-item"><a class="nav-link" href="{{route('roles.index')}}">Roles</a></li>
-					<li class="nav-item"><a class="nav-link" href="{{route('roles.index')}}">Bitácora</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{route('bitacora')}}">Bitácora</a></li>
 				</ul>
 			</div>
 		</li>

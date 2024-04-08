@@ -250,6 +250,11 @@ class MapaDeZonaControlador extends Controller
 		// PENDIENTE [BUSCAR Client]
 		DB::transaction(function () use ($request) {
 			$MapaDeZona = new MapaDeZona();
+
+			// Datos.
+			$contract_monitoreo = (isset($request->m_observacion) and !empty($request->m_observacion)) ? "S" : "N";
+
+			// Detalles dirección.
 			$MapaDeZona->idcodigo = $request->m_codigo;
 			$MapaDeZona->registro = $request->m_ingreso;
 			$MapaDeZona->tipocontracto = $request->m_tipo_contrato;
@@ -257,9 +262,25 @@ class MapaDeZonaControlador extends Controller
 			$MapaDeZona->direccion = $request->c_direccion;
 			$MapaDeZona->referencia = $request->c_referencia;
 			$MapaDeZona->cedula_asesor = auth()->user()->cedula;
-			$MapaDeZona->estatus_monitoreo = "";
 			$MapaDeZona->observaciones = $request->m_observacion;
+
+			// Detalles técnicos.
+			$MapaDeZona->panel_version = $request->m_observacion;
+			$MapaDeZona->modelo_teclado = $request->m_modelo;
+			$MapaDeZona->reporta_por = $request->m_reporta;
+			$MapaDeZona->fecha_instalacion = $request->m_instalacion;
+			$MapaDeZona->fecha_entrega = $request->m_entrega;
+			$MapaDeZona->cedula_asesor = $request->m_asesor;
+			$MapaDeZona->ubicacion_panel = $request->m_ubicacion_panel;
+			$MapaDeZona->particiones_sistema = $request->m_particiones;
+			$MapaDeZona->imei = $request->m_imei;
+			$MapaDeZona->linea_principal = $request->m_linea_principal;
+			$MapaDeZona->linea_respaldo = $request->m_linea_respaldo;
+			$MapaDeZona->monitoreo = $contract_monitoreo;
+			$MapaDeZona->estatus_monitoreo = "A";
 			$MapaDeZona->save();
+
+			// m_instaladores
 
 			// Registramos los usuarios de contacto.
 			for ($var = 0; $var < count($request->usuario_prefijo_id); $var++) {
@@ -317,7 +338,8 @@ class MapaDeZonaControlador extends Controller
 			}
 		});
 
-		return json_encode(["status" => "success", "response" => ["message" => "Mapa de zona registrado exitosamente"]]);
+		return redirect('mapas_de_zonas');
+		// return json_encode(["status" => "success", "response" => ["message" => "Mapa de zona registrado exitosamente"]]);
 	}
 
 	// Display the specified resource. 

@@ -160,10 +160,10 @@
 					// Deshabilitamos los campos.
 					document.getElementById(`usuario_nombre_${idrand}`).setAttribute('readonly', true);
 					document.getElementById(`usuario_prefijotl_${idrand}`).setAttribute('readonly', true);
-					document.getElementById(`usuario_prefijotl_${idrand}`).setAttribute('disabled', true);
+					// document.getElementById(`usuario_prefijotl_${idrand}`).setAttribute('disabled', true);
 					document.getElementById(`usuarios_telefono_${idrand}`).setAttribute('readonly', true);
 					campo_prefijo.setAttribute('readonly', true);
-					campo_prefijo.setAttribute('disabled', true);
+					// campo_prefijo.setAttribute('disabled', true);
 					campo_cedula.setAttribute('readonly', true);
 				}
 			});
@@ -474,8 +474,8 @@
 						</td>
 						<td class="py-1 px-2" style="width: 20px;">
 							${cliente.estatus == "A"
-							? `<button type="button" class="btn btn-primary btn-sm btn_cliente_selecccionado p-2" id="btn_agg_cliente_${i}" data-id="${i}" data-cliente="${cliente.identificacion}"><i class="fas fa-plus"></i></button>`
-							: '<button type="button" class="btn btn-danger btn-sm p-2"><i class="fas fa-ban"></i></button>'
+							? `<button type="button" class="btn btn-primary btn-sm btn-icon btn_cliente_selecccionado" id="btn_agg_cliente_${i}" data-id="${i}" data-cliente="${cliente.identificacion}"><i class="fas fa-plus"></i></button>`
+							: '<button type="button" class="btn btn-danger btn-sm btn-icon"><i class="fas fa-ban"></i></button>'
 						}
 						</td>
 					</tr>`;
