@@ -350,20 +350,20 @@ class MapaDeZonaControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
-		$client	= DB::table('tb_clientes')
-			->select('*')
-			->join('tb_mapa_zonas', 'tb_clientes.identificacion', '=', 'tb_mapa_zonas.id_cliente')
-			->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', '=', 'tb_personal.cedula')
-			->where('tb_mapa_zonas.id_codigo', $id)
-			->first();
+		// $client	= DB::table('tb_clientes')
+		// 	->select('*')
+		// 	->join('tb_mapa_zonas', 'tb_clientes.identificacion', '=', 'tb_mapa_zonas.id_cliente')
+		// 	->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', '=', 'tb_personal.cedula')
+		// 	->where('tb_mapa_zonas.id_codigo', $id)
+		// 	->first();
 
-		$contacts = DB::table('tb_contactos')
-			->select('*')
-			->join('tb_clientes', 'tb_contactos.id_cliente', '=', 'tb_clientes.identificacion')
-			->where('tb_contactos.id_codigo', $id)
-			->get();
+		// $contacts = DB::table('tb_contactos')
+		// 	->select('*')
+		// 	->join('tb_clientes', 'tb_contactos.id_cliente', '=', 'tb_clientes.identificacion')
+		// 	->where('tb_contactos.id_codigo', $id)
+		// 	->get();
 
-		return view('zonemaps.update', ['client' => $client, 'contacts' => $contacts]);
+		// return view('zonemaps.update', ['client' => $client, 'contacts' => $contacts]);
 	}
 
 	// Update the specified resource in storage. 
@@ -419,9 +419,9 @@ class MapaDeZonaControlador extends Controller
 		$variable	= "Ejemplo";
 
 		// Generamos el nuevo PDF.
-		$pdf			= view('pdfs.mapa_de_zona', ["variable" => $variable]);
-		$html2pdf = new Html2Pdf();
-		$html2pdf->pdf->SetTitle('Mapa de zona ' . $id);
+		$pdf			= view('mapa_de_zona/pdf_mapa_de_zona', ["variable" => $variable]);
+		$html2pdf = new Html2Pdf('P', 'LETTER', 'es'); // Orientación [P=Vertical|L=Horizontal] | TAMAÑO [LETTER = CARTA] | Lenguaje [es]
+		$html2pdf->pdf->SetTitle('Mapa de zona');
 		$html2pdf->writeHTML($pdf);
 		$html2pdf->output('mapa_de_zona.pdf');
 	}

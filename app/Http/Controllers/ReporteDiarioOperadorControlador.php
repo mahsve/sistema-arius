@@ -15,7 +15,7 @@ class ReporteDiarioOperadorControlador extends Controller
 		return view('reporte_diario_operador.index', ['reportes' => $reportes]);
 	}
 
-	// Show the form for creating a new resource. 
+	// Show the form for creating a new resource.
 	public function create()
 	{
 		return view('reporte_diario_operador.registrar');
@@ -47,9 +47,9 @@ class ReporteDiarioOperadorControlador extends Controller
 		$variable	= "Ejemplo";
 
 		// Generamos el nuevo PDF.
-		$pdf			= view('pdfs.reporte_diario_operador', ["variable" => $variable]);
-		$html2pdf = new Html2Pdf();
-		$html2pdf->pdf->SetTitle('Reporte diario de operador ' . $id);
+		$pdf			= view('reporte_diario_operador.pdf_reporte_diario', ["variable" => $variable]);
+		$html2pdf = new Html2Pdf('L', 'LETTER', 'es'); // Orientación [P=Vertical|L=Horizontal] | TAMAÑO [LETTER = CARTA] | Lenguaje [es]
+		$html2pdf->pdf->SetTitle('Reporte diario de operador ');
 		$html2pdf->writeHTML($pdf);
 		$html2pdf->output('reporte_diario_operador.pdf');
 	}

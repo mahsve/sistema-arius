@@ -24,6 +24,7 @@
 		</ul>
 
 		<ul class="navbar-nav ms-auto">
+			<?php /*
 			<!-- Search panel -->
 			<li class="nav-item">
 				<form class="search-form" action="#">
@@ -115,6 +116,7 @@
 					</a>
 				</div>
 			</li>
+			*/ ?>
 
 			<li class="nav-item dropdown">
 				<a class="nav-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-expanded="false">
