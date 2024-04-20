@@ -30,8 +30,8 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2"><i class="fas fa-briefcase"></i> Servicio</th>
 						<th class="ps-2"><i class="fas fa-briefcase"></i> Módulo</th>
+						<th class="ps-2"><i class="fas fa-briefcase"></i> Servicio</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -45,8 +45,8 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$servicio->servicio}}</td>
 						<td class="py-1 px-2">{{$servicio->modulo}}</td>
+						<td class="py-1 px-2">{{$servicio->servicio}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($servicio->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($servicio->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">

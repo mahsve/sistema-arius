@@ -74,6 +74,7 @@
 					</a>
 				</div>
 			</li>
+			*/ ?>
 
 			<!-- Notifications -->
 			<li class="nav-item dropdown">
@@ -116,7 +117,6 @@
 					</a>
 				</div>
 			</li>
-			*/ ?>
 
 			<li class="nav-item dropdown">
 				<a class="nav-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-expanded="false">

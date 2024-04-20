@@ -9,65 +9,28 @@
 		<li class="nav-item">
 			<a class="nav-link" href="{{url('/')}}">
 				<i class="menu-icon fas fa-chart-pie"></i>
-				<span class="menu-title">Panel principal</span>
+				<span class="menu-title text-uppercase">Panel principal</span>
 			</a>
 		</li>
+		@foreach($modulos_servicios as $modulo)
 		<li class="nav-item">
-			<a class="nav-link" data-bs-toggle="collapse" href="#ui-mapa-zona" aria-expanded="false" aria-controls="ui-mapa-zona">
-				<i class="menu-icon fas fa-map-marked-alt"></i>
-				<span class="menu-title">Mapas de zonas</span>
+			<a class="nav-link" data-bs-toggle="collapse" href='#ui-{{strtolower(preg_replace("/[\r\n|\n|\r]+/", "-", $modulo->modulo))}}' aria-expanded="false" aria-controls='ui-{{strtolower(preg_replace("/[\r\n|\n|\r]+/", "-", $modulo->modulo))}}'>
+				<i class="menu-icon {{$modulo->icono}}"></i>
+				<span class="menu-title">{{$modulo->modulo}}</span>
 				<i class="menu-arrow fas fa-chevron-right"></i>
 			</a>
-			<div class="collapse" id="ui-mapa-zona">
+			<div class="collapse" id='ui-{{strtolower(preg_replace("/[\r\n|\n|\r]+/", "-", $modulo->modulo))}}'>
 				<ul class="nav flex-column sub-menu">
-					<li class="nav-item"> <a class="nav-link" href="{{route('mapas_de_zonas.index')}}">Mapas de zonas</a></li>
+					@foreach($modulo->servicios as $servicio)
+					@if ($servicio->menu_url != null)
+					<li class="nav-item"><a class="nav-link" href="{{route($servicio->menu_url)}}">{{$servicio->servicio}}</a></li>
+					@else
+					<li class="nav-item"><a class="nav-link" href="#">{{$servicio->servicio}}</a></li>
+					@endif
+					@endforeach
 				</ul>
 			</div>
 		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-bs-toggle="collapse" href="#ui-monitoreo" aria-expanded="false" aria-controls="ui-monitoreo">
-				<i class="menu-icon fas fa-desktop"></i>
-				<span class="menu-title">Monitoreo</span>
-				<i class="menu-arrow fas fa-chevron-right"></i>
-			</a>
-			<div class="collapse" id="ui-monitoreo">
-				<ul class="nav flex-column sub-menu">
-					<li class="nav-item"> <a class="nav-link" href="{{route('reportes_diarios_operador.index')}}">Reportes diarios de operadores</a></li>
-					<!-- <li class="nav-item"> <a class="nav-link" href="{{route('servicios_tecnico_solicitados.index')}}">Servicio Técnico Solicitdado</a></li> -->
-				</ul>
-			</div>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-bs-toggle="collapse" href="#ui-configuracion" aria-expanded="false" aria-controls="ui-configuracion">
-				<i class="menu-icon fas fa-cogs"></i>
-				<span class="menu-title">Configuración</span>
-				<i class="menu-arrow fas fa-chevron-right"></i>
-			</a>
-			<div class="collapse" id="ui-configuracion">
-				<ul class="nav flex-column sub-menu">
-					<li class="nav-item"><a class="nav-link" href="{{route('clientes.index')}}">Clientes</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('departamentos.index')}}">Departamentos</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('cargos.index')}}">Cargos</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('personal.index')}}">Personal</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('dispositivos.index')}}">Dispositivos</a></li>
-					<li class="nav-item"> <a class="nav-link" href="{{route('dispositivo_cog.index')}}">Configuración Disp.</a></li>
-				</ul>
-			</div>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" data-bs-toggle="collapse" href="#ui-seguridad" aria-expanded="false" aria-controls="ui-seguridad">
-				<i class="menu-icon fas fa-unlock-alt"></i>
-				<span class="menu-title">Seguridad</span>
-				<i class="menu-arrow fas fa-chevron-right"></i>
-			</a>
-			<div class="collapse" id="ui-seguridad">
-				<ul class="nav flex-column sub-menu">
-					<li class="nav-item"><a class="nav-link" href="{{route('modulos.index')}}">Módulos</a></li>
-					<li class="nav-item"><a class="nav-link" href="{{route('servicios.index')}}">Servicios</a></li>
-					<li class="nav-item"><a class="nav-link" href="{{route('roles.index')}}">Roles</a></li>
-					<li class="nav-item"><a class="nav-link" href="{{route('bitacora')}}">Bitácora</a></li>
-				</ul>
-			</div>
-		</li>
+		@endforeach
 	</ul>
 </nav>

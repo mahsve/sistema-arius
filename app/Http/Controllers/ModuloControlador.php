@@ -11,7 +11,7 @@ class ModuloControlador extends Controller
 	// Display a listing of the resource. 
 	public function index()
 	{
-		$modulos = Modulo::all();
+		$modulos = Modulo::select()->orderBy('orden', 'ASC')->get();
 		return view('modulo.index', ["modulos" => $modulos]);
 	}
 
@@ -40,7 +40,10 @@ class ModuloControlador extends Controller
 		}
 
 		// Creamos el nuevo registro del módulo.
+		$total	= count(Modulo::select('idmodulo')->get());
 		$modulo = new Modulo();
+		$modulo->orden = $total;
+		$modulo->icono = mb_convert_case($request->c_icono, MB_CASE_LOWER);
 		$modulo->modulo = mb_convert_case($request->c_modulo, MB_CASE_UPPER);
 		$modulo->save();
 
@@ -82,6 +85,7 @@ class ModuloControlador extends Controller
 
 		// Consultamos y modificamos el registro del módulo.
 		$modulo = Modulo::find($id);
+		$modulo->icono = mb_convert_case($request->c_icono, MB_CASE_LOWER);
 		$modulo->modulo = mb_convert_case($request->c_modulo, MB_CASE_UPPER);
 		$modulo->save();
 
@@ -92,6 +96,20 @@ class ModuloControlador extends Controller
 	// Remove the specified resource from storage. 
 	public function destroy(string $id)
 	{
+	}
+
+	// Update module's order.
+	public function order(Request $request)
+	{
+		DB::transaction(function () use ($request) {
+			// Recorremos los módulos y actualizamos su orden según lo descrito por el usuario.
+			for ($i = 0; $i < count($request->modulo); $i++) {
+				$modulo = Modulo::find($request->modulo[$i]);
+				$modulo->orden = $request->orden[$i];
+				$modulo->save();
+			}
+		});
+		return json_encode(["status" => "success", "response" => ["message" => "¡Orden actualizado exitosamente!"]]);
 	}
 
 	// Update status.

@@ -22653,7 +22653,7 @@ div.tagsinput span.tag a {
 
 .main-panel {
 	transition: width 0.25s ease, margin 0.25s ease;
-	width: calc(100% - 270px);
+	width: calc(100% - 280px);
 	min-height: calc(100vh - 97px);
 	display: -webkit-flex;
 	display: flex;
@@ -22695,7 +22695,7 @@ div.tagsinput span.tag a {
 	font-family: "Manrope", sans-serif;
 	font-weight: 500;
 	padding: 0;
-	width: 270px;
+	width: 280px;
 	z-index: 11;
 	transition: width 0.25s ease, background 0.25s ease;
 	-webkit-transition: width 0.25s ease, background 0.25s ease;
@@ -22758,6 +22758,7 @@ div.tagsinput span.tag a {
 	text-align: center;
 	margin-right: 1rem;
 	font-size: 16px;
+	justify-content: center;
 }
 
 .sidebar .nav .nav-item .nav-link i.menu-arrow,
@@ -22996,7 +22997,7 @@ div.tagsinput span.tag a {
 		top: 0;
 		bottom: 0;
 		overflow: auto;
-		left: -270px;
+		left: -280px;
 		-webkit-transition: all 0.25s ease-out;
 		-o-transition: all 0.25s ease-out;
 		transition: all 0.25s ease-out;
@@ -23029,7 +23030,7 @@ div.tagsinput span.tag a {
 }
 
 .navbar .navbar-brand-wrapper {
-	width: 270px;
+	width: 280px;
 	height: 97px;
 	padding: 20px 35px;
 	background: #F4F5F7;
@@ -23141,7 +23142,7 @@ div.tagsinput span.tag a {
 }
 
 .navbar .navbar-menu-wrapper {
-	width: calc(100% - 270px);
+	width: calc(100% - 280px);
 	height: 97px;
 	color: #6C7383;
 	background: #F4F5F7;
@@ -25400,7 +25401,7 @@ div.tagsinput span.tag a {
 	}
 
 	.sidebar-fixed .main-panel {
-		margin-left: 270px;
+		margin-left: 280px;
 	}
 
 	.sidebar-fixed.sidebar-icon-only .main-panel {

@@ -2,17 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Modulo;
 use App\Models\Rol;
+use App\Models\Servicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class RolControlador extends Controller
 {
+	use SeguridadControlador;
+
 	// Display a listing of the resource. 
 	public function index()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$idservicio = 0;
+		if (!$this->verificar_acceso_servicio($idservicio)) {
+			return redirect($this->redireccionar_419());
+		}
+
 		$roles = Rol::all();
-		return view('roles.index', ["roles" => $roles]);
+		$modulos = []; // Variable vacía para ordenar los módulos y dentro sus servicios asosciados [Matríz].
+		$servicios = Servicio::select('tb_servicios.*', 'tb_modulos.orden', 'tb_modulos.icono', 'tb_modulos.modulo', 'tb_modulos.estatus as m_estatus')
+			->join('tb_modulos', 'tb_servicios.idmodulo', 'tb_modulos.idmodulo')
+			->orderBy('tb_modulos.orden', 'ASC')
+			->get();
+
+		// Recorremos todos los servicios encontrados y su módulo correspondiente.
+		foreach ($servicios as $servicio) {
+			// Creamos en el primer nivel la información del módulo y dentro un nuevo arreglo vacío para guardar los servicios.
+			if (!isset($modulos[$servicio->orden])) {
+				$modulos[$servicio->orden] = [
+					'idmodulo' => $servicio->idmodulo,
+					'icono' => $servicio->icono,
+					'modulo' => $servicio->modulo,
+					'servicios' => [],
+					'estatus' => $servicio->m_estatus,
+				];
+			}
+
+			// Agregamos la info del servicio dentro del arreglo.
+			$modulos[$servicio->orden]['servicios'][] = $servicio;
+		}
+
+		$modulos = json_decode(json_encode($modulos, JSON_FORCE_OBJECT));
+		return view('roles.index', [
+			"roles" => $roles,
+			"modulos" => $modulos,
+		]);
 	}
 
 	// Show the form for creating a new resource. 

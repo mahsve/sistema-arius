@@ -249,7 +249,7 @@ class MapaDeZonaControlador extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
-		// PENDIENTE [BUSCAR Client]
+		//
 		DB::transaction(function () use ($request) {
 			$MapaDeZona = new MapaDeZona();
 

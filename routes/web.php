@@ -26,8 +26,15 @@ Route::middleware('guest')->group(function () {
 // Rutas disponibles cuando el usuario haya iniciado sesión.
 Route::middleware('auth')->group(function () {
 	// Controlador [Dashboard]
-	Route::get('/', App\Http\Controllers\PanelControlador::class);
+	Route::get('/', [App\Http\Controllers\PanelControlador::class, 'dashboard']);
+	Route::get('/acceso_restringido', [App\Http\Controllers\PanelControlador::class, 'error403'])->name('dashboard.419');
 
+	// Controlador [Tarea].
+	Route::resource('/tareas', App\Http\Controllers\TareaControlador::class);
+
+	/**
+	 * MONITOREO
+	 */
 	// Controlador [Mapa de zona].
 	Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(function () {
 		Route::get('/mapas_de_zonas', 'index')->name('mapas_de_zonas.index');
@@ -43,9 +50,6 @@ Route::middleware('auth')->group(function () {
 		Route::get('/mapas_de_zonas/pdf/{id}', 'generar_pdf')->name('mapas_de_zonas.pdf');
 	});
 
-	/**
-	 * MONITOREO
-	 */
 	// Controlador [Reportes diarios de operador].
 	Route::controller(App\Http\Controllers\ReporteDiarioOperadorControlador::class)->group(function () {
 		Route::get('/reportes_diarios_operador', 'index')->name('reportes_diarios_operador.index');
@@ -55,6 +59,7 @@ Route::middleware('auth')->group(function () {
 		Route::patch('/reportes_diarios_operador', 'update')->name('reportes_diarios_operador.update');
 		Route::get('/reportes_diarios_operador/pdf/{id}', 'generar_pdf')->name('reportes_diarios_operador.pdf');
 	});
+	
 	// Controlador [Reportes diarios de operador].
 	Route::controller(App\Http\Controllers\ServicioTecnicoSolicitadoControlador::class)->group(function () {
 		Route::get('/servicios_tecnico_solicitados', 'index')->name('servicios_tecnico_solicitados.index');
@@ -78,16 +83,13 @@ Route::middleware('auth')->group(function () {
 		Route::put('/clientes/estatus/{id}', 'toggle')->name('clientes.status'); // 
 	});
 
-	// Controlador [Tarea].
-	Route::resource('/tareas', App\Http\Controllers\TareaControlador::class);
+	// Controlador [Departamentos].
+	Route::resource('/departamentos', App\Http\Controllers\DepartamentoControlador::class);
+	Route::put('/departamentos/estatus/{id}', [App\Http\Controllers\DepartamentoControlador::class, 'toggle'])->name('departamentos.status');
 
 	// Controlador [Cargos].
 	Route::resource('/cargos', App\Http\Controllers\CargoControlador::class);
 	Route::put('/cargos/estatus/{id}', [App\Http\Controllers\CargoControlador::class, 'toggle'])->name('cargos.status');
-
-	// Controlador [Departamentos].
-	Route::resource('/departamentos', App\Http\Controllers\DepartamentoControlador::class);
-	Route::put('/departamentos/estatus/{id}', [App\Http\Controllers\DepartamentoControlador::class, 'toggle'])->name('departamentos.status');
 
 	// Controlador [Personal].
 	Route::resource('/personal', App\Http\Controllers\PersonalControlador::class);
@@ -107,6 +109,7 @@ Route::middleware('auth')->group(function () {
 	 */
 	// Controlador [Módulos].
 	Route::resource('/modulos', App\Http\Controllers\ModuloControlador::class);
+	Route::post('/modulos/orden', [App\Http\Controllers\ModuloControlador::class, 'order'])->name('modulos.order');
 	Route::put('/modulos/estatus/{id}', [App\Http\Controllers\ModuloControlador::class, 'toggle'])->name('modulos.status');
 
 	// Controlador [Servicios].
@@ -117,7 +120,7 @@ Route::middleware('auth')->group(function () {
 	Route::resource('/roles', App\Http\Controllers\RolControlador::class);
 
 	// Controlador [Roles].
-	Route::get('/bitacora', App\Http\Controllers\BitacoraControlador::class)->name('bitacora');
+	Route::get('/bitacora', App\Http\Controllers\BitacoraControlador::class)->name('bitacora.index');
 
 	/**
 	 * PERFIL

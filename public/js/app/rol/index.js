@@ -7,13 +7,61 @@
 	const formulario_registro = document.getElementById("formulario_registro");
 	const modal_modificar = new bootstrap.Modal('#modal_modificar');
 	const formulario_actualizacion = document.getElementById("formulario_actualizacion");
+	/**
+	 * COMENTARIOS [DOCUMENTACIÓN].
+	 */
+	// .servicios_r								- clase que abarca todos los checks de los servicios independientemente del módulo.
+	// .servicios_r_{{idmodulo}}	- clase que abarca todos los checks de los servicios del módulo indicado en el idmodulo.
 
 	// Eventos elementos HTML.
 	// Agregar nuevo registro.
 	btn_nuevo_rol.addEventListener("click", function (e) {
 		e.preventDefault();
 		formulario_registro.reset();
+		Array.from(document.querySelectorAll('.servicios_r')).forEach(check_ => check_.setAttribute('disabled', true));
 		modal_registrar.show();
+	});
+
+	// [MODULO REGISTRAR].
+	// Agregamos evento a los check de los módulos para que activen y desactiven la opción de marcar los servicios de estos.
+	Array.from(document.querySelectorAll('.modulo_r')).forEach(ck_modulo => {
+		ck_modulo.addEventListener('change', function () {
+			const idmodulo = this.value;
+			Array.from(document.querySelectorAll(`.servicio_r_${idmodulo}`)).forEach(ck_servicio => {
+				if (!ck_modulo.checked)
+					ck_servicio.setAttribute("disabled", true);
+				else
+					ck_servicio.removeAttribute("disabled");
+			});
+		});
+	});
+	// Agregamos evento a los check de "Marcar todos" para marcar todos los servicios de un módulo.
+	Array.from(document.querySelectorAll('.marcar_todos_r')).forEach(ck_marcar => {
+		ck_marcar.addEventListener('change', function () {
+			const idmodulo = this.getAttribute('data-modulo');
+			Array.from(document.querySelectorAll(`.servicio_r_${idmodulo}`)).forEach(ck_servicio => ck_servicio.checked = ck_marcar.checked);
+		});
+	});
+
+	// [MODULO MODIFICAR].
+	// Agregamos evento a los check de los módulos para que activen y desactiven la opción de marcar los servicios de estos.
+	Array.from(document.querySelectorAll('.modulo_m')).forEach(ck_modulo => {
+		ck_modulo.addEventListener('change', function () {
+			const idmodulo = this.value;
+			Array.from(document.querySelectorAll(`.servicio_m_${idmodulo}`)).forEach(ck_servicio => {
+				if (!ck_modulo.checked)
+					ck_servicio.setAttribute("disabled", true);
+				else
+					ck_servicio.removeAttribute("disabled");
+			});
+		});
+	});
+	// Agregamos evento a los check de "Marcar todos" para marcar todos los servicios de un módulo.
+	Array.from(document.querySelectorAll('.marcar_todos_m')).forEach(ck_marcar => {
+		ck_marcar.addEventListener('change', function () {
+			const idmodulo = this.getAttribute('data-modulo');
+			Array.from(document.querySelectorAll(`.servicio_m_${idmodulo}`)).forEach(ck_servicio => ck_servicio.checked = ck_marcar.checked);
+		});
 	});
 
 	// Registrar dato.

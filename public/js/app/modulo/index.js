@@ -1,19 +1,51 @@
 (function () {
 	// Elementos HTML.
 	const btn_nuevo_modulo = document.getElementById("btn_nuevo_modulo");
+	const btn_organizar_modulos = document.getElementById("btn_organizar_modulos");
 	const switch_estatus = document.querySelectorAll(".switch_estatus");
 	const btn_editar = document.querySelectorAll(".btn_editar");
 	const modal_registrar = new bootstrap.Modal('#modal_registrar');
 	const formulario_registro = document.getElementById("formulario_registro");
 	const modal_modificar = new bootstrap.Modal('#modal_modificar');
 	const formulario_actualizacion = document.getElementById("formulario_actualizacion");
+	const modal_organizar = new bootstrap.Modal('#modal_organizar');
+	const formulario_organizar = document.getElementById("formulario_organizar");
+
+	// Plugins.
+	const listaModulos = new Sortable(document.getElementById('lista-modulos'), {
+		animation: 150,
+		ghostClass: 'blue-background-class',
+		onUpdate: function () {
+			const list_orden = document.querySelectorAll('.o_orden');
+			const list_html = document.querySelectorAll('.o_htmlorden');
+			for(let i = 0; i < list_orden.length; i++) {
+				list_orden[i].value = i + 1;
+				list_html[i].innerHTML = i + 1;
+			}
+		},
+	});
 
 	// Eventos elementos HTML.
 	// Agregar nuevo registro.
 	btn_nuevo_modulo.addEventListener("click", function (e) {
 		e.preventDefault();
 		formulario_registro.reset();
+		document.getElementById('c_icono_r').dispatchEvent(new Event('keyup'));
 		modal_registrar.show();
+	});
+
+	// Evento para mostrar una visualización rapida del icono agregado en el formulario del módulo.
+	document.getElementById('c_icono_r').addEventListener('keyup', function () {
+		document.getElementById('preview_r').setAttribute('class', `${this.value}`);
+	});
+	document.getElementById('c_icono_m').addEventListener('keyup', function () {
+		document.getElementById('preview_m').setAttribute('class', `${this.value}`);
+	});
+
+	// Mostrar ventana para organizar los módulos por un orden en especifico.
+	btn_organizar_modulos.addEventListener("click", function (e) {
+		e.preventDefault();
+		modal_organizar.show();
 	});
 
 	// Registrar dato.
@@ -94,6 +126,34 @@
 		}
 	});
 
+	// Modificar orden.
+	formulario_organizar.addEventListener("submit", function (e) {
+		e.preventDefault();
+
+		// Elementos del formulario.
+		const btn_guardar = document.getElementById("btn_guardar");
+		btn_guardar.classList.add("loading");
+		fetch(`${formulario_organizar.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_organizar) }).then(response => response.json()).then(data => {
+			btn_guardar.classList.remove("loading");
+
+			// Verificamos si ocurrió algún error.
+			if (data.status == "error") {
+				Toast.fire({ icon: data.status, title: data.response.message });
+				return false;
+			}
+
+			// Enviamos mensaje de exito.
+			modal_modificar.hide();
+			Swal.fire({
+				title: "Exito",
+				text: data.response.message,
+				icon: data.status,
+				timer: 2000,
+				willClose: () => location.reload(),
+			});
+		});
+	});
+
 	// Consultar registro.
 	Array.from(btn_editar).forEach(button_ => {
 		button_.addEventListener('click', function (e) {
@@ -112,6 +172,8 @@
 				formulario_actualizacion.reset();
 				formulario_actualizacion.setAttribute('action', `${url_}/modulos/${id_data}`);
 				document.getElementById('c_modulo_m').value = data.modulo;
+				document.getElementById('c_icono_m').value = data.icono;
+				document.getElementById('c_icono_m').dispatchEvent(new Event('keyup'));
 				modal_modificar.show();
 			});
 		});
