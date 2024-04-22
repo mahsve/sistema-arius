@@ -23168,7 +23168,7 @@ div.tagsinput span.tag a {
 
 @media (max-width: 480px) {
 	.navbar .navbar-menu-wrapper {
-		width: calc(100% - 55px);
+		width: calc(100% - 70px);
 	}
 }
 
@@ -25038,10 +25038,6 @@ div.tagsinput span.tag a {
 		flex-direction: row;
 	}
 
-	/* .navbar .navbar-brand-wrapper {
-		width: 55px;
-	} */
-
 	.navbar-collapse {
 		display: -webkit-box;
 		display: -ms-flexbox;
@@ -25052,7 +25048,7 @@ div.tagsinput span.tag a {
 
 @media (max-width: 480px) {
 	.navbar .navbar-brand-wrapper {
-		width: 55px;
+		width: 70px;
 	}
 
 	.navbar .navbar-brand-wrapper .navbar-brand.brand-logo {

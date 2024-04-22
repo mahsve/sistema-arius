@@ -1,5 +1,5 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
-	<div class="sidebar-logo text-center d-flex d-lg-none align-items-center justify-content-center py-3 px-4">
+	<div class="sidebar-logo text-center d-flex d-lg-none align-items-center justify-content-center py-4 my-2 px-4">
 		<a href="{{url('/')}}">
 			<img src="{{url('images/' . env('LOGO_DARK'))}}" alt="Logo {{env('TITLE')}}">
 		</a>

@@ -87,12 +87,12 @@
 	<script src="{{url('libraries/sweetalert2/dist/sweetalert2.min.js')}}"></script>
 	<script src="{{url('js/app/tareas/gestion.js')}}"></script>
 	<!-- Default plugins JS -->
+	<script src="{{url('js/core/off-canvas.js')}}"></script>
+	<script src="{{url('js/core/hoverable-collapse.js')}}"></script>
+	<script src="{{url('js/core/template.js')}}"></script>
+	<script src="{{url('js/core/todolist.js')}}"></script>
 	<?php /*
-		<script src="{{url('js/off-canvas.js')}}"></script>
-		<script src="{{url('js/hoverable-collapse.js')}}"></script>
-		<script src="{{url('js/template.js')}}"></script>
-		<script src="{{url('js/todolist.js')}}"></script> */
-	?>
+	*/ ?>
 	<script id="contenedor_script_variables">
 		const url_ = '{{url("/")}}';
 		const token_ = '{{csrf_token()}}';
@@ -113,10 +113,12 @@
 			}
 		});
 
+		// Opción para deshabilitar el cerrar el dropdown a la hora de clickear la información del usuario en el navbar.
 		document.getElementById('dropdown-user-menu').addEventListener('click', (e) => {
 			e.stopPropagation();
-		})
+		});
 
+		// Agregamos el evento para cerrer sesión con fetch. 
 		document.getElementById('btn_cerrar_sesion').addEventListener('click', function(e) {
 			e.preventDefault();
 
@@ -128,7 +130,10 @@
 
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
-					Toast.fire({ icon: data.status, title: data.response.message });
+					Toast.fire({
+						icon: data.status,
+						title: data.response.message
+					});
 					return false;
 				}
 
@@ -136,10 +141,17 @@
 				Swal.fire({
 					title: "Exito",
 					text: "¡Sesión cerrada exitosamente!",
-					icon: "success", timer: 2000,
+					icon: "success",
+					timer: 2000,
 					willClose: () => location.reload(),
 				});
 			});
+		});
+
+		// Botón para cerrar y abrir el sidebar en la versión móvil.
+		document.getElementById('btn_toggle_sidebar').addEventListener('click', function (e) {
+			e.preventDefault();
+			document.getElementById('sidebar').classList.toggle('active');
 		});
 	</script>
 </body>
