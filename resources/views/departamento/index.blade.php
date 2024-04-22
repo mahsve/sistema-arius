@@ -19,7 +19,9 @@
 			<h4 class="card-title text-uppercase my-2"><i class="fas fa-hotel"></i> Departamentos</h4>
 		</div>
 		<div class="col-6 text-end">
+			@if (isset($permisos->create))
 			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_departamento"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
+			@endif
 		</div>
 	</div>
 </div>
@@ -35,8 +37,12 @@
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
+						@if (isset($permisos->toggle))
 						<th class="ps-2 text-center"><i class="fas fa-toggle-on"></i></th>
+						@endif
+						@if (isset($permisos->update))
 						<th class="ps-2 text-center"><i class="fas fa-cogs"></i></th>
+						@endif
 					</tr>
 				</thead>
 
@@ -52,19 +58,23 @@
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($departamento->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
 							@if ($departamento->estatus == "A")
-								<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
+							<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
 							@else
-								<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
+							<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
 							@endif
 						</td>
+						@if (isset($permisos->toggle))
 						<td class="py-1 px-2 text-center">
 							<div class="form-check form-switch form-check-inline m-0">
 								<input type="checkbox" class="form-check-input mx-auto switch_estatus" role="switch" id="switch_estatus{{$idrand}}" data-id="{{$idrand}}" value="{{$departamento->iddepartamento}}" <?= $departamento->estatus == "A" ? "checked" : "" ?>>
 							</div>
 						</td>
+						@endif
+						@if (isset($permisos->update))
 						<td class="py-1 px-2" style="width: 20px;">
 							<button type="button" class="btn btn-primary btn-sm btn-icon btn_editar" data-id="{{$departamento->iddepartamento}}"><i class="fas fa-edit"></i></button>
 						</td>
+						@endif
 					</tr>
 					@endforeach
 				</tbody>
@@ -73,6 +83,7 @@
 	</div>
 </div>
 
+@if (isset($permisos->create))
 <div class="modal fade" id="modal_registrar" tabindex="-1" aria-labelledby="modal_registrar_label" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -96,7 +107,9 @@
 		</div>
 	</div>
 </div>
+@endif
 
+@if (isset($permisos->update))
 <div class="modal fade" id="modal_modificar" tabindex="-1" aria-labelledby="modal_modificar_label" aria-hidden="true">
 	<div class="modal-dialog">
 		<div class="modal-content">
@@ -121,4 +134,5 @@
 		</div>
 	</div>
 </div>
+@endif
 @endsection
