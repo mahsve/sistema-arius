@@ -16,7 +16,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-id-card-alt"></i> Roles</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-id-card-alt"></i> Roles</h4>
 		</div>
 		<div class="col-6 text-end">
 			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_rol"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
@@ -106,7 +106,7 @@
 											<label class="form-check-label ms-2" for="marcar_todos_r_{{$modulo->idmodulo}}"><b class="me-2">Marcar todas</b><i class="fas fa-check-double"></i></label>
 										</div>
 										@foreach($modulo->servicios as $servicio)
-										<div class="form-check form-check-inline m-0 d-flex align-items-center">
+										<div class="form-check form-check-inline m-0 d-flex align-items-center {{$servicio->idservicio_raiz > 0 ? 'ms-4' : ''}}">
 											<input class="form-check-input m-0 servicios_r servicio_r_{{$modulo->idmodulo}}" type="checkbox" role="switch" name="servicio[]" id="servicio_r_{{$servicio->idservicio}}" value="{{$servicio->idservicio}}">
 											<label class="form-check-label ms-2" for="servicio_r_{{$servicio->idservicio}}"><b>{{$servicio->servicio}}</b></label>
 										</div>

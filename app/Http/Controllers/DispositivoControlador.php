@@ -8,11 +8,26 @@ use Illuminate\Support\Facades\DB;
 
 class DispositivoControlador extends Controller
 {
+	use SeguridadControlador;
+
+	// Atributos de la clase.
+	public $idservicio = 17;
+
 	// Display a listing of the resource.
 	public function index()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		if (!isset($permisos->index)) {
+			return $this->error403();
+		}
+
+		// Consultamos los datos necesarios y cargamos la vista.
 		$dispositivos = Dispositivo::all();
-		return view('dispositivo.index', ["dispositivos" => $dispositivos]);
+		return view('dispositivo.index', [
+			'permisos' => $permisos,
+			"dispositivos" => $dispositivos
+		]);
 	}
 
 	// Show the form for creating a new resource.
@@ -23,6 +38,11 @@ class DispositivoControlador extends Controller
 	// Store a newly created resource in storage.
 	public function store(Request $request)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_dispositivo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del dispositivo"]]);
@@ -56,6 +76,12 @@ class DispositivoControlador extends Controller
 	// Show the form for editing the specified resource.
 	public function edit(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Consultamos el registro a modificar.
 		$dispositivo = Dispositivo::find($id);
 		return json_encode($dispositivo);
 	}
@@ -63,6 +89,11 @@ class DispositivoControlador extends Controller
 	// Update the specified resource in storage.
 	public function update(Request $request, string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_dispositivo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del dispositivo"]]);
@@ -84,7 +115,7 @@ class DispositivoControlador extends Controller
 		$dispositivo = Dispositivo::find($id);
 		$dispositivo->dispositivo = mb_convert_case($request->c_dispositivo, MB_CASE_UPPER);
 		$dispositivo->save();
-		
+
 		return json_encode(["status" => "success", "response" => ["message" => "Dispositivo modificado exitosamente"]]);
 	}
 
@@ -96,6 +127,11 @@ class DispositivoControlador extends Controller
 	// Update status.
 	public function toggle(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		$dispositivo = Dispositivo::find($id);
 		$dispositivo->estatus = $dispositivo->estatus != "A" ? "A" : "I";
 		$dispositivo->save();

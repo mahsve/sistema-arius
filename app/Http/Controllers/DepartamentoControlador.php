@@ -8,11 +8,26 @@ use Illuminate\Support\Facades\DB;
 
 class DepartamentoControlador extends Controller
 {
+	use SeguridadControlador;
+
+	// Atributos de la clase.
+	public $idservicio = 5;
+
 	// Display a listing of the resource. 
 	public function index()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		if (!isset($permisos->index)) {
+			return $this->error403();
+		}
+
+		// Consultamos los datos necesarios y cargamos la vista.
 		$departamentos = Departamento::all();
-		return view('departamento.index', ["departamentos" => $departamentos]);
+		return view('departamento.index', [
+			'permisos' => $permisos,
+			"departamentos" => $departamentos,
+		]);
 	}
 
 	// Show the form for creating a new resource. 
@@ -23,6 +38,11 @@ class DepartamentoControlador extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_departamento == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del departamento"]]);
@@ -56,6 +76,12 @@ class DepartamentoControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Consultamos el registro a modificar.
 		$departamento = Departamento::find($id);
 		return json_encode($departamento);
 	}
@@ -63,6 +89,11 @@ class DepartamentoControlador extends Controller
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_departamento == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del departamento"]]);
@@ -84,7 +115,7 @@ class DepartamentoControlador extends Controller
 		$departamento = Departamento::find($id);
 		$departamento->departamento = mb_convert_case($request->c_departamento, MB_CASE_UPPER);
 		$departamento->save();
-		
+
 		return json_encode(["status" => "success", "response" => ["message" => "Departamento modificado exitosamente"]]);
 	}
 
@@ -96,6 +127,12 @@ class DepartamentoControlador extends Controller
 	// Update status.
 	public function toggle(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Consultamos el registro a actualizar el estatus.
 		$departamento = Departamento::find($id);
 		$departamento->estatus = $departamento->estatus != "A" ? "A" : "I";
 		$departamento->save();

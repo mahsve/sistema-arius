@@ -16,7 +16,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-map-marked-alt"></i> Mapas de zonas</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-map-marked-alt"></i> Mapas de zonas</h4>
 		</div>
 		<div class="col-6 text-end">
 			<a href="{{route('mapas_de_zonas.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-folder-plus me-2"></i>Agregar</a>

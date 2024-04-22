@@ -15,7 +15,6 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function register(): void
 	{
-		//
 	}
 
 	/**
@@ -36,6 +35,7 @@ class AppServiceProvider extends ServiceProvider
 				->whereNull('tb_servicios.idservicio_raiz')
 				->where('tb_rol_servicio.idrol', '=', $idrol)
 				->orderBy('tb_modulos.orden', 'ASC')
+				->orderBy('tb_servicios.orden', 'ASC')
 				->get();
 			foreach ($servicios as $servicio) {
 				// Creamos en el primer nivel la información del módulo y dentro un nuevo arreglo vacío para guardar los servicios.

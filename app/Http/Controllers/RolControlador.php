@@ -12,15 +12,19 @@ class RolControlador extends Controller
 {
 	use SeguridadControlador;
 
+	// Atributos de la clase.
+	public $idservicio = 33;
+
 	// Display a listing of the resource. 
 	public function index()
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		$idservicio = 0;
-		if (!$this->verificar_acceso_servicio($idservicio)) {
-			return redirect($this->redireccionar_419());
+		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		if (!isset($permisos->index)) {
+			return $this->error403();
 		}
 
+		// Permitimos el acceso en caso de tener permisos.
 		$roles = Rol::all();
 		$modulos = []; // Variable vacía para ordenar los módulos y dentro sus servicios asosciados [Matríz].
 		$servicios = Servicio::select('tb_servicios.*', 'tb_modulos.orden', 'tb_modulos.icono', 'tb_modulos.modulo', 'tb_modulos.estatus as m_estatus')
@@ -45,8 +49,10 @@ class RolControlador extends Controller
 			$modulos[$servicio->orden]['servicios'][] = $servicio;
 		}
 
+		// Consultamos los datos necesarios y cargamos la vista.
 		$modulos = json_decode(json_encode($modulos, JSON_FORCE_OBJECT));
 		return view('roles.index', [
+			'permisos' => $permisos,
 			"roles" => $roles,
 			"modulos" => $modulos,
 		]);
@@ -60,6 +66,11 @@ class RolControlador extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return redirect($this->redireccionar_419());
+		}
+
 		// Validamos.
 		if ($request->c_rol == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
@@ -93,6 +104,12 @@ class RolControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return redirect($this->redireccionar_419());
+		}
+
+		// Consultamos el registro a modificar.
 		$rol = Rol::find($id);
 		return json_encode($rol);
 	}
@@ -100,6 +117,11 @@ class RolControlador extends Controller
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return redirect($this->redireccionar_419());
+		}
+
 		// Validamos.
 		if ($request->c_rol == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
@@ -134,6 +156,12 @@ class RolControlador extends Controller
 	// Update status.
 	public function toggle(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Consultamos el registro a actualizar el estatus.
 		$rol = Rol::find($id);
 		$rol->estatus = $rol->estatus != "A" ? "A" : "I";
 		$rol->save();

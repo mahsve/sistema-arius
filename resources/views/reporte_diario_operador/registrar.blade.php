@@ -10,7 +10,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-folder-plus"></i> Registrar reporte de operadores</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-folder-plus"></i> Registrar reporte de operadores</h4>
 		</div>
 		<div class="col-6 text-end">
 			<a href="{{route('reportes_diarios_operador.index')}}" class="btn btn-primary btn-sm "><i class="fas fa-chevron-left me-2"></i>Regresar</a>

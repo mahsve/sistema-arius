@@ -8,11 +8,26 @@ use Illuminate\Support\Facades\DB;
 
 class ModuloControlador extends Controller
 {
+	use SeguridadControlador;
+
+	// Atributos de la clase.
+	public $idservicio = 25;
+
 	// Display a listing of the resource. 
 	public function index()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		if (!isset($permisos->index)) {
+			return $this->error403();
+		}
+
+		// Consultamos los datos necesarios y cargamos la vista.
 		$modulos = Modulo::select()->orderBy('orden', 'ASC')->get();
-		return view('modulo.index', ["modulos" => $modulos]);
+		return view('modulo.index', [
+			'permisos' => $permisos,
+			"modulos" => $modulos
+		]);
 	}
 
 	// Show the form for creating a new resource. 
@@ -23,6 +38,11 @@ class ModuloControlador extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_modulo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
@@ -59,6 +79,12 @@ class ModuloControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Consultamos el registro a modificar.
 		$modulo = Modulo::find($id);
 		return json_encode($modulo);
 	}
@@ -66,6 +92,11 @@ class ModuloControlador extends Controller
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_modulo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
@@ -115,6 +146,12 @@ class ModuloControlador extends Controller
 	// Update status.
 	public function toggle(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Consultamos el registro a actualizar el estatus.
 		$modulo = Modulo::find($id);
 		$modulo->estatus = $modulo->estatus != "A" ? "A" : "I";
 		$modulo->save();

@@ -16,7 +16,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-laptop-code"></i> Configuraciones</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-laptop-code"></i> Configuraciones</h4>
 		</div>
 		<div class="col-6 text-end">
 			<button type="button" class="btn btn-primary btn-sm" id="btn_nuevo_configuracion"><i class="fas fa-folder-plus me-2"></i>Agregar</button>

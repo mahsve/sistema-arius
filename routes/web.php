@@ -27,7 +27,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
 	// Controlador [Dashboard]
 	Route::get('/', [App\Http\Controllers\PanelControlador::class, 'dashboard']);
-	Route::get('/acceso_restringido', [App\Http\Controllers\PanelControlador::class, 'error403'])->name('dashboard.419');
+	Route::get('/acceso_restringido', [App\Http\Controllers\PanelControlador::class, 'error403'])->name('dashboard.403');
 
 	// Controlador [Tarea].
 	Route::resource('/tareas', App\Http\Controllers\TareaControlador::class);

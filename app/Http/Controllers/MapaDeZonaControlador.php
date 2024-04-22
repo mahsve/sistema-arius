@@ -16,6 +16,10 @@ use Spipu\Html2Pdf\Html2Pdf;
 
 class MapaDeZonaControlador extends Controller
 {
+	use SeguridadControlador;
+
+	// Atributos de la clase.
+	public $idservicio = 38;
 	public $lista_contratos = [
 		"Comercios" => [
 			"1" => "Comercios - Cantv|Telular|Inter",
@@ -128,17 +132,33 @@ class MapaDeZonaControlador extends Controller
 	// Display a listing of the resource. 
 	public function index()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		if (!isset($permisos->index)) {
+			return $this->error403();
+		}
+
+		// Consultamos los datos necesarios y cargamos la vista.
 		$mapas_de_zonas	= DB::table('tb_mapa_zonas')
 			->select('tb_mapa_zonas.*', 'tb_clientes.nombre AS cliente', 'tb_personal.nombre AS asesor')
 			->join('tb_clientes', 'tb_mapa_zonas.idcliente', '=', 'tb_clientes.identificacion')
 			->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', '=', 'tb_personal.cedula')
 			->get();
-		return view('mapa_de_zona.index', ['mapas_de_zonas' => $mapas_de_zonas]);
+		return view('mapa_de_zona.index', [
+			'permisos' => $permisos,
+			'mapas_de_zonas' => $mapas_de_zonas
+		]);
 	}
 
 	// Show the form for creating a new resource. 
 	public function create()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Cargamos la vista para registrar un nuevo mapa de zona con los datos necesarios.
 		$dispositivos	= Dispositivo::all();
 		$personal = Personal::all();
 		return view('mapa_de_zona.registrar', [
@@ -167,7 +187,7 @@ class MapaDeZonaControlador extends Controller
 			$inicio	= "7400";
 			$final	= "7999";
 		}
-	
+
 		// Consultamos el ultimo código registrado según el tipo de contrato [1000, 2000, 3000, 7000];
 		$resultado = DB::table('tb_mapa_zonas')
 			->select('idcodigo')
@@ -249,7 +269,12 @@ class MapaDeZonaControlador extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
-		//
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Llamamos la función transaction para procesar la operación como una transacción.
 		DB::transaction(function () use ($request) {
 			$MapaDeZona = new MapaDeZona();
 
@@ -346,8 +371,7 @@ class MapaDeZonaControlador extends Controller
 			}
 		});
 
-		return redirect('mapas_de_zonas');
-		// return json_encode(["status" => "success", "response" => ["message" => "Mapa de zona registrado exitosamente"]]);
+		return json_encode(["status" => "success", "response" => ["message" => "Mapa de zona registrado exitosamente"]]);
 	}
 
 	// Display the specified resource. 
@@ -358,18 +382,12 @@ class MapaDeZonaControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
-		// $client	= DB::table('tb_clientes')
-		// 	->select('*')
-		// 	->join('tb_mapa_zonas', 'tb_clientes.identificacion', '=', 'tb_mapa_zonas.id_cliente')
-		// 	->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', '=', 'tb_personal.cedula')
-		// 	->where('tb_mapa_zonas.id_codigo', $id)
-		// 	->first();
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
 
-		// $contacts = DB::table('tb_contactos')
-		// 	->select('*')
-		// 	->join('tb_clientes', 'tb_contactos.id_cliente', '=', 'tb_clientes.identificacion')
-		// 	->where('tb_contactos.id_codigo', $id)
-		// 	->get();
+		// Cargamos la vista para modificar un cliente con los datos necesarios.
 
 		// return view('zonemaps.update', ['client' => $client, 'contacts' => $contacts]);
 	}
@@ -377,6 +395,12 @@ class MapaDeZonaControlador extends Controller
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Llamamos la función transaction para procesar la operación como una transacción.
 		DB::transaction(function () use ($request, $id) {
 			// Registramos un nuevo mapa de zona.
 			$MapaDeZona = MapaDeZona::find($id);
@@ -424,6 +448,11 @@ class MapaDeZonaControlador extends Controller
 	// Generar pdf.
 	public function generar_pdf(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Consultamos los datos de todo el mapa de zona.
 		$mapa = MapaDeZona::find($id);
 		$cliente = Cliente::find($mapa->idcliente);

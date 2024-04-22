@@ -31,7 +31,7 @@ if ($personal->telefono2 != null and $personal->telefono2 != 'null') {
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-folder-open"></i> Modificar personal</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-folder-open"></i> Modificar personal</h4>
 		</div>
 		<div class="col-6 text-end">
 		<a href="{{route('personal.index')}}" class="btn btn-primary btn-sm "><i class="fas fa-chevron-left me-2"></i>Regresar</a>

@@ -13,6 +13,10 @@ use PhpParser\Node\Stmt\TryCatch;
 
 class PersonalControlador extends Controller
 {
+	use SeguridadControlador;
+
+	// Atributos de la clase.
+	public $idservicio = 13;
 	public $lista_cedula = ["V", "E"];
 	public $lista_prefijos = [
 		"Móvil" => [
@@ -87,17 +91,33 @@ class PersonalControlador extends Controller
 	// Display a listing of the resource. 
 	public function index()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		if (!isset($permisos->index)) {
+			return $this->error403();
+		}
+
+		// Consultamos los datos necesarios y cargamos la vista.
 		$personal = DB::table('tb_personal')
 			->select('tb_personal.*', 'tb_usuarios.usuario', 'tb_roles.rol')
 			->join('tb_usuarios', 'tb_personal.cedula', '=', 'tb_usuarios.cedula')
 			->join('tb_roles', 'tb_usuarios.idrol', '=', 'tb_roles.idrol')
 			->get();
-		return view('personal.index', ['personal' => $personal]);
+		return view('personal.index', [
+			'permisos' => $permisos,
+			'personal' => $personal,
+		]);
 	}
 
 	// Show the form for creating a new resource. 
 	public function create()
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Cargamos la vista para registrar un nuevo personal con los datos necesarios.
 		$departamentos = Departamento::all();
 		$roles	= Rol::all();
 		return view('personal.registrar', [
@@ -119,6 +139,11 @@ class PersonalControlador extends Controller
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_identificacion == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número de Cédula"]]);
@@ -178,7 +203,7 @@ class PersonalControlador extends Controller
 				$personal->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
 				$personal->idcargo = $request->c_cargo;
 				$personal->save();
-	
+
 				// Registramos los datos del usuario.
 				$usuario = new Usuario();
 				$usuario->cedula = $identificacion;
@@ -201,6 +226,12 @@ class PersonalControlador extends Controller
 	// Show the form for editing the specified resource. 
 	public function edit(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Cargamos la vista para modificar un personal con los datos necesarios.
 		$personal = Personal::select('tb_personal.*', 'tb_cargos.iddepartamento', 'tb_usuarios.idrol')
 			->join('tb_cargos', 'tb_personal.idcargo', 'tb_cargos.idcargo')
 			->join('tb_usuarios', 'tb_personal.cedula', 'tb_usuarios.cedula')
@@ -224,6 +255,11 @@ class PersonalControlador extends Controller
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
 		// Validamos.
 		if ($request->c_nombre_completo == "") {
 			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre completo"]]);
@@ -293,6 +329,12 @@ class PersonalControlador extends Controller
 	// Update status.
 	public function toggle(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+			return $this->error403();
+		}
+
+		// Consultamos el registro a actualizar el estatus.
 		$personal = Personal::find($id);
 		$personal->estatus = $personal->estatus != "A" ? "A" : "I";
 		$personal->save();

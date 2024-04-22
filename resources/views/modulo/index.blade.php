@@ -17,7 +17,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase m-0"><i class="fas fa-briefcase"></i> Módulos</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-briefcase"></i> Módulos</h4>
 		</div>
 		<div class="col-6 text-end">
 			<button type="button" class="btn btn-primary btn-sm" id="btn_organizar_modulos"><i class="fas fa-arrows-alt me-2"></i>Organizar</button>
