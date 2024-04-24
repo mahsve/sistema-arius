@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Departamento;
 use App\Models\Personal;
 use App\Models\Cargo;
-use App\Models\Rol;
-use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use PhpParser\Node\Stmt\TryCatch;
@@ -100,8 +98,8 @@ class PersonalControlador extends Controller
 		// Consultamos los datos necesarios y cargamos la vista.
 		$personal = DB::table('tb_personal')
 			->select('tb_personal.*', 'tb_usuarios.usuario', 'tb_roles.rol')
-			->join('tb_usuarios', 'tb_personal.cedula', '=', 'tb_usuarios.cedula')
-			->join('tb_roles', 'tb_usuarios.idrol', '=', 'tb_roles.idrol')
+			->leftjoin('tb_usuarios', 'tb_personal.cedula', '=', 'tb_usuarios.cedula')
+			->leftjoin('tb_roles', 'tb_usuarios.idrol', '=', 'tb_roles.idrol')
 			->get();
 		return view('personal.index', [
 			'permisos' => $permisos,
@@ -113,109 +111,105 @@ class PersonalControlador extends Controller
 	public function create()
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
 			return $this->error403();
 		}
 
 		// Cargamos la vista para registrar un nuevo personal con los datos necesarios.
 		$departamentos = Departamento::all();
-		$roles	= Rol::all();
 		return view('personal.registrar', [
 			'lista_cedula' => $this->lista_cedula,
 			'lista_prefijos' => $this->lista_prefijos,
 			'departamentos' => $departamentos,
-			'roles' => $roles,
 		]);
 	}
 
-	public function consultar_cargos(string $id)
+	// Función para consultar los cargos de un departamento.
+	public function cargos(string $id)
 	{
-		$cargos = DB::table('tb_cargos')
-			->where('iddepartamento', '=', $id)
-			->get();
-		return json_encode($cargos);
+		// Consultamos los cargos del departamento seleccionado.
+		$cargos = DB::table('tb_cargos')->where('iddepartamento', '=', $id)->get();
+		return response($cargos, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Store a newly created resource in storage
 	public function store(Request $request)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para registrar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_identificacion == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número de Cédula"]]);
-		} else if (strlen($request->c_identificacion) != 8) {
-			return json_encode(["status" => "error", "response" => ["message" => "La cédula está incompleta"]]);
+			$message = "¡Ingrese el número de Cédula!";
+		} else if (strlen($request->c_identificacion) < 8) {
+			$message = "¡La cédula está incompleta!";
 		} else if ($request->c_nombre_completo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre completo"]]);
-		} else if ($request->c_nombre_completo != "" and strlen($request->c_nombre_completo) < 10) {
-			return json_encode(["status" => "error", "response" => ["message" => "El nombre debe tener al menos 10 caracteres"]]);
+			$message = "¡Ingrese el nombre completo!";
+		} else if (strlen($request->c_nombre_completo) < 10) {
+			$message = "¡El nombre debe tener al menos 10 caracteres!";
 		} else if ($request->c_prefijo_telefono1 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el código del primer teléfono"]]);
+			$message = "¡Seleccione el código del primer teléfono!";
 		} else if ($request->c_telefono1 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del primer teléfono"]]);
+			$message = "¡Ingrese el número del primer teléfono!";
 		} else if (strlen($request->c_telefono1) < 8) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del primer teléfono completo"]]);
+			$message = "¡Ingrese el número del primer teléfono completo!";
 		} else if ($request->c_telefono2 != "" and $request->c_prefijo_telefono2 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el código del segundo teléfono"]]);
+			$message = "¡Seleccione el código del segundo teléfono!";
 		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del segundo teléfono"]]);
-		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 != "" and strlen($request->c_telefono2) < 8) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del segundo teléfono completo"]]);
+			$message = "¡Ingrese el número del segundo teléfono!";
+		} else if ($request->c_prefijo_telefono2 != "" and strlen($request->c_telefono2) < 8) {
+			$message = "¡Ingrese el número del segundo teléfono completo!";
 		} else if ($request->c_correo_electronico == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el correo electrónico"]]);
+			$message = "¡Ingrese el correo electrónico!";
 		} else if (filter_var($request->c_correo_electronico, FILTER_VALIDATE_EMAIL) === false) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese un correo electrónico válido"]]);
+			$message = "¡Ingrese un correo electrónico válido!\nEj: usuario@email.com";
 		} else if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
+			$message = "¡Seleccione el departamento!";
 		} else if ($request->c_cargo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el cargo"]]);
-		} else if ($request->c_rol == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el rol"]]);
+			$message = "¡Seleccione el cargo!";
 		} else if ($request->c_direccion == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese la dirección física"]]);
+			$message = "¡Ingrese la dirección física!";
+		} else if (strlen($request->c_direccion) < 10) {
+			$message = "¡La dirección debe tener al menos 10 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Concatenamos la identificación y los teléfonos.
-		$identificacion = $request->c_prefijo_identificacion . "-" . $request->c_identificacion;
-		$telefono1 = "(" . $request->c_prefijo_telefono1 . ") " . $request->c_telefono1;
-		$telefono2 = $request->c_telefono2 != "" ? "(" . $request->c_prefijo_telefono2 . ") " . $request->c_telefono2 : NULL;
+		$identificacion	= $request->c_prefijo_identificacion . "-" . $request->c_identificacion;
+		$telefono1			= "(" . $request->c_prefijo_telefono1 . ") " . $request->c_telefono1;
+		$telefonox			= "(" . $request->c_prefijo_telefono2 . ") " . $request->c_telefono2;
+		$telefono2			= $telefonox != "() " ? $telefonox : "";
 
 		// Validamos que no este ya registrado.
 		if (Personal::find($identificacion)) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este personal ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Este personal ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// Ejecutamos una nueva transacción.
-		try {
-			DB::transaction(function () use ($request, $identificacion, $telefono1, $telefono2) {
-				// Registramos el trabajador.
-				$personal = new Personal();
-				$personal->cedula = $identificacion;
-				$personal->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
-				$personal->telefono1 = $telefono1;
-				$personal->telefono2 = $telefono2;
-				$personal->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
-				$personal->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
-				$personal->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
-				$personal->idcargo = $request->c_cargo;
-				$personal->save();
+		// Registramos el trabajador.
+		$personal = new Personal();
+		$personal->cedula = $identificacion;
+		$personal->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
+		$personal->telefono1 = $telefono1;
+		$personal->telefono2 = $telefono2;
+		$personal->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
+		$personal->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
+		$personal->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
+		$personal->idcargo = $request->c_cargo;
+		$personal->save();
 
-				// Registramos los datos del usuario.
-				$usuario = new Usuario();
-				$usuario->cedula = $identificacion;
-				$usuario->usuario = explode(' ', $request->c_nombre_completo)[0] . rand(100000, 999999);
-				$usuario->contrasena = password_hash($request->c_identificacion, PASSWORD_DEFAULT);
-				$usuario->idrol = $request->c_rol;
-				$usuario->save();
-			});
-		} catch (\Throwable $th) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ocurrió un error al registrar el personal", "error" => $th]]);
-		}
-		return json_encode(["status" => "success", "response" => ["message" => "Personal registrado exitosamente"]]);
+		// Enviamos un mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Personal registrado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Display the specified resource. 
@@ -227,28 +221,23 @@ class PersonalControlador extends Controller
 	public function edit(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
 			return $this->error403();
 		}
 
 		// Cargamos la vista para modificar un personal con los datos necesarios.
-		$personal = Personal::select('tb_personal.*', 'tb_cargos.iddepartamento', 'tb_usuarios.idrol')
+		$personal = Personal::select('tb_personal.*', 'tb_cargos.iddepartamento')
 			->join('tb_cargos', 'tb_personal.idcargo', 'tb_cargos.idcargo')
-			->join('tb_usuarios', 'tb_personal.cedula', 'tb_usuarios.cedula')
 			->where('tb_personal.cedula', '=', $id)
 			->first();
 		$departamentos = Departamento::all();
-		$cargos = Cargo::select('*')
-			->where('iddepartamento', '=', $personal->iddepartamento)
-			->get();
-		$roles	= Rol::all();
+		$cargos = Cargo::select('*')->where('iddepartamento', '=', $personal->iddepartamento)->get();
 		return view('personal.modificar', [
 			'personal' => $personal,
 			'lista_cedula' => $this->lista_cedula,
 			'lista_prefijos' => $this->lista_prefijos,
 			'departamentos' => $departamentos,
 			'cargos' => $cargos,
-			'roles' => $roles,
 		]);
 	}
 
@@ -256,69 +245,68 @@ class PersonalControlador extends Controller
 	public function update(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_nombre_completo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre completo"]]);
-		} else if ($request->c_nombre_completo != "" and strlen($request->c_nombre_completo) < 10) {
-			return json_encode(["status" => "error", "response" => ["message" => "El nombre debe tener al menos 10 caracteres"]]);
+			$message = "¡Ingrese el nombre completo!";
+		} else if (strlen($request->c_nombre_completo) < 10) {
+			$message = "¡El nombre debe tener al menos 10 caracteres!";
 		} else if ($request->c_prefijo_telefono1 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el código del primer teléfono"]]);
+			$message = "¡Seleccione el código del primer teléfono!";
 		} else if ($request->c_telefono1 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del primer teléfono"]]);
+			$message = "¡Ingrese el número del primer teléfono!";
 		} else if (strlen($request->c_telefono1) < 8) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del primer teléfono completo"]]);
+			$message = "¡Ingrese el número del primer teléfono completo!";
 		} else if ($request->c_telefono2 != "" and $request->c_prefijo_telefono2 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el código del segundo teléfono"]]);
+			$message = "¡Seleccione el código del segundo teléfono!";
 		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del segundo teléfono"]]);
-		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 != "" and strlen($request->c_telefono2) < 8) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el número del segundo teléfono completo"]]);
+			$message = "¡Ingrese el número del segundo teléfono!";
+		} else if ($request->c_prefijo_telefono2 != "" and strlen($request->c_telefono2) < 8) {
+			$message = "¡Ingrese el número del segundo teléfono completo!";
 		} else if ($request->c_correo_electronico == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el correo electrónico"]]);
+			$message = "¡Ingrese el correo electrónico!";
 		} else if (filter_var($request->c_correo_electronico, FILTER_VALIDATE_EMAIL) === false) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese un correo electrónico válido"]]);
+			$message = "¡Ingrese un correo electrónico válido!\nEj: usuario@email.com";
 		} else if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
+			$message = "¡Seleccione el departamento!";
 		} else if ($request->c_cargo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el cargo"]]);
-		} else if ($request->c_rol == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el rol"]]);
+			$message = "¡Seleccione el cargo!";
 		} else if ($request->c_direccion == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese la dirección física"]]);
+			$message = "¡Ingrese la dirección física!";
+		} else if (strlen($request->c_direccion) < 10) {
+			$message = "¡La dirección debe tener al menos 10 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Concatenamos la identificación y los teléfonos.
-		$telefono1 = "(" . $request->c_prefijo_telefono1 . ") " . $request->c_telefono1;
-		$telefono2 = $request->c_telefono2 != "" ? "(" . $request->c_prefijo_telefono2 . ") " . $request->c_telefono2 : NULL;
+		$telefono1	= "(" . $request->c_prefijo_telefono1 . ") " . $request->c_telefono1;
+		$telefonox	= "(" . $request->c_prefijo_telefono2 . ") " . $request->c_telefono2;
+		$telefono2	= $telefonox != "() " ? $telefonox : "";
 
-		// Ejecutamos una nueva transacción.
-		try {
-			DB::transaction(function () use ($request, $id, $telefono1, $telefono2) {
-				// Actualizamos los datos del trabajador.
-				$personal = Personal::find($id);
-				$personal->cedula = $id;
-				$personal->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
-				$personal->telefono1 = $telefono1;
-				$personal->telefono2 = $telefono2;
-				$personal->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
-				$personal->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
-				$personal->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
-				$personal->idcargo = $request->c_cargo;
-				$personal->save();
+		// Creamos el nuevo registro del módulo.
+		$personal = Personal::find($id);
+		$personal->nombre = mb_convert_case($request->c_nombre_completo, MB_CASE_UPPER);
+		$personal->telefono1 = $telefono1;
+		$personal->telefono2 = $telefono2;
+		$personal->correo = mb_convert_case($request->c_correo_electronico, MB_CASE_UPPER);
+		$personal->direccion = mb_convert_case($request->c_direccion, MB_CASE_UPPER);
+		$personal->referencia = mb_convert_case($request->c_referencia, MB_CASE_UPPER);
+		$personal->idcargo = $request->c_cargo;
+		$personal->save();
 
-				// Actualizamos los datos del usuario.
-				$usuario = Usuario::where('cedula', '=', $id)->first();
-				$usuario->idrol = $request->c_rol;
-				$usuario->save();
-			});
-		} catch (\Throwable $th) {
-			return json_encode(["status" => "error", "response" => ["message" => "Ocurrió un error al modificar el personal", "error" => $th]]);
-		}
-		return json_encode(["status" => "success", "response" => ["message" => "Personal modificado exitosamente"]]);
+		// Enviamos un mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Personal modificado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Remove the specified resource from storage. 
@@ -330,8 +318,9 @@ class PersonalControlador extends Controller
 	public function toggle(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a actualizar el estatus.
@@ -339,6 +328,9 @@ class PersonalControlador extends Controller
 		$personal->estatus = $personal->estatus != "A" ? "A" : "I";
 		$personal->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => ""]]);
+		// Enviamos mensaje de exito al usuario.
+		$message	= $personal->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
+		$response = ["status" => "success", "response" => ["message" => $message]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

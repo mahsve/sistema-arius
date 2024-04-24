@@ -24,12 +24,14 @@ class SesionControlador extends Controller
 
 		// Validamos si encontró el usuario solicitado.
 		if (!$usuario) {
-			return json_encode(["status" => "error", "response" => ["message" => "¡El usuario no se encuentra registrado!"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡El usuario no se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Comprobamos que la contraseña sea correcta.
 		if (!password_verify($request->contrasena, $usuario->contrasena)) {
-			return json_encode(["status" => "error", "response" => ["message" => "¡La contraseña ingresada es incorrecta!"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡La contraseña ingresada es incorrecta!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Iniciamos la sesión.

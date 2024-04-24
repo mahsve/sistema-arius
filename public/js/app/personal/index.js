@@ -38,7 +38,7 @@
 						}
 
 						// Enviamos mensaje de exito al usuario.
-						Toast.fire({ icon: "success", title: "Estatus actualizado exitosamente" });
+						Toast.fire({ icon: data.status, title: data.response.message });
 						this.checked = !this.checked;
 						const idrand = this.getAttribute('data-id');
 						if (this.checked) {

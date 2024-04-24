@@ -42,7 +42,7 @@
 						<input type="text" class="form-control text-uppercase" name="c_identificacion" id="c_identificacion" style="width: calc(100% - 65px); height: 33px;">
 					</div>
 				</div>
-				<div class="form-group col-12 col-lg-6">
+				<div class="form-group col-12 col-lg-7">
 					<label for="c_nombre_completo" class="required"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
 					<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" placeholder="Ingrese el nombre completo">
 				</div>
@@ -52,11 +52,11 @@
 						<select class="form-control text-center" name="c_prefijo_telefono1" id="c_prefijo_telefono1" style="height: 31px; margin-top: 1px;">
 							<option value="">COD.</option>
 							@foreach ($lista_prefijos as $index => $prefijo)
-								<optgroup label="{{$index}}">
-									@foreach ($prefijo as $codigos)
-									<option value="{{$codigos}}">{{$codigos}}</option>
-									@endforeach
-								</optgroup>
+							<optgroup label="{{$index}}">
+								@foreach ($prefijo as $codigos)
+								<option value="{{$codigos}}">{{$codigos}}</option>
+								@endforeach
+							</optgroup>
 							@endforeach
 						</select>
 						<input type="text" class="form-control text-uppercase" name="c_telefono1" id="c_telefono1" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
@@ -68,11 +68,11 @@
 						<select class="form-control text-center" name="c_prefijo_telefono2" id="c_prefijo_telefono2" style="height: 31px; margin-top: 1px;">
 							<option value="">COD.</option>
 							@foreach ($lista_prefijos as $index => $prefijo)
-								<optgroup label="{{$index}}">
-									@foreach ($prefijo as $codigos)
-									<option value="{{$codigos}}">{{$codigos}}</option>
-									@endforeach
-								</optgroup>
+							<optgroup label="{{$index}}">
+								@foreach ($prefijo as $codigos)
+								<option value="{{$codigos}}">{{$codigos}}</option>
+								@endforeach
+							</optgroup>
 							@endforeach
 						</select>
 						<input type="text" class="form-control text-uppercase" name="c_telefono2" id="c_telefono2" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
@@ -80,7 +80,7 @@
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_correo_electronico" class="required"><i class="fas fa-envelope"></i> Correo electrónico</label>
-					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" placeholder="Ingrese el correo electrónico">
+					<input type="text" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" placeholder="Ingrese el correo electrónico">
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_direccion" class="required"><i class="fas fa-map-marked-alt"></i> Dirección</label>

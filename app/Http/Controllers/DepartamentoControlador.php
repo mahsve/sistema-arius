@@ -39,15 +39,23 @@ class DepartamentoControlador extends Controller
 	public function store(Request $request)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para registrar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del departamento"]]);
+			$message = "¡Ingrese el nombre del departamento!";
 		} else if (strlen($request->c_departamento) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El departamento debe tener al menos 3 caracteres"]]);
+			$message = "¡El departamento debe tener al menos 3 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos que no este ya registrado.
@@ -56,7 +64,8 @@ class DepartamentoControlador extends Controller
 			->where('departamento', '=', mb_convert_case($request->c_departamento, MB_CASE_UPPER))
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este departamento ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Esta departamento ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Creamos el nuevo registro del departamento.
@@ -64,8 +73,9 @@ class DepartamentoControlador extends Controller
 		$departamento->departamento = mb_convert_case($request->c_departamento, MB_CASE_UPPER);
 		$departamento->save();
 
-		// return redirect('/departamentos')->with('success', '¡Departamento creado exitosamente!');
-		return json_encode(["status" => "success", "response" => ["message" => "Departamento registrado exitosamente"]]);
+		// Retoramos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Departamento registrado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Display the specified resource. 
@@ -77,28 +87,37 @@ class DepartamentoControlador extends Controller
 	public function edit(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a modificar.
 		$departamento = Departamento::find($id);
-		return json_encode($departamento);
+		return response($departamento, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del departamento"]]);
+			$message = "¡Ingrese el nombre del departamento!";
 		} else if (strlen($request->c_departamento) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El departamento debe tener al menos 3 caracteres"]]);
+			$message = "¡El departamento debe tener al menos 3 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos que no este ya registrado.
@@ -108,7 +127,8 @@ class DepartamentoControlador extends Controller
 			->where('iddepartamento', '!=', $id)
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este departamento ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Esta departamento ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos y modificamos el registro del departamento.
@@ -116,7 +136,9 @@ class DepartamentoControlador extends Controller
 		$departamento->departamento = mb_convert_case($request->c_departamento, MB_CASE_UPPER);
 		$departamento->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => "Departamento modificado exitosamente"]]);
+		// Retoramos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Departamento modificado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Remove the specified resource from storage. 
@@ -128,8 +150,9 @@ class DepartamentoControlador extends Controller
 	public function toggle(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a actualizar el estatus.
@@ -137,6 +160,9 @@ class DepartamentoControlador extends Controller
 		$departamento->estatus = $departamento->estatus != "A" ? "A" : "I";
 		$departamento->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => ""]]);
+		// Enviamos un mensaje de exito al usuario.
+		$message	= $departamento->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
+		$response = ["status" => "success", "response" => ["message" => $message]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

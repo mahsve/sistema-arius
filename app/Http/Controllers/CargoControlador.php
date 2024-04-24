@@ -51,12 +51,19 @@ class CargoControlador extends Controller
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
+			$message = "¡Seleccione el departamento!";
 		} else if ($request->c_cargo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del cargo"]]);
+			$message = "¡Ingrese el nombre del cargo!";
 		} else if (strlen($request->c_cargo) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El cargo debe tener al menos 3 caracteres"]]);
+			$message = "¡El cargo debe tener al menos 3 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
@@ -66,7 +73,8 @@ class CargoControlador extends Controller
 			->where('iddepartamento', '=', $request->c_departamento)
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este cargo ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Este cargo ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Creamos el nuevo registro del cargo.
@@ -90,29 +98,38 @@ class CargoControlador extends Controller
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
-			return $this->error403();
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a modificar.
 		$cargo = Cargo::find($id);
-		return json_encode($cargo);
+		return response($cargo, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_departamento == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el departamento"]]);
+			$message = "¡Seleccione el departamento!";
 		} else if ($request->c_cargo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del cargo"]]);
+			$message = "¡Ingrese el nombre del cargo!";
 		} else if (strlen($request->c_cargo) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El cargo debe tener al menos 3 caracteres"]]);
+			$message = "¡El cargo debe tener al menos 3 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
@@ -123,7 +140,8 @@ class CargoControlador extends Controller
 			->where('idcargo', '!=', $id)
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este cargo ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Este cargo ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos y modificamos el registro del cargo.
@@ -132,7 +150,9 @@ class CargoControlador extends Controller
 		$cargo->iddepartamento = $request->c_departamento;
 		$cargo->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => "Cargo modificado exitosamente"]]);
+		// Enviamos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Cargo modificado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Remove the specified resource from storage. 
@@ -144,8 +164,9 @@ class CargoControlador extends Controller
 	public function toggle(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a actualizar el estatus.
@@ -153,6 +174,9 @@ class CargoControlador extends Controller
 		$cargo->estatus = $cargo->estatus != "A" ? "A" : "I";
 		$cargo->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => ""]]);
+		// Enviamos un mensaje de exito al usuario.
+		$message	= $cargo->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
+		$response = ["status" => "success", "response" => ["message" => $message]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

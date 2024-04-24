@@ -72,30 +72,21 @@
 				</div>
 				<div class="form-group col-12 col-lg-6">
 					<label for="c_correo_electronico" class="required"><i class="fas fa-envelope"></i> Correo electrónico</label>
-					<input type="email" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" placeholder="Ingrese el correo electrónico">
+					<input type="text" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" placeholder="Ingrese el correo electrónico">
 				</div>
-				<div class="form-group col-6 col-lg-2">
+				<div class="form-group col-6 col-lg-3">
 					<label for="c_departamento" class="required"><i class="fas fa-hotel"></i> Departamento</label>
-					<select class="form-control text-uppercase" name="c_departamento" id="c_departamento" required>
+					<select class="form-control text-uppercase" name="c_departamento" id="c_departamento">
 						<option value="">Seleccione</option>
 						@foreach ($departamentos as $departamento)
 						<option value="{{$departamento->iddepartamento}}">{{$departamento->departamento}}</option>
 						@endforeach
 					</select>
 				</div>
-				<div class="form-group col-6 col-lg-2">
+				<div class="form-group col-6 col-lg-3">
 					<label for="c_cargo" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
-					<select class="form-control text-uppercase" name="c_cargo" id="c_cargo" required>
+					<select class="form-control text-uppercase" name="c_cargo" id="c_cargo">
 						<option value="">Seleccione</option>
-					</select>
-				</div>
-				<div class="form-group col-6 col-lg-2">
-					<label for="c_rol" class="required"><i class="fas fa-id-card-alt"></i> Rol</label>
-					<select class="form-control text-uppercase" name="c_rol" id="c_rol" required>
-						<option value="">Seleccione</option>
-						@foreach ($roles as $rol)
-						<option value="{{$rol->idrol}}">{{$rol->rol}}</option>
-						@endforeach
 					</select>
 				</div>
 				<div class="col-12"></div>

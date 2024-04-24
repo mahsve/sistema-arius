@@ -23,7 +23,7 @@
 				<ul class="nav flex-column sub-menu">
 					@foreach($modulo->servicios as $servicio)
 					@if ($servicio->menu_url != null)
-					<li class="nav-item"><a class="nav-link" href="{{route($servicio->menu_url)}}">{{$servicio->servicio}}</a></li>
+					<li class="nav-item"><a class="nav-link" href="{{url($servicio->menu_url)}}">{{$servicio->servicio}}</a></li>
 					@else
 					<li class="nav-item"><a class="nav-link" href="#">{{$servicio->servicio}}</a></li>
 					@endif

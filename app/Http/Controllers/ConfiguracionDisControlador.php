@@ -45,17 +45,25 @@ class ConfiguracionDisControlador extends Controller
 	public function store(Request $request)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para registrar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_dispositivo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el dispositivo"]]);
+			$message = "¡Seleccione el dispositivo!";
 		} else if ($request->c_configuracion == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre de la configuración"]]);
+			$message = "¡Ingrese el nombre de la configuración!";
 		} else if (strlen($request->c_configuracion) < 2) {
-			return json_encode(["status" => "error", "response" => ["message" => "La configuración debe tener al menos 3 caracteres"]]);
+			$message = "¡La configuración debe tener al menos 2 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
@@ -65,7 +73,8 @@ class ConfiguracionDisControlador extends Controller
 			->where('iddispositivo', '=', $request->c_dispositivo)
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Esta configuración ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Esta configuración del dispositivo ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Creamos el nuevo registro de la configuracion.
@@ -75,7 +84,9 @@ class ConfiguracionDisControlador extends Controller
 		$configuracion->descripcion = $request->c_descripcion;
 		$configuracion->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => "Configuración registrada exitosamente"]]);
+		// Retoramos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Configuración del dispositivo registrado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Display the specified resource.
@@ -87,30 +98,39 @@ class ConfiguracionDisControlador extends Controller
 	public function edit(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a modificar.
 		$configuracion = ConfiguracionDis::find($id);
-		return json_encode($configuracion);
+		return response($configuracion, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update the specified resource in storage.
 	public function update(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_dispositivo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Seleccione el dispositivo"]]);
+			$message = "¡Seleccione el dispositivo!";
 		} else if ($request->c_configuracion == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre de la configuración"]]);
+			$message = "¡Ingrese el nombre de la configuración!";
 		} else if (strlen($request->c_configuracion) < 2) {
-			return json_encode(["status" => "error", "response" => ["message" => "La configuración debe tener al menos 3 caracteres"]]);
+			$message = "¡La configuración debe tener al menos 2 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
@@ -121,7 +141,8 @@ class ConfiguracionDisControlador extends Controller
 			->where('idconfiguracion', '!=', $id)
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Esta configuración ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Esta configuración del dispositivo ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos y modificamos el registro de la configuración.
@@ -131,7 +152,9 @@ class ConfiguracionDisControlador extends Controller
 		$configuracion->descripcion = $request->c_descripcion;
 		$configuracion->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => "Configuración modificada exitosamente"]]);
+		// Retoramos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Configuración del dispositivo modificado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Remove the specified resource from storage.
@@ -143,8 +166,9 @@ class ConfiguracionDisControlador extends Controller
 	public function toggle(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a actualizar el estatus.
@@ -152,6 +176,9 @@ class ConfiguracionDisControlador extends Controller
 		$configuracion->estatus = $configuracion->estatus != "A" ? "A" : "I";
 		$configuracion->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => ""]]);
+		// Enviamos un mensaje de exito al usuario.
+		$message	= $configuracion->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
+		$response = ["status" => "success", "response" => ["message" => $message]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

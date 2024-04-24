@@ -135,9 +135,9 @@ class ClienteControlador extends Controller
 		if ($request->c_identificacion == "") {
 			$texto_id	= $request->c_tipo_identificacion == "C" ? "Cédula" : "RIF";
 			$message	= "¡Ingrese el número de $texto_id!";
-		} else if ($request->c_tipo_identificacion == "C" and strlen($request->c_identificacion) < 7) {
+		} else if ($request->c_tipo_identificacion == "C" and strlen($request->c_identificacion) < 8) {
 			$message = "¡La cédula está incompleta!";
-		} else if ($request->c_tipo_identificacion == "R" and strlen($request->c_identificacion) != 10) {
+		} else if ($request->c_tipo_identificacion == "R" and strlen($request->c_identificacion) < 10) {
 			$message = "¡El RIF está incompleto!";
 		} else if ($request->c_nombre_completo == "") {
 			$message = "¡Ingrese el Nombre/Razon social del cliente!";
@@ -153,14 +153,16 @@ class ClienteControlador extends Controller
 			$message = "¡Seleccione el código del segundo teléfono!";
 		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 == "") {
 			$message = "¡Ingrese el número del segundo teléfono!";
-		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 != "" and strlen($request->c_telefono2) < 8) {
+		} else if ($request->c_prefijo_telefono2 != "" and strlen($request->c_telefono2) < 8) {
 			$message = "¡Ingrese el número del segundo teléfono completo!";
 		} else if ($request->c_correo_electronico == "") {
 			$message = "¡Ingrese el correo electrónico!";
 		} else if (filter_var($request->c_correo_electronico, FILTER_VALIDATE_EMAIL) === false) {
-			$message = "¡Ingrese un correo electrónico válido!";
+			$message = "¡Ingrese un correo electrónico válido!\nEj: usuario@email.com";
 		} else if ($request->c_direccion == "") {
 			$message = "¡Ingrese la dirección física!";
+		} else if (strlen($request->c_direccion) < 10) {
+			$message = "¡La dirección debe tener al menos 10 caracteres!";
 		}
 
 		// Verificamos si ocurrió algún error en la válidación.
@@ -231,7 +233,8 @@ class ClienteControlador extends Controller
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
-			return $this->error403();
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
@@ -250,14 +253,16 @@ class ClienteControlador extends Controller
 			$message = "¡Seleccione el código del segundo teléfono!";
 		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 == "") {
 			$message = "¡Ingrese el número del segundo teléfono!";
-		} else if ($request->c_prefijo_telefono2 != "" and $request->c_telefono2 != "" and strlen($request->c_telefono2) < 8) {
+		} else if ($request->c_prefijo_telefono2 != "" and strlen($request->c_telefono2) < 8) {
 			$message = "¡Ingrese el número del segundo teléfono completo!";
 		} else if ($request->c_correo_electronico == "") {
 			$message = "¡Ingrese el correo electrónico!";
 		} else if (filter_var($request->c_correo_electronico, FILTER_VALIDATE_EMAIL) === false) {
-			$message = "¡Ingrese un correo electrónico válido!";
+			$message = "¡Ingrese un correo electrónico válido!\nEj: usuario@email.com";
 		} else if ($request->c_direccion == "") {
 			$message = "¡Ingrese la dirección física!";
+		} else if (strlen($request->c_direccion) < 10) {
+			$message = "¡La dirección debe tener al menos 10 caracteres!";
 		}
 
 		// Verificamos si ocurrió algún error en la válidación.
@@ -296,7 +301,8 @@ class ClienteControlador extends Controller
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
-			return $this->error403();
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a actualizar el estatus.
@@ -305,7 +311,7 @@ class ClienteControlador extends Controller
 		$cliente->save();
 
 		// Enviamos mensaje de exito al usuario.
-		$message	= $cliente->estatus == "A" ? "¡Cliente activado exitosamente!" : "¡Cliente inactivado exitosamente!";
+		$message	= $cliente->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
 		$response = ["status" => "success", "response" => ["message" => $message]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}

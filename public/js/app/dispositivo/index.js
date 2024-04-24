@@ -3,110 +3,122 @@
 	const btn_nuevo_dispositivo = document.getElementById("btn_nuevo_dispositivo");
 	const switch_estatus = document.querySelectorAll(".switch_estatus");
 	const btn_editar = document.querySelectorAll(".btn_editar");
-	const modal_registrar = new bootstrap.Modal('#modal_registrar');
+	const modal_registrar = document.getElementById('modal_registrar') != null ? new bootstrap.Modal('#modal_registrar') : null;
 	const formulario_registro = document.getElementById("formulario_registro");
-	const modal_modificar = new bootstrap.Modal('#modal_modificar');
+	const modal_modificar = document.getElementById('modal_modificar') != null ? new bootstrap.Modal('#modal_modificar') : null;
 	const formulario_actualizacion = document.getElementById("formulario_actualizacion");
 
 	// Eventos elementos HTML.
 	// Agregar nuevo registro.
-	btn_nuevo_dispositivo.addEventListener("click", function (e) {
-		e.preventDefault();
-		formulario_registro.reset();
-		modal_registrar.show();
-	});
+	if (btn_nuevo_dispositivo != null) {
+		btn_nuevo_dispositivo.addEventListener("click", function (e) {
+			e.preventDefault();
+			formulario_registro.reset();
+			modal_registrar.show();
+		});
+	}
 
 	// Registrar dato.
-	formulario_registro.addEventListener("submit", function (e) {
-		e.preventDefault();
+	if (formulario_registro != null) {
+		formulario_registro.addEventListener("submit", function (e) {
+			e.preventDefault();
 
-		// Elementos del formulario.
-		const c_dispositivo = document.getElementById("c_dispositivo_r");
-		const btn_guardar = document.getElementById("btn_registrar");
+			// Elementos del formulario.
+			const c_dispositivo = document.getElementById("c_dispositivo_r");
+			const btn_guardar = document.getElementById("btn_registrar");
 
-		// Validamos los campos.
-		if (c_dispositivo.value == "") {
-			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del dispositivo' });
-			c_dispositivo.focus();
-		} else if (c_dispositivo.value.length < 2) {
-			Toast.fire({ icon: 'error', title: 'El dispositivo debe tener al menos 3 caracteres' });
-			c_dispositivo.focus();
-		} else {
-			btn_guardar.classList.add("loading");
-			fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
-				btn_guardar.classList.remove("loading");
+			// Validamos los campos.
+			if (c_dispositivo.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre del dispositivo!' });
+				c_dispositivo.focus();
+			} else if (c_dispositivo.value.length < 2) {
+				Toast.fire({ icon: 'error', title: '¡El dispositivo debe tener al menos 2 caracteres!' });
+				c_dispositivo.focus();
+			} else {
+				btn_guardar.classList.add("loading");
+				btn_guardar.setAttribute('disabled', true);
+				fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
+					btn_guardar.classList.remove("loading");
+					btn_guardar.removeAttribute('disabled');
 
-				// Verificamos si ocurrió algún error.
-				if (data.status == "error") {
-					Toast.fire({ icon: data.status, title: data.response.message });
-					return false;
-				}
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
+						Toast.fire({ icon: data.status, title: data.response.message });
+						return false;
+					}
 
-				// Enviamos mensaje de exito.
-				modal_registrar.hide();
-				Swal.fire({
-					title: "Exito",
-					text: "Dispositivo registrado exitosamente",
-					icon: "success",
-					timer: 2000,
-					willClose: () => location.reload(),
+					// Enviamos mensaje de exito.
+					modal_registrar.hide();
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
+						willClose: () => location.reload(),
+					});
 				});
-			});
-		}
-	});
+			}
+		});
+	}
 
 	// Modificar dato.
-	formulario_actualizacion.addEventListener("submit", function (e) {
-		e.preventDefault();
+	if (formulario_actualizacion != null) {
+		formulario_actualizacion.addEventListener("submit", function (e) {
+			e.preventDefault();
 
-		// Elementos del formulario.
-		const c_dispositivo = document.getElementById("c_dispositivo_m");
-		const btn_guardar = document.getElementById("btn_modificar");
+			// Elementos del formulario.
+			const c_dispositivo = document.getElementById("c_dispositivo_m");
+			const btn_guardar = document.getElementById("btn_modificar");
 
-		// Validamos los campos.
-		if (c_dispositivo.value == "") {
-			Toast.fire({ icon: 'error', title: 'Ingrese el nombre del dispositivo' });
-			c_dispositivo.focus();
-		} else if (c_dispositivo.value.length < 2) {
-			Toast.fire({ icon: 'error', title: 'El dispositivo debe tener al menos 3 caracteres' });
-			c_dispositivo.focus();
-		} else {
-			btn_guardar.classList.add("loading");
-			fetch(`${formulario_actualizacion.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_actualizacion) }).then(response => response.json()).then(data => {
-				btn_guardar.classList.remove("loading");
+			// Validamos los campos.
+			if (c_dispositivo.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre del dispositivo!' });
+				c_dispositivo.focus();
+			} else if (c_dispositivo.value.length < 2) {
+				Toast.fire({ icon: 'error', title: '¡El dispositivo debe tener al menos 2 caracteres!' });
+				c_dispositivo.focus();
+			} else {
+				btn_guardar.classList.add("loading");
+				btn_guardar.setAttribute('disabled', true);
+				fetch(`${formulario_actualizacion.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_actualizacion) }).then(response => response.json()).then(data => {
+					btn_guardar.classList.remove("loading");
+					btn_guardar.removeAttribute('disabled');
 
-				// Verificamos si ocurrió algún error.
-				if (data.status == "error") {
-					Toast.fire({ icon: data.status, title: data.response.message });
-					return false;
-				}
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
+						Toast.fire({ icon: data.status, title: data.response.message });
+						return false;
+					}
 
-				// Enviamos mensaje de exito.
-				modal_modificar.hide();
-				Swal.fire({
-					title: "Exito",
-					text: "Dispositivo modificado exitosamente",
-					icon: "success",
-					timer: 2000,
-					willClose: () => location.reload(),
+					// Enviamos mensaje de exito.
+					modal_modificar.hide();
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
+						willClose: () => location.reload(),
+					});
 				});
-			});
-		}
-	});
+			}
+		});
+	}
 
 	// Consultar registro.
-	Array.from(btn_editar).forEach(button_ => {
-		button_.addEventListener('click', function (e) {
+	Array.from(btn_editar).forEach(btn_ => {
+		btn_.addEventListener('click', function (e) {
 			e.preventDefault();
 
 			// Capturamos el elemento que provoco el evento.
-			const button_element = this;
-			const id_data = button_element.getAttribute('data-id');
+			const btn_consultar = this;
+			const id_data = btn_consultar.getAttribute('data-id');
 
 			// Realizamos la consulta AJAX.
-			button_element.classList.add('loading');
+			btn_consultar.classList.add('loading');
+			btn_consultar.setAttribute('disabled', true);
 			fetch(`${url_}/dispositivos/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
-				button_element.classList.remove('loading');
+				btn_consultar.classList.remove('loading');
+				btn_consultar.removeAttribute('disabled');
 
 				// Limpiamos el formulario y cargamos los datos consultados.
 				formulario_actualizacion.reset();
@@ -153,7 +165,7 @@
 						}
 
 						// Enviamos mensaje de exito al usuario.
-						Toast.fire({ icon: "success", title: "Estatus actualizado exitosamente" });
+						Toast.fire({ icon: data.status, title: data.response.message });
 						switch_element.checked = !switch_element.checked;
 						const idrand = switch_element.getAttribute('data-id');
 						if (switch_element.checked) {

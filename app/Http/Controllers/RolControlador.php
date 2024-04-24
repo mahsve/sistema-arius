@@ -67,15 +67,23 @@ class RolControlador extends Controller
 	public function store(Request $request)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return redirect($this->redireccionar_419());
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para registrar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_rol == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
+			$message = "¡Ingrese el nombre del rol!";
 		} else if (strlen($request->c_rol) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El módulo debe tener al menos 3 caracteres"]]);
+			$message = "¡El rol debe tener al menos 3 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos que no este ya registrado.
@@ -84,16 +92,18 @@ class RolControlador extends Controller
 			->where('rol', '=', mb_convert_case($request->c_rol, MB_CASE_UPPER))
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este módulo ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Este rol ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// Creamos el nuevo registro del módulo.
+		// Creamos el nuevo registro del rol.
 		$rol = new Rol();
 		$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
 		$rol->save();
 
-		// Enviamos mensaje de existo al usuario.
-		return json_encode(["status" => "success", "response" => ["message" => "Módulo registrado exitosamente"]]);
+		// Enviamos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Rol registrado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Display the specified resource. 
@@ -105,47 +115,58 @@ class RolControlador extends Controller
 	public function edit(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return redirect($this->redireccionar_419());
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a modificar.
 		$rol = Rol::find($id);
-		return json_encode($rol);
+		return response($rol, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return redirect($this->redireccionar_419());
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_rol == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
+			$message = "¡Ingrese el nombre del rol!";
 		} else if (strlen($request->c_rol) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El módulo debe tener al menos 3 caracteres"]]);
+			$message = "¡El rol debe tener al menos 3 caracteres!";
 		}
 
-		// Validamos que no este ya registrado.
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Verificamos primero si ya se encuentra registrado en la base de datos.
 		$existente = DB::table('tb_roles')
 			->select('rol')
 			->where('rol', '=', mb_convert_case($request->c_rol, MB_CASE_UPPER))
 			->where('idrol', '!=', $id)
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este módulo ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Este rol ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// Consultamos y modificamos el registro del módulo.
+		// Consultamos y modificamos el registro del rol.
 		$rol = Rol::find($id);
 		$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
 		$rol->save();
 
-		// Enviamos mensaje de existo al usuario.
-		return json_encode(["status" => "success", "response" => ["message" => "Módulo modificado exitosamente"]]);
+		// Enviamos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Rol modificado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Remove the specified resource from storage. 
@@ -157,8 +178,9 @@ class RolControlador extends Controller
 	public function toggle(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a actualizar el estatus.
@@ -166,6 +188,9 @@ class RolControlador extends Controller
 		$rol->estatus = $rol->estatus != "A" ? "A" : "I";
 		$rol->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => ""]]);
+		// Enviamos un mensaje de exito al usuario.
+		$message	= $rol->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
+		$response = ["status" => "success", "response" => ["message" => $message]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

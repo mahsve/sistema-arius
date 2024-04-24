@@ -39,15 +39,23 @@ class ModuloControlador extends Controller
 	public function store(Request $request)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para registrar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_modulo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
+			$message = "¡Ingrese el nombre del módulo!";
 		} else if (strlen($request->c_modulo) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El módulo debe tener al menos 3 caracteres"]]);
+			$message = "¡El módulo debe tener al menos 3 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos que no este ya registrado.
@@ -56,19 +64,21 @@ class ModuloControlador extends Controller
 			->where('modulo', '=', mb_convert_case($request->c_modulo, MB_CASE_UPPER))
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este módulo ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Este módulo ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Creamos el nuevo registro del módulo.
-		$total	= count(Modulo::select('idmodulo')->get());
+		$total	= count(Modulo::select('idmodulo')->get()) + 1;
 		$modulo = new Modulo();
 		$modulo->orden = $total;
 		$modulo->icono = mb_convert_case($request->c_icono, MB_CASE_LOWER);
 		$modulo->modulo = mb_convert_case($request->c_modulo, MB_CASE_UPPER);
 		$modulo->save();
 
-		// Enviamos mensaje de existo al usuario.
-		return json_encode(["status" => "success", "response" => ["message" => "Módulo registrado exitosamente"]]);
+		// Enviamos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Módulo registrado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Display the specified resource. 
@@ -80,28 +90,37 @@ class ModuloControlador extends Controller
 	public function edit(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a modificar.
 		$modulo = Modulo::find($id);
-		return json_encode($modulo);
+		return response($modulo, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos.
+		$message = "";
 		if ($request->c_modulo == "") {
-			return json_encode(["status" => "error", "response" => ["message" => "Ingrese el nombre del módulo"]]);
+			$message = "¡Ingrese el nombre del módulo!";
 		} else if (strlen($request->c_modulo) < 3) {
-			return json_encode(["status" => "error", "response" => ["message" => "El módulo debe tener al menos 3 caracteres"]]);
+			$message = "¡El módulo debe tener al menos 3 caracteres!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Validamos que no este ya registrado.
@@ -111,7 +130,8 @@ class ModuloControlador extends Controller
 			->where('idmodulo', '!=', $id)
 			->first();
 		if ($existente) {
-			return json_encode(["status" => "error", "response" => ["message" => "Este módulo ya se encuentra registrado"]]);
+			$response = ["status" => "error", "response" => ["message" => "¡Este módulo ya se encuentra registrado!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos y modificamos el registro del módulo.
@@ -120,8 +140,9 @@ class ModuloControlador extends Controller
 		$modulo->modulo = mb_convert_case($request->c_modulo, MB_CASE_UPPER);
 		$modulo->save();
 
-		// Enviamos mensaje de existo al usuario.
-		return json_encode(["status" => "success", "response" => ["message" => "Módulo modificado exitosamente"]]);
+		// Enviamos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Módulo modificado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Remove the specified resource from storage. 
@@ -132,23 +153,33 @@ class ModuloControlador extends Controller
 	// Update module's order.
 	public function order(Request $request)
 	{
-		DB::transaction(function () use ($request) {
+		// Ejecutamos una nueva transacción.
+		try {
 			// Recorremos los módulos y actualizamos su orden según lo descrito por el usuario.
-			for ($i = 0; $i < count($request->modulo); $i++) {
-				$modulo = Modulo::find($request->modulo[$i]);
-				$modulo->orden = $request->orden[$i];
-				$modulo->save();
-			}
-		});
-		return json_encode(["status" => "success", "response" => ["message" => "¡Orden actualizado exitosamente!"]]);
+			DB::transaction(function () use ($request) {
+				for ($i = 0; $i < count($request->modulo); $i++) {
+					$modulo = Modulo::find($request->modulo[$i]);
+					$modulo->orden = $request->orden[$i];
+					$modulo->save();
+				}
+			});
+		} catch (\Throwable $th) {
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al actualizar el orden de los módulos!", "error" => $th]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Enviamos un mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Orden actualizado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update status.
 	public function toggle(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
 		// Consultamos el registro a actualizar el estatus.
@@ -156,6 +187,9 @@ class ModuloControlador extends Controller
 		$modulo->estatus = $modulo->estatus != "A" ? "A" : "I";
 		$modulo->save();
 
-		return json_encode(["status" => "success", "response" => ["message" => ""]]);
+		// Enviamos un mensaje de exito al usuario.
+		$message	= $modulo->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
+		$response = ["status" => "success", "response" => ["message" => $message]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

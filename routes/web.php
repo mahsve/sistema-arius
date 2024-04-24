@@ -59,7 +59,7 @@ Route::middleware('auth')->group(function () {
 		Route::patch('/reportes_diarios_operador', 'update')->name('reportes_diarios_operador.update');
 		Route::get('/reportes_diarios_operador/pdf/{id}', 'generar_pdf')->name('reportes_diarios_operador.pdf');
 	});
-	
+
 	// Controlador [Reportes diarios de operador].
 	Route::controller(App\Http\Controllers\ServicioTecnicoSolicitadoControlador::class)->group(function () {
 		Route::get('/servicios_tecnico_solicitados', 'index')->name('servicios_tecnico_solicitados.index');
@@ -92,9 +92,15 @@ Route::middleware('auth')->group(function () {
 	Route::put('/cargos/estatus/{id}', [App\Http\Controllers\CargoControlador::class, 'toggle'])->name('cargos.status');
 
 	// Controlador [Personal].
-	Route::resource('/personal', App\Http\Controllers\PersonalControlador::class);
-	Route::get('/personal/consultar_cargos/{id}', [App\Http\Controllers\PersonalControlador::class, 'consultar_cargos']);
-	Route::put('/personal/estatus/{id}', [App\Http\Controllers\PersonalControlador::class, 'toggle'])->name('personal.status');
+	Route::controller(App\Http\Controllers\PersonalControlador::class)->group(function () {
+		Route::get('/personal', 'index')->name('personal.index');								// Mostrar el listado.
+		Route::get('/personal/registrar', 'create')->name('personal.create');		// Mostrar formulario para nuevo registro.
+		Route::get('/personal/cargos/{id}', 'cargos')->name('personal.cargos');	// 
+		Route::post('/personal', 'store')->name('personal.store');							// Enviar los datos al controlador para nuevo registro.
+		Route::get('/personal/modificar/{id}', 'edit')->name('personal.edit');	// Mostrar formulario para modificar registro.
+		Route::patch('/personal/{id}', 'update')->name('personal.update');				// Enviar los datos al controlador para modificar registro.
+		Route::put('/personal/estatus/{id}', 'toggle')->name('personal.status');
+	});
 
 	// Controlador [Dispositivos de zonas].
 	Route::resource('/dispositivos', App\Http\Controllers\DispositivoControlador::class);
@@ -114,6 +120,7 @@ Route::middleware('auth')->group(function () {
 
 	// Controlador [Servicios].
 	Route::resource('/servicios', App\Http\Controllers\ServicioControlador::class);
+	Route::get('/servicios/submodulos/{id}', [App\Http\Controllers\ServicioControlador::class, 'submodulos'])->name('servicios.submodules');
 	Route::put('/servicios/estatus/{id}', [App\Http\Controllers\ServicioControlador::class, 'toggle'])->name('servicios.status');
 
 	// Controlador [Roles].

@@ -16,7 +16,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase my-2"><i class="fas fa-briefcase"></i> Servicios</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-server"></i> Servicios</h4>
 		</div>
 		<div class="col-6 text-end">
 			@if (isset($permisos->create))
@@ -32,8 +32,9 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2"><i class="fas fa-briefcase"></i> Módulo</th>
-						<th class="ps-2"><i class="fas fa-briefcase"></i> Servicio</th>
+						<th class="ps-2"><i class="fas fa-sitemap"></i> Módulo</th>
+						<th class="ps-2"><i class="fas fa-server"></i> Servicio</th>
+						<th class="ps-2"><i class="fas fa-laptop-code"></i> Tipo</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -51,8 +52,21 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$servicio->modulo}}</td>
-						<td class="py-1 px-2">{{$servicio->servicio}}</td>
+						<td class="py-1 px-2"><b>{{$servicio->modulo}}</b></td>
+						<td class="py-1 px-2">
+							@if($servicio->idservicio_raiz == null)
+							<b>{{$servicio->servicio}}</b>
+							@else
+							<b>{{$servicio->submodulo}}</b> - {{$servicio->servicio}}
+							@endif
+						</td>
+						<td class="py-1 px-2">
+							@if($servicio->idservicio_raiz == null)
+							<span class="badge badge-primary"><i class="fas fa-sitemap"></i> Submódulo</span>
+							@else
+							<span class="badge badge-info"><i class="fas fa-laptop"></i> Operación</span>
+							@endif
+						</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($servicio->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($servicio->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
@@ -93,18 +107,48 @@
 			<div class="modal-body py-3">
 				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('servicios.store')}}">
 					@csrf
-					<div class="form-group">
-						<label for="c_modulo_r"><i class="fas fa-hotel"></i> Módulo</label>
-						<select class="form-control text-uppercase" name="c_modulo" id="c_modulo_r" required>
+					<div class="form-group mb-3">
+						<label class="required"><i class="fas fa-laptop-code"></i> Tipo de servicio: </label>
+						<div class="d-flex">
+							<div class="form-check form-check-inline d-flex align-items-center m-0 me-3">
+								<input class="form-check-input m-0 me-2" type="radio" name="c_tipo_servicio" id="c_submodulo_r" value="submodulo" checked>
+								<label class="form-check-label m-0" for="c_submodulo_r">Submódulo</label>
+							</div>
+							<div class="form-check form-check-inline d-flex align-items-center m-0 me-3">
+								<input class="form-check-input m-0 me-2" type="radio" name="c_tipo_servicio" id="c_operacion_r" value="operacion">
+								<label class="form-check-label m-0" for="c_operacion_r">Operación</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_modulo_r" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
+						<select class="form-control text-uppercase" name="c_modulo" id="c_modulo_r">
 							<option value="">Seleccione el módulo</option>
 							@foreach ($modulos as $modulo)
 							<option value="{{$modulo->idmodulo}}">{{$modulo->modulo}}</option>
 							@endforeach
 						</select>
 					</div>
+					<div class="form-group mb-3" id="contenedor_submodulos_r">
+						<label for="c_submodulos_r" class="required"><i class="fas fa-sitemap"></i> Submódulos</label>
+						<select class="form-control text-uppercase" name="c_submodulo" id="c_submodulos_r">
+							<option value="">Seleccione el submódulo</option>
+						</select>
+					</div>
 					<div class="form-group mb-3">
-						<label for="c_servicio_r"><i class="fas fa-briefcase"></i> Servicio</label>
-						<input type="text" class="form-control text-uppercase" name="c_servicio" id="c_servicio_r" placeholder="Ingrese el nombre del servicio" minlength="3" required>
+						<label for="c_servicio_r" class="required"><i class="fas fa-server"></i> Servicio</label>
+						<input type="text" class="form-control text-uppercase" name="c_servicio" id="c_servicio_r" placeholder="Ingrese el nombre del servicio">
+					</div>
+					<div class="form-group mb-3" id="contenedor_enlace_r">
+						<label for="c_enlace_r" class="required"><i class="fas fa-link"></i> Enlace del submódulo</label>
+						<div class="input-group">
+							<span class="input-group-text">{{url('')}}/</span>
+							<input type="text" class="form-control text-lowercase" name="c_enlace" id="c_enlace_r" placeholder="Ingrese el enlace">
+						</div>
+					</div>
+					<div class="form-group mb-3" id="contenedor_metodo_r">
+						<label for="c_metodo_r" class="required"><i class="fas fa-database"></i> Método del controlador</label>
+						<input type="text" class="form-control text-lowercase" name="c_metodo" id="c_metodo_r" placeholder="Ej: create, update, toggle">
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -129,18 +173,48 @@
 				<form class="forms-sample" name="formulario_actualizacion" id="formulario_actualizacion" method="POST" action="">
 					@csrf
 					@method('PATCH')
-					<div class="form-group">
-						<label for="c_modulo"><i class="fas fa-hotel"></i> Módulo</label>
-						<select class="form-control text-uppercase" name="c_modulo" id="c_modulo_m" required>
+					<div class="form-group mb-3">
+						<label class="required"><i class="fas fa-laptop-code"></i> Tipo de servicio: </label>
+						<div class="d-flex">
+							<div class="form-check form-check-inline d-flex align-items-center m-0 me-3">
+								<input class="form-check-input m-0 me-2" type="radio" name="c_tipo_servicio" id="c_submodulo_m" value="submodulo">
+								<label class="form-check-label m-0" for="c_submodulo_m">Submódulo</label>
+							</div>
+							<div class="form-check form-check-inline d-flex align-items-center m-0 me-3">
+								<input class="form-check-input m-0 me-2" type="radio" name="c_tipo_servicio" id="c_operacion_m" value="operacion">
+								<label class="form-check-label m-0" for="c_operacion_m">Operación</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_modulo_m" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
+						<select class="form-control text-uppercase" name="c_modulo" id="c_modulo_m">
 							<option value="">Seleccione el módulo</option>
 							@foreach ($modulos as $modulo)
 							<option value="{{$modulo->idmodulo}}">{{$modulo->modulo}}</option>
 							@endforeach
 						</select>
 					</div>
-					<div class="form-group">
-						<label for="c_servicio_m"><i class="fas fa-briefcase"></i> Servicio</label>
-						<input type="text" class="form-control text-uppercase" name="c_servicio" id="c_servicio_m" placeholder="Ingrese el nombre del servicio" minlength="3" required>
+					<div class="form-group mb-3" id="contenedor_submodulos_m">
+						<label for="c_submodulos_m" class="required"><i class="fas fa-sitemap"></i> Submódulos</label>
+						<select class="form-control text-uppercase" name="c_submodulo" id="c_submodulos_m">
+							<option value="">Seleccione el submódulo</option>
+						</select>
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_servicio_m" class="required"><i class="fas fa-server"></i> Servicio</label>
+						<input type="text" class="form-control text-uppercase" name="c_servicio" id="c_servicio_m" placeholder="Ingrese el nombre del servicio">
+					</div>
+					<div class="form-group mb-3" id="contenedor_enlace_m">
+						<label for="c_enlace_m" class="required"><i class="fas fa-link"></i> Enlace del submódulo</label>
+						<div class="input-group">
+							<span class="input-group-text">{{url('')}}/</span>
+							<input type="text" class="form-control text-lowercase" name="c_enlace" id="c_enlace_m" placeholder="Ingrese el enlace">
+						</div>
+					</div>
+					<div class="form-group mb-3" id="contenedor_metodo_m">
+						<label for="c_metodo_m" class="required"><i class="fas fa-database"></i> Método del controlador</label>
+						<input type="text" class="form-control text-lowercase" name="c_metodo" id="c_metodo_m" placeholder="Ej: create, update, toggle">
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

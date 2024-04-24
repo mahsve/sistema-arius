@@ -62,14 +62,18 @@
 						</td>
 						@if (isset($permisos->toggle))
 						<td class="py-1 px-2 text-center">
+							@if (auth()->user()->idrol != $rol->idrol)
 							<div class="form-check form-switch form-check-inline m-0">
 								<input type="checkbox" class="form-check-input mx-auto switch_estatus" role="switch" id="switch_estatus{{$idrand}}" data-id="{{$idrand}}" value="{{$rol->idrol}}" <?= $rol->estatus == "A" ? "checked" : "" ?>>
 							</div>
+							@endif
 						</td>
 						@endif
 						@if (isset($permisos->update))
 						<td class="py-1 px-2" style="width: 20px;">
+							@if (auth()->user()->idrol != $rol->idrol)
 							<button type="button" class="btn btn-primary btn-sm btn-icon btn_editar" data-id="{{$rol->idrol}}"><i class="fas fa-edit"></i></button>
+							@endif
 						</td>
 						@endif
 					</tr>

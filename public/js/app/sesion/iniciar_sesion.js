@@ -13,15 +13,17 @@
 
 		// Válidamos los campos del formulario.
 		if (usuario.value == "") {
-			Toast.fire({ icon: "error", title: "Ingrese su nombre de usuario" });
+			Toast.fire({ icon: "error", title: "¡Ingrese su nombre de usuario!" });
 			usuario.focus();
 		} else if (contrasena.value == "") {
-			Toast.fire({ icon: "error", title: "Ingrese su contraseña" });
+			Toast.fire({ icon: "error", title: "¡Ingrese su contraseña!" });
 			contrasena.focus();
 		} else {
 			btn_sesion.classList.add("loading");
+			btn_sesion.setAttribute('disabled', true);
 			fetch(`${formulario_sesion.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_sesion) }).then(response => response.json()).then(data => {
 				btn_sesion.classList.remove("loading");
+				btn_sesion.removeAttribute('disabled');
 
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
@@ -32,8 +34,8 @@
 				// Enviamos mensaje de exito.
 				Swal.fire({
 					title: "Exito",
-					text: "¡Sesión iniciada exitosamente!",
-					icon: "success",
+					icon: data.status,
+					text: data.response.message,
 					timer: 2000,
 					willClose: () => location.reload(),
 				});

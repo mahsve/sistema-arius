@@ -17,7 +17,7 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase my-2"><i class="fas fa-briefcase"></i> Módulos</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-sitemap"></i> Módulos</h4>
 		</div>
 		<div class="col-6 text-end">
 			@if (isset($permisos->sortable))
@@ -37,7 +37,7 @@
 				<thead>
 					<tr>
 						<th class="ps-2" width="50"><i class="fas fa-sort-amount-down"></i> Órden</th>
-						<th class="ps-2"><i class="fas fa-briefcase"></i> Módulo</th>
+						<th class="ps-2"><i class="fas fa-sitemap"></i> Módulo</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -98,12 +98,12 @@
 				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('modulos.store')}}">
 					@csrf
 					<div class="form-group mb-3">
-						<label for="c_modulo_r" class="required"><i class="fas fa-briefcase"></i> Módulo</label>
+						<label for="c_modulo_r" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
 						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_r" placeholder="Ingrese el nombre del módulo" minlength="3" required>
 					</div>
 					<div class="form-group mb-3">
 						<label for="c_icono_r" class="d-flex justify-content-between">
-							<span><i class="fas fa-briefcase"></i> Icono</span>
+							<span><i class="fas fa-icons"></i> Icono</span>
 							<a href="https://fontawesome.com/v5/search?o=r&m=free" class="fw-bold text-dark" style="text-decoration: none;" target="blank">
 								<i class="fas fa-icons"></i> Ver lista <i class="fas fa-external-link-alt"></i>
 							</a>
@@ -140,12 +140,12 @@
 					@csrf
 					@method('PATCH')
 					<div class="form-group">
-						<label for="c_modulo_m" class="required"><i class="fas fa-briefcase"></i> Módulo</label>
+						<label for="c_modulo_m" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
 						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_m" placeholder="Ingrese el nombre del módulo" minlength="3" required>
 					</div>
 					<div class="form-group mb-3">
 						<label for="c_icono_m" class="d-flex justify-content-between">
-							<span><i class="fas fa-briefcase"></i> Icono</span>
+							<span><i class="fas fa-icons"></i> Icono</span>
 							<a href="https://fontawesome.com/v5/search?o=r&m=free" class="fw-bold text-dark" style="text-decoration: none;" target="blank">
 								<i class="fas fa-icons"></i> Ver lista <i class="fas fa-external-link-alt"></i>
 							</a>

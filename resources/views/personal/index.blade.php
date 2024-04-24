@@ -76,7 +76,7 @@
 						@endif
 						@if (isset($permisos->update))
 						<td class="py-1 px-2" style="width: 20px;">
-							<a href="{{route('personal.edit', ['personal' => $persona->cedula])}}" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
+							<a href="{{route('personal.edit', ['id' => $persona->cedula])}}" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
 						</td>
 						@endif
 					</tr>

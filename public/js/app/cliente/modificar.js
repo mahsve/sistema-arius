@@ -26,10 +26,10 @@
 
 		} else {
 			btn_guardar.classList.add("loading");
+			btn_guardar.setAttribute('disabled', true);
 			fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
 				btn_guardar.classList.remove("loading");
-
-				console.log(data);
+				btn_guardar.removeAttribute('disabled');
 
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
@@ -40,8 +40,8 @@
 				// Enviamos mensaje de exito.
 				Swal.fire({
 					title: "Exito",
-					text: "Cliente modificado exitosamente",
-					icon: "success",
+					icon: data.status,
+					text: data.response.message,
 					timer: 2000,
 					willClose: () => location.href = `${url_}/clientes`,
 				});
