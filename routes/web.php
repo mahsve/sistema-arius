@@ -125,6 +125,11 @@ Route::middleware('auth')->group(function () {
 
 	// Controlador [Roles].
 	Route::resource('/roles', App\Http\Controllers\RolControlador::class);
+	Route::put('/roles/estatus/{id}', [App\Http\Controllers\RolControlador::class, 'toggle'])->name('roles.status');
+
+	// Controlador [Roles].
+	Route::resource('/usuarios', App\Http\Controllers\UsuarioControlador::class);
+	Route::put('/usuarios/estatus/{id}', [App\Http\Controllers\UsuarioControlador::class, 'toggle'])->name('roles.status');
 
 	// Controlador [Roles].
 	Route::get('/bitacora', App\Http\Controllers\BitacoraControlador::class)->name('bitacora.index');
