@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\RolModulo;
 use App\Models\RolServicio;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 trait SeguridadControlador
 {
@@ -32,17 +33,17 @@ trait SeguridadControlador
 	public function verificar_acceso_servicio_full(string $idservicio)
 	{
 		$idrol = auth()->user()->idrol;
-		$resultados = RolServicio::select('tb_rol_servicio.idservicio', 'tb_servicios.servicio', 'tb_servicios.menu_url')
+		$resultados = RolServicio::select('tb_servicios.idservicio', 'tb_servicios.servicio', 'tb_servicios.menu_url', 'tb_servicios.idservicio_raiz')
 			->join('tb_servicios', 'tb_rol_servicio.idservicio', 'tb_servicios.idservicio')
 			->where('tb_rol_servicio.idrol', '=', $idrol)
-			->orWhere('tb_servicios.idservicio_raiz', '=', $idservicio)
+			->whereRaw("(`tb_servicios`.`idservicio`=? or `tb_servicios`.`idservicio_raiz`=?)", [$idservicio, $idservicio])
 			->get();
 
 		// Recorremos los resultados encontrados y los ordenamos en un arreglo asociativo con el metodo como indice para acceder a el mas facilmente.
 		$servicios = [];
 		foreach ($resultados as $servicio) {
 			$metodo = $servicio->menu_url;
-			if (strpos($metodo, 'index') !== false) $metodo = "index";
+			if ($servicio->idservicio_raiz == null) $metodo = "index";
 
 			// Creamos una nueva posición en el arreglo utilizando el nombre del metodo como indice y dentro el nombre del servicio.
 			$servicios[$metodo] = $servicio->servicio;

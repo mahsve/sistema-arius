@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Modulo;
 use App\Models\Rol;
+use App\Models\RolModulo;
+use App\Models\RolServicio;
 use App\Models\Servicio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -96,12 +97,37 @@ class RolControlador extends Controller
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// Creamos el nuevo registro del rol.
-		$rol = new Rol();
-		$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
-		$rol->save();
+		// Ejecutamos una nueva transacción.
+		try {
+			// Recorremos los módulos y actualizamos su orden según lo descrito por el usuario.
+			DB::transaction(function () use ($request) {
+				// Creamos el nuevo registro del rol.
+				$rol = new Rol();
+				$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
+				$rol->save();
 
-		// Enviamos mensaje de exito al usuario.
+				// Registramos todos los módulos en el rol.
+				for ($i = 0; $i < count($request->modulo); $i++) {
+					$rol_modulo = new RolModulo();
+					$rol_modulo->idmodulo = $request->modulo[$i];
+					$rol_modulo->idrol = $rol->idrol;
+					$rol_modulo->save();
+				}
+
+				// Registramos todos los servicios en el rol.
+				for ($i = 0; $i < count($request->servicio); $i++) {
+					$rol_servicio = new RolServicio();
+					$rol_servicio->idservicio = $request->servicio[$i];
+					$rol_servicio->idrol = $rol->idrol;
+					$rol_servicio->save();
+				}
+			});
+		} catch (\Throwable $th) {
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al registrar el rol con los módulos y los servicios!", "error" => $th]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Enviamos un mensaje de exito al usuario.
 		$response = ["status" => "success", "response" => ["message" => "¡Rol registrado exitosamente!"]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
@@ -122,6 +148,8 @@ class RolControlador extends Controller
 
 		// Consultamos el registro a modificar.
 		$rol = Rol::find($id);
+		$rol->modulos = RolModulo::where('idrol', '=', $rol->idrol)->get();
+		$rol->servicios = RolServicio::where('idrol', '=', $rol->idrol)->get();
 		return response($rol, 200)->header('Content-Type', 'text/json');
 	}
 
@@ -159,10 +187,41 @@ class RolControlador extends Controller
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// Consultamos y modificamos el registro del rol.
-		$rol = Rol::find($id);
-		$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
-		$rol->save();
+		// Ejecutamos una nueva transacción.
+		try {
+			// Recorremos los módulos y actualizamos su orden según lo descrito por el usuario.
+			DB::transaction(function () use ($request, $id) {
+				// Consultamos y modificamos el registro del rol.
+				$rol = Rol::find($id);
+				$rol->rol = mb_convert_case($request->c_rol, MB_CASE_UPPER);
+				$rol->save();
+				DB::table('tb_rol_modulo')->where('idrol', '=', $id)->delete();
+				DB::table('tb_rol_servicio')->where('idrol', '=', $id)->delete();
+
+				// Registramos todos los módulos en el rol.
+				if (isset($request->modulo)) {
+					for ($i = 0; $i < count($request->modulo); $i++) {
+						$rol_modulo = new RolModulo();
+						$rol_modulo->idmodulo = $request->modulo[$i];
+						$rol_modulo->idrol = $rol->idrol;
+						$rol_modulo->save();
+					}
+				}
+
+				// Registramos todos los servicios en el rol.
+				if (isset($request->servicio)) {
+					for ($i = 0; $i < count($request->servicio); $i++) {
+						$rol_servicio = new RolServicio();
+						$rol_servicio->idservicio = $request->servicio[$i];
+						$rol_servicio->idrol = $rol->idrol;
+						$rol_servicio->save();
+					}
+				}
+			});
+		} catch (\Throwable $th) {
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al modificar el rol con los módulos y los servicios!", "error" => $th]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
 
 		// Enviamos mensaje de exito al usuario.
 		$response = ["status" => "success", "response" => ["message" => "¡Rol modificado exitosamente!"]];

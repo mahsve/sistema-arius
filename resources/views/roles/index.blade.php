@@ -71,9 +71,7 @@
 						@endif
 						@if (isset($permisos->update))
 						<td class="py-1 px-2" style="width: 20px;">
-							@if (auth()->user()->idrol != $rol->idrol)
 							<button type="button" class="btn btn-primary btn-sm btn-icon btn_editar" data-id="{{$rol->idrol}}"><i class="fas fa-edit"></i></button>
-							@endif
 						</td>
 						@endif
 					</tr>
@@ -105,21 +103,41 @@
 							<div class="card mb-2">
 								<div class="card-header d-flex align-items-center justify-content-between border-bottom-0 ps-3 py-2 pe-2 m-0">
 									<div class="form-check form-check-inline m-0 d-flex align-items-center">
-										<input class="form-check-input m-0 modulo_r" type="checkbox" role="switch" name="modulo[]" id="modulo_r_{{$modulo->idmodulo}}" value="{{$modulo->idmodulo}}">
-										<label class="form-check-label ms-2" for="modulo_r_{{$modulo->idmodulo}}"><b>{{$modulo->modulo}}</b></label>
+										<input class="form-check-input m-0 r_modulo" type="checkbox" role="switch" name="modulo[]" id="r_modulo_{{$modulo->idmodulo}}" value="{{$modulo->idmodulo}}">
+										<label class="form-check-label ms-2" for="r_modulo_{{$modulo->idmodulo}}"><b>{{$modulo->modulo}}</b></label>
 									</div>
-									<a class="btn btn-secondary btn-sm" data-bs-toggle="collapse" href="#collapse_servicios_r_{{$modulo->idmodulo}}" role="button" aria-expanded="false" aria-controls="collapse_servicios_r_{{$modulo->idmodulo}}"><i class="fas fa-eye"></i></a>
+									<a class="btn btn-secondary btn-sm" data-bs-toggle="collapse" href="#r_collapse_servicios_{{$modulo->idmodulo}}" role="button" aria-expanded="false" aria-controls="r_collapse_servicios_{{$modulo->idmodulo}}"><i class="fas fa-eye"></i></a>
 								</div>
-								<div class="collapse" id="collapse_servicios_r_{{$modulo->idmodulo}}">
+
+								<div class="collapse" id="r_collapse_servicios_{{$modulo->idmodulo}}">
 									<div class="card-body p-3">
 										<div class="form-check form-check-inline m-0 d-flex align-items-center border-bottom">
-											<input class="form-check-input m-0 servicios_r servicio_r_{{$modulo->idmodulo}} marcar_todos_r" type="checkbox" role="switch" id="marcar_todos_r_{{$modulo->idmodulo}}" data-modulo="{{$modulo->idmodulo}}">
-											<label class="form-check-label ms-2" for="marcar_todos_r_{{$modulo->idmodulo}}"><b class="me-2">Marcar todas</b><i class="fas fa-check-double"></i></label>
+											<input class="form-check-input m-0
+												r_marcar_todos
+												r_modulo_servicios_{{$modulo->idmodulo}}
+												r_modulo_submodulo_{{$modulo->idmodulo}}
+												r_servicios" type="checkbox" role="switch" id="r_marcar_todos_{{$modulo->idmodulo}}" data-modulo="{{$modulo->idmodulo}}">
+											<label class="form-check-label ms-2" for="r_marcar_todos_{{$modulo->idmodulo}}"><b class="me-2">Marcar todas</b><i class="fas fa-check-double"></i></label>
 										</div>
+
 										@foreach($modulo->servicios as $servicio)
+										<?php
+										if ($servicio->idservicio_raiz == null) {
+											$tipo_servicio = "submodulo";
+											$idservicio_raiz = $servicio->idservicio;
+										} else {
+											$tipo_servicio = "operacion";
+											$idservicio_raiz = $servicio->idservicio_raiz;
+										}
+										?>
 										<div class="form-check form-check-inline m-0 d-flex align-items-center {{$servicio->idservicio_raiz > 0 ? 'ms-4' : ''}}">
-											<input class="form-check-input m-0 servicios_r servicio_r_{{$modulo->idmodulo}}" type="checkbox" role="switch" name="servicio[]" id="servicio_r_{{$servicio->idservicio}}" value="{{$servicio->idservicio}}">
-											<label class="form-check-label ms-2" for="servicio_r_{{$servicio->idservicio}}"><b>{{$servicio->servicio}}</b></label>
+											<input class="form-check-input m-0
+												r_modulo_servicios_{{$modulo->idmodulo}}
+												r_modulo_{{$tipo_servicio}}_{{$modulo->idmodulo}}
+												r_servicios
+												r_{{$tipo_servicio}}
+												r_{{$tipo_servicio}}_{{$idservicio_raiz}}" type="checkbox" role="switch" name="servicio[]" id="r_servicio_{{$servicio->idservicio}}" value="{{$servicio->idservicio}}" data-modulo="{{$modulo->idmodulo}}" data-submodulo="{{$idservicio_raiz}}">
+											<label class="form-check-label ms-2" for="r_servicio_{{$servicio->idservicio}}"><b>{{$servicio->servicio}}</b></label>
 										</div>
 										@endforeach
 									</div>
@@ -128,7 +146,7 @@
 						</div>
 						@endforeach
 					</div>
-					<div class="text-end">
+					<div class="text-end mt-3">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
 						<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
@@ -141,7 +159,7 @@
 
 @if (isset($permisos->update))
 <div class="modal fade" id="modal_modificar" tabindex="-1" aria-labelledby="modal_modificar_label" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header border-0 pb-0">
 				<h1 class="modal-title text-uppercase fs-5" id="modal_modificar_label"><i class="fas fa-folder-open"></i> Modificar rol</h1>
@@ -161,21 +179,41 @@
 							<div class="card mb-2">
 								<div class="card-header d-flex align-items-center justify-content-between border-bottom-0 ps-3 py-2 pe-2 m-0">
 									<div class="form-check form-check-inline m-0 d-flex align-items-center">
-										<input class="form-check-input m-0 modulo_m" type="checkbox" role="switch" name="modulo[]" id="modulo_m_{{$modulo->idmodulo}}" value="{{$modulo->idmodulo}}">
-										<label class="form-check-label ms-2" for="modulo_m_{{$modulo->idmodulo}}"><b>{{$modulo->modulo}}</b></label>
+										<input class="form-check-input m-0 m_modulo" type="checkbox" role="switch" name="modulo[]" id="m_modulo_{{$modulo->idmodulo}}" value="{{$modulo->idmodulo}}">
+										<label class="form-check-label ms-2" for="m_modulo_{{$modulo->idmodulo}}"><b>{{$modulo->modulo}}</b></label>
 									</div>
-									<a class="btn btn-secondary btn-sm" data-bs-toggle="collapse" href="#collapse_servicios_m_{{$modulo->idmodulo}}" role="button" aria-expanded="false" aria-controls="collapse_servicios_m_{{$modulo->idmodulo}}"><i class="fas fa-eye"></i></a>
+									<a class="btn btn-secondary btn-sm" data-bs-toggle="collapse" href="#m_collapse_servicios_{{$modulo->idmodulo}}" role="button" aria-expanded="false" aria-controls="m_collapse_servicios_{{$modulo->idmodulo}}"><i class="fas fa-eye"></i></a>
 								</div>
-								<div class="collapse" id="collapse_servicios_m_{{$modulo->idmodulo}}">
+
+								<div class="collapse" id="m_collapse_servicios_{{$modulo->idmodulo}}">
 									<div class="card-body p-3">
 										<div class="form-check form-check-inline m-0 d-flex align-items-center border-bottom">
-											<input class="form-check-input m-0 servicios_m servicio_m_{{$modulo->idmodulo}} marcar_todos_m" type="checkbox" role="switch" id="marcar_todos_m_{{$modulo->idmodulo}}" data-modulo="{{$modulo->idmodulo}}">
-											<label class="form-check-label ms-2" for="marcar_todos_m_{{$modulo->idmodulo}}"><b class="me-2">Marcar todas</b><i class="fas fa-check-double"></i></label>
+											<input class="form-check-input m-0
+												m_marcar_todos
+												m_modulo_servicios_{{$modulo->idmodulo}}
+												m_modulo_submodulo_{{$modulo->idmodulo}}
+												m_servicios" type="checkbox" role="switch" id="m_marcar_todos_{{$modulo->idmodulo}}" data-modulo="{{$modulo->idmodulo}}">
+											<label class="form-check-label ms-2" for="m_marcar_todos_{{$modulo->idmodulo}}"><b class="me-2">Marcar todas</b><i class="fas fa-check-double"></i></label>
 										</div>
+
 										@foreach($modulo->servicios as $servicio)
-										<div class="form-check form-check-inline m-0 d-flex align-items-center">
-											<input class="form-check-input m-0 servicios_m servicio_m_{{$modulo->idmodulo}}" type="checkbox" role="switch" name="servicio[]" id="servicio_m_{{$servicio->idservicio}}" value="{{$servicio->idservicio}}">
-											<label class="form-check-label ms-2" for="servicio_m_{{$servicio->idservicio}}"><b>{{$servicio->servicio}}</b></label>
+										<?php
+										if ($servicio->idservicio_raiz == null) {
+											$tipo_servicio = "submodulo";
+											$idservicio_raiz = $servicio->idservicio;
+										} else {
+											$tipo_servicio = "operacion";
+											$idservicio_raiz = $servicio->idservicio_raiz;
+										}
+										?>
+										<div class="form-check form-check-inline m-0 d-flex align-items-center {{$servicio->idservicio_raiz > 0 ? 'ms-4' : ''}}">
+											<input class="form-check-input m-0
+												m_modulo_servicios_{{$modulo->idmodulo}}
+												m_modulo_{{$tipo_servicio}}_{{$modulo->idmodulo}}
+												m_servicios
+												m_{{$tipo_servicio}}
+												m_{{$tipo_servicio}}_{{$idservicio_raiz}}" type="checkbox" role="switch" name="servicio[]" id="m_servicio_{{$servicio->idservicio}}" value="{{$servicio->idservicio}}" data-modulo="{{$modulo->idmodulo}}" data-submodulo="{{$idservicio_raiz}}">
+											<label class="form-check-label ms-2" for="m_servicio_{{$servicio->idservicio}}"><b>{{$servicio->servicio}}</b></label>
 										</div>
 										@endforeach
 									</div>
@@ -184,7 +222,7 @@
 						</div>
 						@endforeach
 					</div>
-					<div class="text-end">
+					<div class="text-end mt-3">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
 						<button type="submit" class="btn btn-primary btn-sm" id="btn_modificar"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>

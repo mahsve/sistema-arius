@@ -19,54 +19,127 @@
 		btn_nuevo_rol.addEventListener("click", function (e) {
 			e.preventDefault();
 			formulario_registro.reset();
-			Array.from(document.querySelectorAll('.servicios_r')).forEach(check_ => check_.setAttribute('disabled', true));
+			Array.from(document.querySelectorAll('.r_servicios')).forEach(check_ => check_.setAttribute('disabled', true));
 			modal_registrar.show();
 		});
 	}
 
-	// [MODULO REGISTRAR].
-	// Agregamos evento a los check de los módulos para que activen y desactiven la opción de marcar los servicios de estos.
-	Array.from(document.querySelectorAll('.modulo_r')).forEach(ck_modulo => {
+	// Activar/desactivar los submódulos al marcar/desmarcar un módulo.
+	// [REGISTRAR].
+	Array.from(document.querySelectorAll('.r_modulo')).forEach(ck_modulo => {
 		ck_modulo.addEventListener('change', function () {
 			const idmodulo = this.value;
-			Array.from(document.querySelectorAll(`.servicio_r_${idmodulo}`)).forEach(ck_servicio => {
-				if (!ck_modulo.checked)
+			Array.from(document.querySelectorAll(`.r_modulo_servicios_${idmodulo}`)).forEach(ck_servicio => {
+				if (!ck_modulo.checked) {
+					ck_servicio.checked = false;
 					ck_servicio.setAttribute("disabled", true);
-				else
+				} else if (ck_servicio.classList.contains(`r_modulo_submodulo_${idmodulo}`))
+					ck_servicio.removeAttribute("disabled");
+			});
+		});
+	});
+	// [MODIFICAR].
+	Array.from(document.querySelectorAll('.m_modulo')).forEach(ck_modulo => {
+		ck_modulo.addEventListener('change', function () {
+			const idmodulo = this.value;
+			Array.from(document.querySelectorAll(`.m_modulo_servicios_${idmodulo}`)).forEach(ck_servicio => {
+				if (!ck_modulo.checked) {
+					ck_servicio.checked = false;
+					ck_servicio.setAttribute("disabled", true);
+				} else if (ck_servicio.classList.contains(`m_modulo_submodulo_${idmodulo}`))
 					ck_servicio.removeAttribute("disabled");
 			});
 		});
 	});
 
-	// Agregamos evento a los check de "Marcar todos" para marcar todos los servicios de un módulo.
-	Array.from(document.querySelectorAll('.marcar_todos_r')).forEach(ck_marcar => {
+	// Check "Marcar todos" para marcar los submodulos y los procesos de un módulo.
+	// [REGISTRAR]
+	Array.from(document.querySelectorAll('.r_marcar_todos')).forEach(ck_marcar => {
 		ck_marcar.addEventListener('change', function () {
 			const idmodulo = this.getAttribute('data-modulo');
-			Array.from(document.querySelectorAll(`.servicio_r_${idmodulo}`)).forEach(ck_servicio => ck_servicio.checked = ck_marcar.checked);
+			Array.from(document.querySelectorAll(`.r_modulo_servicios_${idmodulo}`)).forEach(ck_servicio => {
+				ck_servicio.checked = ck_marcar.checked;
+				if (!ck_servicio.checked && ck_servicio.classList.contains('r_operacion'))
+					ck_servicio.setAttribute('disabled', true);
+				else
+					ck_servicio.removeAttribute('disabled');
+			});
 		});
 	});
-
-	// [MODULO MODIFICAR].
-	// Agregamos evento a los check de los módulos para que activen y desactiven la opción de marcar los servicios de estos.
-	Array.from(document.querySelectorAll('.modulo_m')).forEach(ck_modulo => {
-		ck_modulo.addEventListener('change', function () {
-			const idmodulo = this.value;
-			Array.from(document.querySelectorAll(`.servicio_m_${idmodulo}`)).forEach(ck_servicio => {
-				if (!ck_modulo.checked)
-					ck_servicio.setAttribute("disabled", true);
+	// [MODIFICAR]
+	Array.from(document.querySelectorAll('.m_marcar_todos')).forEach(ck_marcar => {
+		ck_marcar.addEventListener('change', function () {
+			const idmodulo = this.getAttribute('data-modulo');
+			Array.from(document.querySelectorAll(`.m_modulo_servicios_${idmodulo}`)).forEach(ck_servicio => {
+				ck_servicio.checked = ck_marcar.checked;
+				if (!ck_servicio.checked && ck_servicio.classList.contains('m_operacion'))
+					ck_servicio.setAttribute('disabled', true);
 				else
-					ck_servicio.removeAttribute("disabled");
+					ck_servicio.removeAttribute('disabled');
 			});
 		});
 	});
 
-	// Agregamos evento a los check de "Marcar todos" para marcar todos los servicios de un módulo.
-	Array.from(document.querySelectorAll('.marcar_todos_m')).forEach(ck_marcar => {
-		ck_marcar.addEventListener('change', function () {
-			const idmodulo = this.getAttribute('data-modulo');
-			Array.from(document.querySelectorAll(`.servicio_m_${idmodulo}`)).forEach(ck_servicio => ck_servicio.checked = ck_marcar.checked);
+	// Activar/desactivar las operaciones al marcar/desmarcar un submódulo.
+	// [REGISTRAR]
+	Array.from(document.querySelectorAll('.r_submodulo')).forEach(ck_submodulo => {
+		ck_submodulo.addEventListener('change', function () {
+			const idsubmodulo = this.getAttribute('data-submodulo');
+			Array.from(document.querySelectorAll(`.r_operacion_${idsubmodulo}`)).forEach(ck_operacion => {
+				if (!ck_submodulo.checked) {
+					ck_operacion.checked = false;
+					ck_operacion.setAttribute('disabled', true);
+				} else
+					ck_operacion.removeAttribute('disabled');
+			});
 		});
 	});
+	// [MODIFICAR]
+	Array.from(document.querySelectorAll('.m_submodulo')).forEach(ck_submodulo => {
+		ck_submodulo.addEventListener('change', function () {
+			const idsubmodulo = this.getAttribute('data-submodulo');
+			Array.from(document.querySelectorAll(`.m_operacion_${idsubmodulo}`)).forEach(ck_operacion => {
+				if (!ck_submodulo.checked) {
+					ck_operacion.checked = false;
+					ck_operacion.setAttribute('disabled', true);
+				} else
+					ck_operacion.removeAttribute('disabled');
+			});
+		});
+	});
+
+	// Evento para chequear si algun servicio de un modulo no esta marcado y desmarcar el check "Marcar todos".
+	// [REGISTRAR]
+	Array.from(document.querySelectorAll('.r_servicios')).forEach(ck_servicio => {
+		if (!ck_servicio.classList.contains('r_marcar_todos')) {
+			ck_servicio.addEventListener('change', desmarcar_CheckMarcarTodos);
+		}
+	});
+	// [MODIFICAR]
+	Array.from(document.querySelectorAll('.m_servicios')).forEach(ck_servicio => {
+		if (!ck_servicio.classList.contains('m_marcar_todos')) {
+			ck_servicio.addEventListener('change', desmarcar_CheckMarcarTodos);
+		}
+	});
+
+	function desmarcar_CheckMarcarTodos() {
+		let desmarcados = 0;
+		const prefijo = this.classList.contains('r_servicios') ? "r" : "m";
+		const idmodulo = this.getAttribute('data-modulo');
+		// Recorremos todos los servicios de un modulo y sumamos uno si alguno no esta marcado.
+		Array.from(document.querySelectorAll(`.${prefijo}_modulo_servicios_${idmodulo}`)).forEach(ck_ms => {
+			if (!ck_ms.classList.contains(`${prefijo}_marcar_todos`) && !ck_ms.checked) {
+				desmarcados++;
+			}
+		});
+
+		// Verificamos si hay alguno que no este marcado y desmarcamos el Check "Marcar todos".
+		document.getElementById(`${prefijo}_marcar_todos_${idmodulo}`).checked = true;
+		if (desmarcados > 0) {
+			document.getElementById(`${prefijo}_marcar_todos_${idmodulo}`).checked = false;
+		}
+	}
+
 
 	// Registrar dato.
 	if (formulario_registro != null) {
@@ -94,6 +167,7 @@
 					// Verificamos si ocurrió algún error.
 					if (data.status == "error") {
 						Toast.fire({ icon: data.status, title: data.response.message });
+						if (data.response.error) console.error(`Error: ${data.response.error}`);
 						return false;
 					}
 
@@ -137,6 +211,7 @@
 					// Verificamos si ocurrió algún error.
 					if (data.status == "error") {
 						Toast.fire({ icon: data.status, title: data.response.message });
+						if (data.response.error) console.error(`Error: ${data.response.error}`);
 						return false;
 					}
 
@@ -173,7 +248,21 @@
 				// Limpiamos el formulario y cargamos los datos consultados.
 				formulario_actualizacion.reset();
 				formulario_actualizacion.setAttribute('action', `${url_}/roles/${id_data}`);
+				Array.from(document.querySelectorAll('.m_servicios')).forEach(check_ => check_.setAttribute('disabled', true));
 				document.getElementById('c_rol_m').value = data.rol;
+				// Recorremos los módulos agregados en el rol.
+				for (let index = 0; index < data.modulos.length; index++) {
+					document.getElementById(`m_modulo_${data.modulos[index].idmodulo}`).checked = true;
+					document.getElementById(`m_modulo_${data.modulos[index].idmodulo}`).dispatchEvent(new Event('change'));
+				}
+				// Recorremos los servicios agregados en el rol.
+				for (let index = 0; index < data.servicios.length; index++) {
+					document.getElementById(`m_servicio_${data.servicios[index].idservicio}`).checked = true;
+					if (data.servicios[index].idservicio_raiz == null) {
+						document.getElementById(`m_servicio_${data.servicios[index].idservicio}`).dispatchEvent(new Event('change'));
+					}
+				}
+				// Abrimos la modal.
 				modal_modificar.show();
 			});
 		});

@@ -9,6 +9,8 @@ class RolServicio extends Model
 {
 	use HasFactory;
 
+	protected $primaryKey = null;
+	public $incrementing = false;
 	public $timestamps = false;
 	protected $table = 'tb_rol_servicio';
 }

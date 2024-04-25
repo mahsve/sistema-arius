@@ -157,7 +157,7 @@
 			if (c_modulo.value == "") {
 				Toast.fire({ icon: 'error', title: '¡Seleccione el módulo!' });
 				c_modulo.focus();
-			} else if (c_submodulo.checked && c_submodulos.value == "") {
+			} else if (c_operacion.checked && c_submodulos.value == "") {
 				Toast.fire({ icon: 'error', title: '¡Seleccione el submódulo!' });
 				c_servicio.focus();
 			} else if (c_servicio.value == "") {
@@ -225,7 +225,7 @@
 			if (c_modulo.value == "") {
 				Toast.fire({ icon: 'error', title: '¡Seleccione el módulo!' });
 				c_modulo.focus();
-			} else if (c_submodulo.checked && c_submodulos.value == "") {
+			} else if (c_operacion.checked && c_submodulos.value == "") {
 				Toast.fire({ icon: 'error', title: '¡Seleccione el submódulo!' });
 				c_servicio.focus();
 			} else if (c_servicio.value == "") {
