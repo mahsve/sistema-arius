@@ -154,7 +154,7 @@ class MapaDeZonaControlador extends Controller
 	public function create()
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
 			return $this->error403();
 		}
 
@@ -270,7 +270,7 @@ class MapaDeZonaControlador extends Controller
 	public function store(Request $request)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
 			return $this->error403();
 		}
 
@@ -309,9 +309,9 @@ class MapaDeZonaControlador extends Controller
 
 			// m_instaladores
 			// Instalamos los tecnicos encargados de instalar.
-			for ($var = 0; $var < count($request->m_instaladores); $var++) {
+			for ($var = 0; $var < count($request->cedula_instalador); $var++) {
 				$instalador = new Instaladores();
-				$instalador->cedula = $request->m_instaladores[$var];
+				$instalador->cedula = $request->cedula_instalador[$var];
 				$instalador->idcodigo = $request->m_codigo;
 			}
 
@@ -371,7 +371,8 @@ class MapaDeZonaControlador extends Controller
 			}
 		});
 
-		return json_encode(["status" => "success", "response" => ["message" => "Mapa de zona registrado exitosamente"]]);
+		return redirect()->route('mapas_de_zonas.index');
+		// return json_encode(["status" => "success", "response" => ["message" => "Mapa de zona registrado exitosamente"]]);
 	}
 
 	// Display the specified resource. 
@@ -489,5 +490,25 @@ class MapaDeZonaControlador extends Controller
 	// Remove the specified resource from storage. 
 	public function destroy(string $id)
 	{
+	}
+
+	// Update status.
+	public function toggle(string $id)
+	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Consultamos el registro a actualizar el estatus.
+		$departamento = MapaDeZona::find($id);
+		$departamento->estatus = $departamento->estatus != "A" ? "A" : "I";
+		$departamento->save();
+
+		// Enviamos un mensaje de exito al usuario.
+		$message	= $departamento->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";
+		$response = ["status" => "success", "response" => ["message" => $message]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

@@ -3,10 +3,14 @@
 	const tipo_contrato = document.getElementById("m_tipo_contrato");
 	const codigo_manual = document.getElementById("codigo_manual");
 	const input_codigo = document.getElementById("m_codigo");
+	const omitir_datos = document.getElementById('omitir_datos_tecnicos');
+	const m_reporta_ = document.getElementById("m_reporta");
+	const btn_next = document.getElementById("btn_next");
+	const btn_prev = document.getElementById("btn_prev");
+	const btn_save = document.getElementById('btn_save');
 	const cl_tipo_identificacion_ = document.getElementById("cl_tipo_identificacion");
 
 	// Activar plugins
-	new TomSelect("#m_instaladores", { create: true });
 	const telefonoAsigMask = IMask(document.getElementById('c_telefono_assig'), { mask: '000-0000' });
 
 	// Eventos elementos HTML.
@@ -49,22 +53,72 @@
 			lista_rif.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
 		}
 	});
-	
+
+	// Deshabilitar los campos si desea omitirlos.
+	omitir_datos.addEventListener('change', () => {
+		Array.from(document.querySelectorAll('.form-tecnicos')).forEach(field => {
+			if (omitir_datos.checked) {
+				field.setAttribute('disabled', true);
+			} else {
+				field.removeAttribute('disabled');
+			}
+		});
+	});
+
+	// Mostramos/Ocultamos los campos de telefono según el canal de reporte.
+	m_reporta_.addEventListener('change', function () {
+		const cta = document.getElementById('contenedor_telefono_asig');
+		const pt_asg = document.getElementById('c_prefijo_telefono_asg');
+		const t_sig = document.getElementById('c_telefono_assig');
+		if (this.value == "0") {
+			cta.style.display = '';
+		} else {
+			cta.style.display = 'none';
+			pt_asg.value = "";
+			t_sig.value = "";
+		}
+	});
+
 	// Botones step [Avanzar y retroceder en el formulario].
-	document.getElementById("btn_next_1").addEventListener("click", cambiar_vista);
-	document.getElementById("btn_prev_2").addEventListener("click", cambiar_vista);
-	document.getElementById("btn_next_2").addEventListener("click", cambiar_vista);
-	document.getElementById("btn_prev_3").addEventListener("click", cambiar_vista);
-	document.getElementById("btn_next_3").addEventListener("click", cambiar_vista);
-	document.getElementById("btn_prev_4").addEventListener("click", cambiar_vista);
-
-	// Avanzar el formulario.
-	function cambiar_vista(e) {
-		e.preventDefault();
-
-		const tab = this.getAttribute('data-tab');
-		document.querySelector(`#${tab}`).click();
-	}
+	var vista = 0;
+	const listado_vistas = ["#pills-cliente-tab", "#pills-usuarios-tab", "#pills-zonas-tab", "#pills-tecnicos-tab"];
+	// Botón para retroceder la vista.
+	btn_prev.addEventListener("click", function () {
+		if (listado_vistas[vista - 1]) {
+			vista--;
+			document.querySelector(listado_vistas[vista]).click();
+		}
+		actualizar_botones();
+	});
+	// Botón para adelantar la vista.
+	btn_next.addEventListener("click", function () {
+		if (listado_vistas[vista + 1]) {
+			vista++;
+			document.querySelector(listado_vistas[vista]).click();
+		}
+		actualizar_botones();
+	});
+	// Función para actualizar que botones mostrar/ocultar. 
+	const actualizar_botones = () => {
+		btn_prev.style.display = "";
+		if (vista == 0) {
+			btn_prev.style.display = "none";
+		}
+		// Verificamos si ya llego a la ultima pestaña.
+		btn_save.style.display = "none";
+		btn_next.style.display = "";
+		if ((vista + 1) == listado_vistas.length) {
+			btn_save.style.display = "";
+			btn_next.style.display = "none";
+		}
+	};
+	// Al cliquear algunas de las tab, toma su posición y actualizar los botones nuevamente.
+	Array.from(document.querySelectorAll('.tab_mapa')).forEach(tab => {
+		tab.addEventListener('click', function () {
+			vista = parseInt(this.getAttribute('data-vista'));
+			actualizar_botones();
+		});
+	});
 
 	// Disparamos el evento change para restablecer el tipo de identificacion [Solo una vez al abrir el formulario].
 	cl_tipo_identificacion_.dispatchEvent(new Event('change'));
@@ -109,7 +163,7 @@
 			<td class="py-1 px-2">
 				<input type="hidden" name="usuario_registro[]" id="usuario_registro_${idrand}">
 				<input type="hidden" name="usuario_orden[]" id="usuario_orden_${idrand}" value="${tabla_usuarios.children.length + 1}" class="usuario_orden" data-id="${idrand}">
-				<div class="form-group input-group m-0">
+				<div class="form-group input-group m-0" style="min-width: 150px;">
 					<select class="form-control text-uppercase text-center" name="usuario_prefijo_id[]" id="usuario_prefijoid_${idrand}" data-id="${idrand}" style="height: 31px; margin-top: 1px;">
 						${lista_cedula.map(cd => `<option value="${cd}">${cd}</option>`).join('')}
 					</select>
@@ -119,7 +173,7 @@
 			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuario_nombre[]" id="usuario_nombre_${idrand}" placeholder="Nombre completo"></td>
 			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuarios_contrasena[]" id="usuarios_contrasena_${idrand}" placeholder="Contraseña"></td>
 			<td class="py-1 px-2">
-				<div class="input-group">
+				<div class="input-group" style="min-width: 150px;">
 					<select class="form-control text-center" name="usuario_prefijotl[]" id="usuario_prefijotl_${idrand}" style="height: 31px; margin-top: 1px;">
 						<option value="">COD.</option>
 						<optgroup label="Móvil">
@@ -132,7 +186,7 @@
 					<input type="text" class="form-control text-uppercase" name="usuarios_telefono[]" id="usuarios_telefono_${idrand}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
 				</div>
 			</td>
-			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuarios_nota[]" id="usuarios_nota_${idrand}" placeholder="Nota (Opcional)"></td>
+			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuarios_nota[]" id="usuarios_nota_${idrand}" style="min-width: 200px;" placeholder="Nota (Opcional)"></td>
 			<td class="py-1 px-2" style="width: 20px;">
 				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_usuario_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
 			</td>
@@ -246,10 +300,10 @@
 			<td class="py-1 px-2 text-center n_zonas" id="zona_norden_${idrand}">${tabla_zonas.children.length + 1}</td>
 			<td class="py-1 px-2">
 				<input type="hidden" name="zona_orden[]" id="zona_orden_${idrand}" value="${tabla_zonas.children.length + 1}" class="zona_orden" data-id="${idrand}">
-				<input type="text" class="form-control text-uppercase" name="zona_descripcion[]" id="zona_descripcion_${idrand}" placeholder="Descripción de la zona">
+				<input type="text" class="form-control text-uppercase" name="zona_descripcion[]" id="zona_descripcion_${idrand}" placeholder="Descripción de la zona" style="min-width: 150px;">
 			</td>
 			<td class="py-1 px-2">
-				<div class="form-group m-0">
+				<div class="form-group m-0" style="min-width: 150px;">
 					<select class="form-control text-uppercase" name="zona_equipos[]" id="zona_equipos_${idrand}" data-id=${idrand}>
 						<option value="0">SELC.  EQUIPO</option>
 						${dispositivos.map(dv => `<option value="${dv.iddispositivo}">${dv.dispositivo}</option>`).join('')}
@@ -257,11 +311,11 @@
 				<div>
 			</td>
 			<td class="py-1 px-2">
-				<select class="form-control text-uppercase" name="zona_configuracion[]" id="zona_configuracion_${idrand}" data-id="${idrand}">
+				<select class="form-control text-uppercase" name="zona_configuracion[]" id="zona_configuracion_${idrand}" data-id="${idrand}" style="min-width: 150px;">
 					<option value="0">SELC. CONFIGURACIÓN</option>
 				</select>
 			</td>
-			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="zona_nota[]" id="zona_nota_${idrand}" placeholder="Observación (opcional)"></td>
+			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="zona_nota[]" id="zona_nota_${idrand}" placeholder="Observación (opcional)" style="min-width: 200px;"></td>
 			<td class="py-1 px-2" style="width: 20px;">
 				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_zona_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
 			</td>
@@ -319,6 +373,99 @@
 			input.value = (index + 1);
 		});
 	}
+
+
+
+	/**
+	 * AGREGAR INSTALADORES.
+	 */
+	// Elementos HTML.
+	const btn_agregar_instalador = document.getElementById('btn_agregar_instalador');
+	const tabla_tecnicos = document.querySelector('#tabla_tecnicos tbody');
+	const tabla_tecnicos_vacio = tabla_tecnicos.innerHTML;
+	const tecnicos = document.getElementById('lista_tecnicos');
+	const btn_agregar_tecnico = document.getElementById('btn_agregar_tecnico');
+	const modal_instaladores = new bootstrap.Modal(document.getElementById('modal_instaladores'));
+
+	// Eventos elementos HTML.
+	// Abrimos la modal para seleccionar el tecnico a agregar.
+	btn_agregar_instalador.addEventListener('click', (e) => {
+		e.preventDefault();
+		tecnicos.value = "";
+		modal_instaladores.show();
+	});
+
+	// Agregamos el técnico en la tabla.
+	btn_agregar_tecnico.addEventListener('click', function (e) {
+		e.preventDefault();
+
+		// Válidamos que el campo tecnbico no este vacío.
+		if (tecnicos.value == "") {
+			Toast.fire({ icon: 'error', text: '¡Selecccione el técnico!' });
+			tecnicos.focus();
+		} else {
+			let coincidencia = 0; // Guardamos todas las coincidencias encontradas.
+			// Recorremos los campos ya agregado de cedula y verificamos si la nueva ya se encuentra agregada.
+			Array.from(document.querySelectorAll('.cedula_instalador')).forEach(input => {
+				if (input.value == lista_tecnicos[tecnicos.value].cedula) coincidencia++;
+			});
+			// Si ya se encuentra agregada, procedemos a denegar el proceso.
+			if (coincidencia > 0) {
+				Toast.fire({ icon: 'error', text: '¡Este técnico ya se encuentra agregado!' });
+				return;
+			}
+
+			// Válidamos la tabla.
+			if (tabla_tecnicos.children.length > 0 && tabla_tecnicos.children[0].classList.contains('sin_tecnicos')) tabla_tecnicos.innerHTML = '';
+
+			// GENERAMOS UN NUEVO ELEMENTO.
+			const idrand = Math.random().toString().replace('.', ''); // GENERAMOS UN ID UNICO PARA MANEJAR LA FILA DEL INSTALADOR.
+			const elemento = document.createElement('tr'); // GENERAMOS UN NUEVO ELEMENTO.
+			elemento.id = `tr_instalador_${idrand}`;
+
+			// Definimos toda la estructura de la nueva fila.
+			const tecnico_ = lista_tecnicos[tecnicos.value];
+			elemento.innerHTML = `
+				<td class="py-1 px-2 text-center n_tecnicos" class="tecnico_norden" id="tecnico_norden_${idrand}" data-id="${idrand}">${tabla_tecnicos.children.length + 1}</td>
+				<td class="py-1 px-2">
+					<input type="hidden" class="cedula_instalador" name="cedula_instalador[]" value="${tecnico_.cedula}" data-id="${idrand}">
+					<span>${tecnico_.cedula}</span>
+				</td>
+				<td class="py-1 px-2">
+					<span>${tecnico_.nombre}</span>
+				</td>
+				<td class="py-1 px-2">
+					<span>${tecnico_.telefono1}</span>
+				</td>
+				<td class="py-1 px-2" style="width: 20px;">
+					<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_instalador_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
+				</td>`;
+			tabla_tecnicos.appendChild(elemento);
+			modal_instaladores.hide();
+
+			// Agregamos los eventos a los elementos agregados a la tabla.
+			document.getElementById(`btn_eliminar_instalador_${idrand}`).addEventListener("click", eliminar_instalador);
+		}
+	});
+
+	// Evento para eliminar instalador de la tabla.
+	function eliminar_instalador() {
+		// Capturamos el elemento que provoco el evento.
+		const idrand = this.getAttribute('data-id');
+		document.getElementById(`tr_instalador_${idrand}`).remove();
+
+		// En caso que quede vacío, cargamos un mensaje en la tabla "Sin usuarios".
+		if (tabla_tecnicos.children.length == 0) {
+			tabla_tecnicos.innerHTML = tabla_tecnicos_vacio;
+			return;
+		}
+
+		// Reordenamos la enumeración del listado.
+		Array.from(document.querySelectorAll('.n_tecnicos')).forEach((tr_, index) => {
+			const idrand = tr_.getAttribute('data-id');
+			document.querySelector(`#tecnico_norden_${idrand}`).innerHTML = (index + 1);
+		});
+	};
 
 
 
