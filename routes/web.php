@@ -50,6 +50,17 @@ Route::middleware('auth')->group(function () {
 		Route::get('/mapas_de_zonas/pdf/{id}', 'generar_pdf')->name('mapas_de_zonas.pdf');
 	});
 
+	// Controlador [Servicio técnico solicitado].
+	Route::controller(App\Http\Controllers\ServicioTecnicoSolicitadoControlador::class)->group(function () {
+		Route::get('/servicios_tecnico_solicitados', 'index')->name('servicios_tecnico_solicitados.index');
+		Route::get('/servicios_tecnico_solicitados/clientes/{string}', 'clientes')->name('servicios_tecnico_solicitados.client'); // Buscar clientes.
+		Route::get('/servicios_tecnico_solicitados/mapa_de_zona/{id}', 'mapa_de_zona')->name('servicios_tecnico_solicitados.selected'); // Consultar cliente seleccionado por ID.
+		Route::post('/servicios_tecnico_solicitados', 'store')->name('servicios_tecnico_solicitados.store');
+		Route::get('/servicios_tecnico_solicitados/modificar/{id}', 'edit')->name('servicios_tecnico_solicitados.edit');
+		Route::patch('/servicios_tecnico_solicitados', 'update')->name('servicios_tecnico_solicitados.update');
+		Route::get('/servicios_tecnico_solicitados/pdf/{id}', 'generar_pdf')->name('servicios_tecnico_solicitados.pdf');
+	});
+
 	// Controlador [Reportes diarios de operador].
 	Route::controller(App\Http\Controllers\ReporteDiarioOperadorControlador::class)->group(function () {
 		Route::get('/reportes_diarios_operador', 'index')->name('reportes_diarios_operador.index');
@@ -58,16 +69,6 @@ Route::middleware('auth')->group(function () {
 		Route::get('/reportes_diarios_operador/modificar/{id}', 'edit')->name('reportes_diarios_operador.edit');
 		Route::patch('/reportes_diarios_operador', 'update')->name('reportes_diarios_operador.update');
 		Route::get('/reportes_diarios_operador/pdf/{id}', 'generar_pdf')->name('reportes_diarios_operador.pdf');
-	});
-
-	// Controlador [Reportes diarios de operador].
-	Route::controller(App\Http\Controllers\ServicioTecnicoSolicitadoControlador::class)->group(function () {
-		Route::get('/servicios_tecnico_solicitados', 'index')->name('servicios_tecnico_solicitados.index');
-		Route::get('/servicios_tecnico_solicitados/registrar', 'create')->name('servicios_tecnico_solicitados.create');
-		Route::post('/servicios_tecnico_solicitados', 'store')->name('servicios_tecnico_solicitados.store');
-		Route::get('/servicios_tecnico_solicitados/modificar/{id}', 'edit')->name('servicios_tecnico_solicitados.edit');
-		Route::patch('/servicios_tecnico_solicitados', 'update')->name('servicios_tecnico_solicitados.update');
-		Route::get('/servicios_tecnico_solicitados/pdf/{id}', 'generar_pdf')->name('servicios_tecnico_solicitados.pdf');
 	});
 
 	/**

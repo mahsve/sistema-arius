@@ -197,6 +197,7 @@ class ClienteControlador extends Controller
 
 		// Válidamos si viene la solicitud desde otro módulo o el módulo de cliente.
 		if (isset($request->modulo)) {
+			$cliente->identificacion = $identificacion;
 			return response($cliente, 200)->header('Content-Type', 'text/json');
 		} else {
 			$response = ["status" => "success", "response" => ["message" => "¡Cliente registrado exitosamente!"]];

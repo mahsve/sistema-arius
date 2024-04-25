@@ -546,6 +546,7 @@
 				// Enviamos mensaje de exito.
 				Swal.fire({ title: "Exito", text: "Cliente registrado exitosamente", icon: "success", timer: 2000 });
 
+				console.log(data);
 				// Capturamos y gestionamos la información.
 				let prefijo_id = data.identificacion.substring(0, 1);
 				let identificacion = data.identificacion.substring(2);
@@ -560,6 +561,7 @@
 
 				// Ingresamos la información del cliente en el formulario.
 				document.getElementById("cl_tipo_identificacion").value = data.tipo_identificacion;
+				cl_tipo_identificacion_.dispatchEvent(new Event('change'));
 				document.getElementById("cl_prefijo_identificacion").value = prefijo_id;
 				document.getElementById("cl_identificacion").value = identificacion;
 				document.getElementById("cl_nombre_completo").value = data.nombre;
@@ -569,9 +571,6 @@
 				document.getElementById("cl_telefono2").value = telefono2;
 				document.getElementById("cl_correo_electronico").value = data.correo;
 				document.getElementById("id_cliente").value = data.identificacion;
-				// Ejecutamos la función change del tipo de identificación del formulario principal una vez cargado los datos al formulario.
-				cl_tipo_identificacion_.dispatchEvent(new Event('change'));
-
 
 				// Cerramos la modal.
 				modal_registrar_cliente.hide();
@@ -699,4 +698,45 @@
 			modal_buscar_cliente.hide();
 		});
 	}
+
+
+	/**
+	 * FORMULARIO REGISTRAR.
+	 */
+	const formulario_registro = document.getElementById('formulario_registro');
+	formulario_registro.addEventListener("submit", function (e) {
+		e.preventDefault();
+
+		// Elementos del formulario.
+		// const c_dispositivo = document.getElementById("c_dispositivo_r");
+		const btn_guardar = document.getElementById("btn_save");
+
+		// Validamos los campos.
+		if (false) {
+
+		} else {
+			btn_guardar.classList.add("loading");
+			btn_guardar.setAttribute('disabled', true);
+			fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
+				btn_guardar.classList.remove("loading");
+				btn_guardar.removeAttribute('disabled');
+
+				// Verificamos si ocurrió algún error.
+				if (data.status == "error") {
+					Toast.fire({ icon: data.status, title: data.response.message });
+					if (data.response.error) console.error(`Error: ${data.response.error}`);
+					return false;
+				}
+
+				// Enviamos mensaje de exito.
+				Swal.fire({
+					title: "Exito",
+					icon: data.status,
+					text: data.response.message,
+					timer: 2000,
+					willClose: () => location.href = `${url_}/mapas_de_zonas`,
+				});
+			});
+		}
+	});
 })();
