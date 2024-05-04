@@ -36,8 +36,9 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2" width="50"><i class="fas fa-sort-amount-down"></i> Órden</th>
+						<th class="ps-2" style="display: none;">Órden</th>
 						<th class="ps-2"><i class="fas fa-sitemap"></i> Módulo</th>
+						<th class="ps-2" width="50"><i class="fas fa-sort-amount-down"></i> Órden</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -55,8 +56,9 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
+						<td class="py-1 px-2" style="display: none;">{{$modulo->orden}}</td>
+						<td class="py-1 px-2"><i class="{{$modulo->icono}} text-center me-2" style="width: 20px;"></i><b>{{$modulo->modulo}}</b></td>
 						<td class="py-1 px-2 text-center"><i class="fas fa-sort"></i> {{$modulo->orden}}</td>
-						<td class="py-1 px-2"><i class="{{$modulo->icono}} me-2"></i>{{$modulo->modulo}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($modulo->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($modulo->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
@@ -99,7 +101,7 @@
 					@csrf
 					<div class="form-group mb-3">
 						<label for="c_modulo_r" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
-						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_r" placeholder="Ingrese el nombre del módulo" minlength="3" required>
+						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_r" placeholder="Ingrese el nombre del módulo">
 					</div>
 					<div class="form-group mb-3">
 						<label for="c_icono_r" class="d-flex justify-content-between">
@@ -108,7 +110,7 @@
 								<i class="fas fa-icons"></i> Ver lista <i class="fas fa-external-link-alt"></i>
 							</a>
 						</label>
-						<input type="text" class="form-control text-lowercase" name="c_icono" id="c_icono_r" placeholder="Ejemplo: fas fa-icons" minlength="3" required>
+						<input type="text" class="form-control text-lowercase" name="c_icono" id="c_icono_r" placeholder="Ejemplo: fas fa-icons">
 					</div>
 					<div class="form-group mb-3">
 						<label><i class="fas fa-desktop"></i> Vista previa</label>
@@ -141,7 +143,7 @@
 					@method('PATCH')
 					<div class="form-group">
 						<label for="c_modulo_m" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
-						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_m" placeholder="Ingrese el nombre del módulo" minlength="3" required>
+						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_m" placeholder="Ingrese el nombre del módulo">
 					</div>
 					<div class="form-group mb-3">
 						<label for="c_icono_m" class="d-flex justify-content-between">
@@ -150,7 +152,7 @@
 								<i class="fas fa-icons"></i> Ver lista <i class="fas fa-external-link-alt"></i>
 							</a>
 						</label>
-						<input type="text" class="form-control text-lowercase" name="c_icono" id="c_icono_m" placeholder="Ejemplo: fas fa-icons" minlength="3" required>
+						<input type="text" class="form-control text-lowercase" name="c_icono" id="c_icono_m" placeholder="Ejemplo: fas fa-icons">
 					</div>
 					<div class="form-group mb-3">
 						<label><i class="fas fa-desktop"></i> Vista previa</label>

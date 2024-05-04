@@ -25,10 +25,7 @@ class ConfiguracionDisControlador extends Controller
 
 		// Consultamos los datos necesarios y cargamos la vista.
 		$dispositivos = Dispositivo::all();
-		$configuraciones = DB::table('tb_config_disp')
-			->select('tb_config_disp.*', 'tb_dispositivos.dispositivo')
-			->join('tb_dispositivos', 'tb_config_disp.iddispositivo', 'tb_dispositivos.iddispositivo')
-			->get();
+		$configuraciones = ConfiguracionDis::all();
 		return view('configuracion_dispositivo.index', [
 			'permisos' => $permisos,
 			"configuraciones" => $configuraciones,
@@ -52,9 +49,7 @@ class ConfiguracionDisControlador extends Controller
 
 		// Validamos.
 		$message = "";
-		if ($request->c_dispositivo == "") {
-			$message = "¡Seleccione el dispositivo!";
-		} else if ($request->c_configuracion == "") {
+		if ($request->c_configuracion == "") {
 			$message = "¡Ingrese el nombre de la configuración!";
 		} else if (strlen($request->c_configuracion) < 2) {
 			$message = "¡La configuración debe tener al menos 2 caracteres!";
@@ -70,7 +65,6 @@ class ConfiguracionDisControlador extends Controller
 		$existente = DB::table('tb_config_disp')
 			->select('idconfiguracion')
 			->where('configuracion', '=', mb_convert_case($request->c_configuracion, MB_CASE_UPPER))
-			->where('iddispositivo', '=', $request->c_dispositivo)
 			->first();
 		if ($existente) {
 			$response = ["status" => "error", "response" => ["message" => "¡Esta configuración del dispositivo ya se encuentra registrado!"]];
@@ -80,12 +74,16 @@ class ConfiguracionDisControlador extends Controller
 		// Creamos el nuevo registro de la configuracion.
 		$configuracion = new ConfiguracionDis();
 		$configuracion->configuracion = mb_convert_case($request->c_configuracion, MB_CASE_UPPER); // Transformamos a mayuscula.
-		$configuracion->iddispositivo = $request->c_dispositivo;
-		$configuracion->descripcion = $request->c_descripcion;
 		$configuracion->save();
 
+		// Verificamos si es un registro rápido.
+		$registro = null;
+		if (isset($request->modulo) and !empty($request->modulo)) {
+			$registro = $configuracion;
+		}
+
 		// Retoramos mensaje de exito al usuario.
-		$response = ["status" => "success", "response" => ["message" => "¡Configuración del dispositivo registrado exitosamente!"]];
+		$response = ["status" => "success", "response" => ["message" => "¡Configuración del dispositivo registrado exitosamente!", "data" => $registro]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
@@ -119,9 +117,7 @@ class ConfiguracionDisControlador extends Controller
 
 		// Validamos.
 		$message = "";
-		if ($request->c_dispositivo == "") {
-			$message = "¡Seleccione el dispositivo!";
-		} else if ($request->c_configuracion == "") {
+		if ($request->c_configuracion == "") {
 			$message = "¡Ingrese el nombre de la configuración!";
 		} else if (strlen($request->c_configuracion) < 2) {
 			$message = "¡La configuración debe tener al menos 2 caracteres!";
@@ -137,7 +133,6 @@ class ConfiguracionDisControlador extends Controller
 		$existente = DB::table('tb_config_disp')
 			->select('idconfiguracion')
 			->where('configuracion', '=', mb_convert_case($request->c_configuracion, MB_CASE_UPPER))
-			->where('iddispositivo', '=', $request->c_dispositivo)
 			->where('idconfiguracion', '!=', $id)
 			->first();
 		if ($existente) {
@@ -148,8 +143,6 @@ class ConfiguracionDisControlador extends Controller
 		// Consultamos y modificamos el registro de la configuración.
 		$configuracion = ConfiguracionDis::find($id);
 		$configuracion->configuracion = mb_convert_case($request->c_configuracion, MB_CASE_UPPER);
-		$configuracion->iddispositivo = $request->c_dispositivo;
-		$configuracion->descripcion = $request->c_descripcion;
 		$configuracion->save();
 
 		// Retoramos mensaje de exito al usuario.

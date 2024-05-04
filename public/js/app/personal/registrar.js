@@ -4,6 +4,15 @@
 	const c_departamento_ = document.getElementById("c_departamento");
 	const c_cargo_ = document.getElementById("c_cargo");
 	const btn_guardar = document.getElementById("btn_guardar");
+	// AUXILIAR.
+	// [Departamentos].
+	const btn_nuevo_dep = document.querySelectorAll('.btn_nuevo_dep');
+	const modal_registrar_dep = document.getElementById('modal_registrar_dep') != null ? new bootstrap.Modal('#modal_registrar_dep') : null;
+	const formulario_registro_dep = document.getElementById("formulario_registro_dep");
+	// [Cargos].
+	const btn_nuevo_car = document.querySelectorAll('.btn_nuevo_car');
+	const modal_registrar_car = document.getElementById('modal_registrar_car') != null ? new bootstrap.Modal('#modal_registrar_car') : null;
+	const formulario_registro_car = document.getElementById("formulario_registro_car");
 
 	// Mascaras.
 	var identificacionMask = IMask(document.getElementById('c_identificacion'), { mask: '00000000' });
@@ -122,4 +131,154 @@
 			});
 		}
 	});
+
+	// Agregar nuevo registro [Departamento] como un formulario auxiliar para registro rápido.
+	if (btn_nuevo_dep.length > 0) {
+		Array.from(btn_nuevo_dep).forEach(btn => {
+			btn.addEventListener("click", function (e) {
+				e.preventDefault();
+				formulario_registro_dep.reset();
+				document.getElementById('btn_click_dep').value = btn.getAttribute('data-form');
+				if (document.getElementById('btn_click_dep').value == "modal") {
+					modal_registrar_car.hide();
+					setTimeout(() => modal_registrar_dep.show(), 200);
+				} else {
+					modal_registrar_dep.show();
+				}
+			});
+		});
+
+		// Cuando se oculte este registrar, se cargará nuevamente la ventana principal correspondiente.
+		document.getElementById('modal_registrar_dep').addEventListener('hidden.bs.modal', event => {
+			if (document.getElementById('btn_click_dep').value == "modal") {
+				setTimeout(() => modal_registrar_car.show(), 200);
+			}
+		});
+	}
+
+	// Agregar nuevo registro [Cargo] como un formulario auxiliar para registro rápido.
+	if (btn_nuevo_car.length > 0) {
+		Array.from(btn_nuevo_car).forEach(btn => {
+			btn.addEventListener("click", function (e) {
+				e.preventDefault();
+				formulario_registro_car.reset();
+				document.getElementById('c_departamento_c').value = document.getElementById('c_departamento').value;
+				document.getElementById('btn_click_car').value = btn.getAttribute('data-form');
+				modal_registrar_car.show();
+			});
+		});
+	}
+
+	// Función registro rápido [Departamento].
+	if (formulario_registro_dep != null) {
+		formulario_registro_dep.addEventListener("submit", function (e) {
+			e.preventDefault();
+
+			// Elementos del formulario.
+			const c_departamento = document.getElementById("c_departamento_aux");
+			const btn_guardar = document.getElementById("btn_registrar_dep");
+
+			// Validamos los campos.
+			if (c_departamento.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre del departamento!' });
+				c_departamento.focus();
+			} else if (c_departamento.value.length < 3) {
+				Toast.fire({ icon: 'error', title: '¡El departamento debe tener al menos 3 caracteres!' });
+				c_departamento.focus();
+			} else {
+				btn_guardar.classList.add("loading");
+				btn_guardar.setAttribute('disabled', true);
+				fetch(`${formulario_registro_dep.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro_dep) }).then(response => response.json()).then(data => {
+					btn_guardar.classList.remove("loading");
+					btn_guardar.removeAttribute('disabled');
+
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
+						Toast.fire({ icon: data.status, title: data.response.message });
+						return false;
+					}
+
+					// Creamos un nuevo elemento de tipo option con la info para agregar la nueva opción al campo select de ambos formularios.
+					const optionR = document.createElement('option');
+					optionR.setAttribute('value', data.response.data.iddepartamento);
+					optionR.innerHTML = data.response.data.departamento;
+					document.getElementById('c_departamento').append(optionR); // Campo departamento [personal].
+					// Nuevo
+					const optionM = document.createElement('option');
+					optionM.setAttribute('value', data.response.data.iddepartamento);
+					optionM.innerHTML = data.response.data.departamento;
+					document.getElementById('c_departamento_c').append(optionM); // Campo departamento [cargo].
+
+					// Enviamos mensaje de exito.
+					modal_registrar_dep.hide();
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
+					});
+				});
+			}
+		});
+	}
+
+	// Función registro rápido [Departamento].
+	if (formulario_registro_car != null) {
+		formulario_registro_car.addEventListener("submit", function (e) {
+			e.preventDefault();
+
+			// Elementos del formulario.
+			const c_departamento = document.getElementById("c_departamento_c");
+			const c_cargo = document.getElementById("c_cargo_aux");
+			const btn_guardar = document.getElementById("btn_registrar_car");
+
+			// Validamos los campos.
+			if (c_departamento.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Seleccione el departamento!' });
+				c_departamento.focus();
+			} else if (c_cargo.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre del cargo!' });
+				c_cargo.focus();
+			} else if (c_cargo.value.length < 3) {
+				Toast.fire({ icon: 'error', title: '¡El cargo debe tener al menos 3 caracteres!' });
+				c_cargo.focus();
+			} else {
+				btn_guardar.classList.add("loading");
+				btn_guardar.setAttribute('disabled', true);
+				fetch(`${formulario_registro_car.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro_car) }).then(response => response.json()).then(data => {
+					btn_guardar.classList.remove("loading");
+					btn_guardar.removeAttribute('disabled');
+
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
+						Toast.fire({ icon: data.status, title: data.response.message });
+						return false;
+					}
+
+					// Verificamos si hay un departamento escogido y no tiene un solo cargo registrado.
+					if (document.getElementById('c_departamento').value != "" && document.querySelectorAll('#c_cargo option').length == 1) {
+						document.getElementById('c_cargo').innerHTML = `<option value="">Seleccione una opción</option>`; // Rescribimos la opciones a "Seleccione una opción".
+					}
+
+					// Verificamos primero si hay un departamento seleccionado.
+					if (document.getElementById('c_departamento').value != "") {
+						// Creamos un nuevo elemento de tipo option con la info para agregar la nueva opción al campo select de ambos formularios.
+						const optionR = document.createElement('option');
+						optionR.setAttribute('value', data.response.data.idcargo);
+						optionR.innerHTML = data.response.data.cargo;
+						document.getElementById('c_cargo').append(optionR); // Campo cargo [personal].
+					}
+
+					// Enviamos mensaje de exito.
+					modal_registrar_car.hide();
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
+					});
+				});
+			}
+		});
+	}
 })();

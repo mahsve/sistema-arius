@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use App\Models\ConfiguracionDis;
 use App\Models\Dispositivo;
 use App\Models\MapaDeZona;
 use App\Models\Contacto;
@@ -20,6 +21,8 @@ class MapaDeZonaControlador extends Controller
 
 	// Atributos de la clase.
 	public $idservicio = 38;
+	public $idservicio_disp = 17;
+	public $idservicio_conf = 21;
 	public $lista_contratos = [
 		"Comercios" => [
 			"1" => "Comercios - Cantv|Telular|Inter",
@@ -154,6 +157,8 @@ class MapaDeZonaControlador extends Controller
 	public function create()
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$crear_disp = $this->verificar_acceso_servicio_metodo($this->idservicio_disp, 'create'); // Buscando también si tiene permiso para registro en este submódulo [dispositivos].
+		$crear_conf = $this->verificar_acceso_servicio_metodo($this->idservicio_conf, 'create'); // Buscando también si tiene permiso para registro en este submódulo [configuraciones].
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
 			return $this->error403();
 		}
@@ -167,6 +172,8 @@ class MapaDeZonaControlador extends Controller
 			'lista_cedula' => $this->lista_cedula,
 			'lista_rif' => $this->lista_rif,
 			'lista_prefijos' => $this->lista_prefijos,
+			'crear_dispositivo' => $crear_disp,
+			'crear_configuracion' => $crear_conf,
 			'dispositivos' => $dispositivos,
 			'canales_reportes' => $this->canales_reportes,
 			'personal' => $personal,
@@ -258,9 +265,9 @@ class MapaDeZonaControlador extends Controller
 	// Buscara configuraciones del dispositivo seleccionado.
 	public function configuraciones(string $id)
 	{
-		$configuraciones	= DB::table('tb_config_disp')
-			->select('*')
-			->where('iddispositivo', '=', $id)
+		$configuraciones	= ConfiguracionDis::select('tb_config_disp.*')
+			->join('tb_detalles_conf', 'tb_config_disp.idconfiguracion', 'tb_detalles_conf.idconfiguracion')
+			->where('tb_detalles_conf.iddispositivo', '=', $id)
 			->get();
 		if (count($configuraciones) == 0) $configuraciones = "null";
 		return response($configuraciones, 200)->header('Content-Type', 'text/json');
@@ -295,19 +302,23 @@ class MapaDeZonaControlador extends Controller
 				$MapaDeZona->observaciones = $request->m_observacion;
 
 				// Detalles técnicos.
-				$MapaDeZona->panel_version = $request->m_observacion;
-				$MapaDeZona->modelo_teclado = $request->m_modelo;
-				$MapaDeZona->reporta_por = $request->m_reporta;
-				$MapaDeZona->fecha_instalacion = $request->m_instalacion;
-				$MapaDeZona->fecha_entrega = $request->m_entrega;
-				$MapaDeZona->cedula_asesor = $request->m_asesor;
-				$MapaDeZona->ubicacion_panel = $request->m_ubicacion_panel;
-				$MapaDeZona->particiones_sistema = $request->m_particiones;
-				$MapaDeZona->imei = $request->m_imei;
-				$MapaDeZona->linea_principal = $request->m_linea_principal;
-				$MapaDeZona->linea_respaldo = $request->m_linea_respaldo;
-				$MapaDeZona->monitoreo = $contract_monitoreo;
-				$MapaDeZona->estatus_monitoreo = "A";
+				if (isset($request->omitir_datos_tecnicos)) {
+					$MapaDeZona->panel_version = $request->m_observacion;
+					$MapaDeZona->modelo_teclado = $request->m_modelo;
+					$MapaDeZona->reporta_por = $request->m_reporta;
+					$MapaDeZona->fecha_instalacion = $request->m_instalacion;
+					$MapaDeZona->fecha_entrega = $request->m_entrega;
+					$MapaDeZona->cedula_asesor = $request->m_asesor;
+					$MapaDeZona->ubicacion_panel = $request->m_ubicacion_panel;
+					$MapaDeZona->particiones_sistema = $request->m_particiones;
+					$MapaDeZona->imei = $request->m_imei;
+					$MapaDeZona->linea_principal = $request->m_linea_principal;
+					$MapaDeZona->linea_respaldo = $request->m_linea_respaldo;
+				}
+
+				// Detalles monitoreo.
+				$MapaDeZona->monitoreo_contratado = $contract_monitoreo;
+				$MapaDeZona->monitoreo_estatus = "A";
 				$MapaDeZona->save();
 
 				// m_instaladores
@@ -374,7 +385,7 @@ class MapaDeZonaControlador extends Controller
 				}
 			});
 		} catch (\Throwable $th) {
-			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al registrar el mapa de zona!", "error" => $th]];
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al registrar el mapa de zona!", "error" => $th->getMessage()]];
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 

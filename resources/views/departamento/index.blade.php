@@ -52,8 +52,8 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$departamento->departamento}}</td>
-						<td class="py-1 px-2">{{0}} trabajadores</td>
+						<td class="py-1 px-2"><b>{{$departamento->departamento}}</b></td>
+						<td class="py-1 px-2">{{$departamento->personal}} {{$departamento->personal == 1 ? 'trabajador' : 'trabajadores'}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($departamento->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($departamento->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
@@ -96,7 +96,7 @@
 					@csrf
 					<div class="form-group">
 						<label for="c_departamento_r" class="required"><i class="fas fa-hotel"></i> Departamento</label>
-						<input type="text" class="form-control text-uppercase" name="c_departamento" id="c_departamento_r" placeholder="Ingrese el nombre del departamento" minlength="3" required>
+						<input type="text" class="form-control text-uppercase" name="c_departamento" id="c_departamento_r" placeholder="Ingrese el nombre del departamento">
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -123,7 +123,7 @@
 					@method('PATCH')
 					<div class="form-group">
 						<label for="c_departamento_m" class="required"><i class="fas fa-hotel"></i> Departamento</label>
-						<input type="text" class="form-control text-uppercase" name="c_departamento" id="c_departamento_m" placeholder="Ingrese el nombre del departamento" minlength="3" required>
+						<input type="text" class="form-control text-uppercase" name="c_departamento" id="c_departamento_m" placeholder="Ingrese el nombre del departamento">
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

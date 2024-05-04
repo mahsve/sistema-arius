@@ -75,7 +75,16 @@
 					<input type="text" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" placeholder="Ingrese el correo electrónico">
 				</div>
 				<div class="form-group col-6 col-lg-3">
-					<label for="c_departamento" class="required"><i class="fas fa-hotel"></i> Departamento</label>
+					<div class="row align-items-center">
+						<div class="col-8">
+							<label for="c_departamento" class="required"><i class="fas fa-hotel"></i> Departamento</label>
+						</div>
+						@if (isset($crear_departamento))
+						<div class="col-4 text-end">
+							<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto btn_nuevo_dep" data-form="main"><i class="fas fa-plus"></i></button>
+						</div>
+						@endif
+					</div>
 					<select class="form-control text-uppercase" name="c_departamento" id="c_departamento">
 						<option value="">Seleccione</option>
 						@foreach ($departamentos as $departamento)
@@ -84,7 +93,16 @@
 					</select>
 				</div>
 				<div class="form-group col-6 col-lg-3">
-					<label for="c_cargo" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
+					<div class="row align-items-center">
+						<div class="col-8">
+							<label for="c_cargo" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
+						</div>
+						@if (isset($crear_departamento))
+						<div class="col-4 text-end">
+							<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto btn_nuevo_car" data-form="main"><i class="fas fa-plus"></i></button>
+						</div>
+						@endif
+					</div>
 					<select class="form-control text-uppercase" name="c_cargo" id="c_cargo">
 						<option value="">Seleccione</option>
 					</select>
@@ -107,4 +125,76 @@
 		</form>
 	</div>
 </div>
+
+@if (isset($crear_departamento))
+<div class="modal fade" id="modal_registrar_dep" tabindex="-1" aria-labelledby="modal_registrar_dep_label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header border-0 pb-0">
+				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_dep_label"><i class="fas fa-paste"></i> Registro rápido</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body py-3">
+				<form class="forms-sample" name="formulario_registro" id="formulario_registro_dep" method="POST" action="{{route('departamentos.store')}}">
+					@csrf
+					<div class="form-group">
+						<label for="c_departamento_aux" class="required"><i class="fas fa-hotel"></i> Departamento</label>
+						<input type="text" class="form-control text-uppercase" name="c_departamento" id="c_departamento_aux" placeholder="Ingrese el nombre del departamento">
+					</div>
+					<input type="hidden" name="modulo" id="btn_click_dep" value="personal">
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar_dep"><i class="fas fa-save me-2"></i>Guardar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endif
+
+@if (isset($crear_cargo))
+<div class="modal fade" id="modal_registrar_car" tabindex="-1" aria-labelledby="modal_registrar_car_label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header border-0 pb-0">
+				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_car_label"><i class="fas fa-paste"></i> Registro rápido</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body py-3">
+				<form class="forms-sample" name="formulario_registro" id="formulario_registro_car" method="POST" action="{{route('cargos.store')}}">
+					@csrf
+					<div class="form-group">
+						<div class="row align-items-center">
+							<div class="col">
+								<label for="c_departamento_c" class="required"><i class="fas fa-hotel"></i> Departamento</label>
+							</div>
+							@if (isset($crear_departamento))
+							<div class="col text-end">
+								<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto btn_nuevo_dep" data-form="modal"><i class="fas fa-plus"></i></button>
+							</div>
+							@endif
+						</div>
+						<select class="form-control text-uppercase" name="c_departamento" id="c_departamento_c">
+							<option value="">Seleccione el departamento</option>
+							@foreach ($departamentos as $departamento)
+							<option value="{{$departamento->iddepartamento}}">{{$departamento->departamento}}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_cargo_aux" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
+						<input type="text" class="form-control text-uppercase" name="c_cargo" id="c_cargo_aux" placeholder="Ingrese el nombre del cargo">
+					</div>
+					<input type="hidden" name="modulo" id="btn_click_car" value="personal">
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar_car"><i class="fas fa-save me-2"></i>Guardar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endif
 @endsection

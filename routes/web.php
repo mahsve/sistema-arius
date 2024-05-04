@@ -108,8 +108,8 @@ Route::middleware('auth')->group(function () {
 	Route::put('/dispositivos/estatus/{id}', [App\Http\Controllers\DispositivoControlador::class, 'toggle'])->name('dispositivos.status');
 
 	// Controlador [Configuración dispositivos de zonas].
-	Route::resource('/dispositivo_cog', App\Http\Controllers\ConfiguracionDisControlador::class);
-	Route::put('/dispositivo_cog/estatus/{id}', [App\Http\Controllers\ConfiguracionDisControlador::class, 'toggle'])->name('dispositivo_cog.status');
+	Route::resource('/configuracion_disp', App\Http\Controllers\ConfiguracionDisControlador::class);
+	Route::put('/configuracion_disp/estatus/{id}', [App\Http\Controllers\ConfiguracionDisControlador::class, 'toggle'])->name('dispositivo_cog.status');
 
 	/**
 	 * SEGURIDAD

@@ -33,7 +33,6 @@
 				<thead>
 					<tr>
 						<th class="ps-2"><i class="fas fa-laptop-code"></i> Configuración</th>
-						<th class="ps-2"><i class="fas fa-video"></i> Dispositivo</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -52,8 +51,7 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$configuracion->configuracion}}</td>
-						<td class="py-1 px-2">{{$configuracion->dispositivo}}</td>
+						<td class="py-1 px-2"><b>{{$configuracion->configuracion}}</b></td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($configuracion->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($configuracion->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
@@ -92,24 +90,11 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body py-3">
-				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('dispositivo_cog.store')}}">
+				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('configuracion_disp.store')}}">
 					@csrf
-					<div class="form-group">
-						<label for="c_dispositivo_r" class="required"><i class="fas fa-video"></i> Dispositivo</label>
-						<select class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_r" required>
-							<option value="">Seleccione el dispositivo</option>
-							@foreach ($dispositivos as $dispositivo)
-							<option value="{{$dispositivo->iddispositivo}}">{{$dispositivo->dispositivo}}</option>
-							@endforeach
-						</select>
-					</div>
 					<div class="form-group mb-3">
 						<label for="c_configuracion_r" class="required"><i class="fas fa-laptop-code"></i> Configuración</label>
-						<input type="text" class="form-control text-uppercase" name="c_configuracion" id="c_configuracion_r" placeholder="Ingrese el nombre del configuración" minlength="3" required>
-					</div>
-					<div class="form-group mb-3">
-						<label for="c_descripcion_r"><i class="fas fa-sticky-note"></i> Descripción</label>
-						<textarea class="form-control text-uppercase" name="c_descripcion" id="c_descripcion_r" placeholder="Ingrese la descripción del configuración (Opcional)" rows="3"></textarea>
+						<input type="text" class="form-control text-uppercase" name="c_configuracion" id="c_configuracion_r" placeholder="Ingrese el nombre de la configuración">
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -135,21 +120,8 @@
 					@csrf
 					@method('PATCH')
 					<div class="form-group">
-						<label for="c_dispositivo"><i class="fas fa-video"></i> Dispositivo</label>
-						<select class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_m" required>
-							<option value="">Seleccione el dispositivo</option>
-							@foreach ($dispositivos as $dispositivo)
-							<option value="{{$dispositivo->iddispositivo}}">{{$dispositivo->dispositivo}}</option>
-							@endforeach
-						</select>
-					</div>
-					<div class="form-group">
 						<label for="c_configuracion_m"><i class="fas fa-laptop-code"></i> Configuración</label>
-						<input type="text" class="form-control text-uppercase" name="c_configuracion" id="c_configuracion_m" placeholder="Ingrese el nombre del configuración" minlength="3" required>
-					</div>
-					<div class="form-group mb-3">
-						<label for="c_descripcion_m"><i class="fas fa-sticky-note"></i> Descripción</label>
-						<textarea class="form-control text-uppercase" name="c_descripcion" id="c_descripcion_m" placeholder="Ingrese la descripción del configuración (Opcional)" rows="3"></textarea>
+						<input type="text" class="form-control text-uppercase" name="c_configuracion" id="c_configuracion_m" placeholder="Ingrese el nombre de la configuración">
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>

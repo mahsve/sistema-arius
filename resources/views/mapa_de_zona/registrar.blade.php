@@ -7,17 +7,19 @@
 @endsection
 
 @section('scripts')
-<script>
+<script id="contenedor_script_variables_2">
 	const tipos_identificaciones = <?= json_encode($tipos_identificaciones) ?>;
 	const lista_cedula = <?= json_encode($lista_cedula) ?>;
 	const lista_rif = <?= json_encode($lista_rif) ?>;
 	const lista_prefijos = <?= json_encode($lista_prefijos) ?>;
 	const lista_tecnicos = <?= json_encode($personal) ?>;
-	const dispositivos = <?= json_encode($dispositivos) ?>;
+	const const_dispositivos = <?= json_encode($dispositivos) ?>;
+	document.getElementById('contenedor_script_variables_2').remove();
 </script>
 <script src="{{url('libraries/sortable/sortable.min.js')}}"></script>
 <script src="{{url('libraries/tom-select/js/tom-select.base.min.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar.js')}}"></script>
+<script src="{{url('js/app/mapa_de_zona/registrar_cliente.js')}}"></script>
 @endsection
 
 @section('content')
@@ -41,6 +43,7 @@
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="1" class="nav-link tab_mapa" id="pills-usuarios-tab" data-bs-toggle="pill" data-bs-target="#pills-usuarios" role="tab" aria-controls="pills-usuarios" aria-selected="false"><i class="fas fa-address-card"></i> Usuarios</button></li>
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="2" class="nav-link tab_mapa" id="pills-zonas-tab" data-bs-toggle="pill" data-bs-target="#pills-zonas" role="tab" aria-controls="pills-zonas" aria-selected="false"><i class="fas fa-door-open"></i> Zonas</button></li>
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="3" class="nav-link tab_mapa" id="pills-tecnicos-tab" data-bs-toggle="pill" data-bs-target="#pills-tecnicos" role="tab" aria-controls="pills-tecnicos" aria-selected="false"><i class="fas fa-digital-tachograph"></i> Datos técnico</button></li>
+				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="4" class="nav-link tab_mapa" id="pills-visitas-tab" data-bs-toggle="pill" data-bs-target="#pills-visitas" role="tab" aria-controls="pills-visitas" aria-selected="false"><i class="fas fa-map-marked-alt"></i> Visitas</button></li>
 			</ul>
 
 			<div class="tab-content border rounded pt-3 pb-0" id="pills-tabContent">
@@ -55,7 +58,7 @@
 							<div class="form-row justify-content-end">
 								<div class="form-group col-12 col-md-4 mb-4">
 									<label for="m_ingreso" class="required"><i class="fas fa-calendar-day"></i> Fecha ingreso</label>
-									<input type="date" class="form-control text-uppercase" name="m_ingreso" id="m_ingreso">
+									<input type="date" class="form-control text-uppercase" name="m_ingreso" id="m_ingreso" value="<?= date('Y-m-d') ?>">
 								</div>
 								<div class="form-group col-6 col-md-4 mb-4">
 									<label for="m_tipo_contrato" class="required"><i class="fas fa-file-contract"></i> Contrato</label>
@@ -118,22 +121,40 @@
 								<input type="text" class="form-control text-uppercase" id="cl_identificacion" style="width: calc(100% - 65px); height: 33px;" disabled>
 							</div>
 						</div>
-						<div class="form-group col-12 col-md-6 col-lg-6 mb-2">
+						<div class="form-group col-12 col-md-6 col-lg-7 mb-2">
 							<label for="cl_nombre_completo"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
-							<input type="text" class="form-control text-uppercase" id="cl_nombre_completo" placeholder="Ingrese el nombre completo" readonly>
+							<input type="text" class="form-control text-uppercase" id="cl_nombre_completo" placeholder="Nombre / Razón social" readonly>
 						</div>
 						<div class="form-group col-12 col-md-3 col-lg-3 mb-2">
-							<label for="cl_telefono1"><i class="fas fa-phone-alt"></i> Teléfono 1</label>
+							<label for="cl_telefono2"><i class="fas fa-phone-alt"></i> Teléfono 2</label>
 							<div class="input-group">
-								<input type="text" class="form-control text-center" id="cl_prefijo_telefono1" placeholder="COD." readonly>
-								<input type="text" class="form-control text-uppercase" id="cl_telefono1" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px);" readonly>
+								<select class="form-control text-center" id="cl_prefijo_telefono1" style="height:31px; margin-top: 1px;" disabled>
+									<option value="">COD.</option>
+									@foreach ($lista_prefijos as $index => $prefijo)
+									<optgroup label="{{$index}}">
+										@foreach ($prefijo as $codigos)
+										<option value="{{$codigos}}">{{$codigos}}</option>
+										@endforeach
+									</optgroup>
+									@endforeach
+								</select>
+								<input type="text" class="form-control text-uppercase" id="cl_telefono1" placeholder="Teléfono" style="width: calc(100% - 100px); height: 33px;" readonly>
 							</div>
 						</div>
 						<div class="form-group col-12 col-md-3 col-lg-3 mb-2">
 							<label for="cl_telefono2"><i class="fas fa-phone-alt"></i> Teléfono 2</label>
 							<div class="input-group">
-								<input type="text" class="form-control text-center" id="cl_prefijo_telefono2" placeholder="COD." readonly>
-								<input type="text" class="form-control text-uppercase" id="cl_telefono2" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px);" readonly>
+								<select class="form-control text-center" id="cl_prefijo_telefono2" style="height:31px; margin-top: 1px;" disabled>
+									<option value="">COD.</option>
+									@foreach ($lista_prefijos as $index => $prefijo)
+									<optgroup label="{{$index}}">
+										@foreach ($prefijo as $codigos)
+										<option value="{{$codigos}}">{{$codigos}}</option>
+										@endforeach
+									</optgroup>
+									@endforeach
+								</select>
+								<input type="text" class="form-control text-uppercase" id="cl_telefono2" placeholder="Teléfono" style="width: calc(100% - 100px); height: 33px;" readonly>
 							</div>
 						</div>
 						<div class="form-group col-12 col-md-6 col-lg-6 mb-2">
@@ -146,7 +167,7 @@
 					<!-- TITULOS DIRECCION -->
 					<div class="row align-items-center mt-4 mb-3">
 						<div class="col-12 text-start">
-							<h4 class="text-uppercase m-0"><i class="fas fa-warehouse"></i> Detalles del lugar</h4>
+							<h4 class="text-uppercase m-0"><i class="fas fa-warehouse"></i> Detalles del sitio</h4>
 						</div>
 					</div>
 
@@ -227,8 +248,22 @@
 									<th class="px-2 text-center" width="40px"><i class="fas fa-arrows-alt"></i></th>
 									<th class="px-2 text-center" width="40px"><i class="fas fa-list-ol"></i> N°</th>
 									<th class="ps-2"><i class="fas fa-map"></i> zona</th>
-									<th class="ps-2"><i class="fas fa-laptop-house"></i> Equipos</th>
-									<th class="ps-2"><i class="fas fa-laptop-code"></i> Configuración</th>
+									<th class="ps-2">
+										<div class="d-flex align-items-center">
+											<span><i class="fas fa-laptop-house"></i> Equipos</span>
+											@if (isset($crear_dispositivo))
+											<button type="button" class="btn btn-sm btn-primary btn-auxilar btn_nuevo_disp ms-2" data-form="update"><i class="fas fa-plus"></i></button>
+											@endif
+										</div>
+									</th>
+									<th class="ps-2">
+										<div class="d-flex align-items-center">
+											<span><i class="fas fa-laptop-code"></i> Configuración</span>
+											@if (isset($crear_configuracion))
+											<button type="button" class="btn btn-sm btn-primary btn-auxilar btn_nuevo_conf ms-2" data-form="update"><i class="fas fa-plus"></i></button>
+											@endif
+										</div>
+									</th>
 									<th class="ps-2"><i class="fas fa-sticky-note"></i> Notas</th>
 									<th class="px-2 text-center" width="55px"><i class="fas fa-cogs"></i></th>
 								</tr>
@@ -388,18 +423,17 @@
 					<!-- TITULO -->
 					<div class="row align-items-center mb-3">
 						<div class="col-6 text-start">
-							<h4 class="text-uppercase m-0"><i class="fas fa-compass"></i> Visitas</h4>
+							<h4 class="text-uppercase m-0"><i class="fas fa-map-marked-alt"></i> Visitas</h4>
 						</div>
 						<div class="col-6 text-end">
-							<button type="button" class="btn btn-primary btn-sm" id="btn_agregar_zona"><i class="fas fa-folder-plus me-2"></i>Agregar zona</button>
+							<button type="button" class="btn btn-primary btn-sm" id="btn_agregar_anio"><i class="fas fa-calendar-week me-2"></i>Agregar año</button>
 						</div>
 					</div>
 
-
-					<!-- BOTONES -->
-					<div class="d-flex align-items-center justify-content-end">
-						<button type="button" class="btn btn-secondary mx-1" id="asd"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
-						<button type="submit" class="btn btn-primary mx-1" id="asd"><i class="fas fa-save me-2"></i>Guardar</button>
+					<div id="contenedor_visitas" class="border rounded mb-3">
+						<div class="d-flex justify-content-center align-items-center py-5 px-3">
+							<h4 class="m-0"><i class="fas fa-map-marked-alt"></i> Sin visitas agregadas</h4>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -413,7 +447,7 @@
 			<div class="d-flex align-items-center justify-content-end">
 				<button type="button" class="btn btn-secondary mx-1" id="btn_prev" style="display: none;"><i class="fas fa-chevron-left me-2"></i>Anterior</button>
 				<button type="button" class="btn btn-secondary mx-1" id="btn_next">Siguiente<i class="fas fa-chevron-right ms-2"></i></button>
-				<button type="submit" class="btn btn-primary mx-1" id="btn_save" style="display: none;"><i class="fas fa-save me-2"></i>Guardar</button>
+				<button type="submit" class="btn btn-primary mx-1" id="btn_save"><i class="fas fa-save me-2"></i>Guardar</button>
 			</div>
 		</form>
 	</div>

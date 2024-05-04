@@ -81,7 +81,7 @@
 				c_modulo.focus();
 			} else {
 				btn_guardar.classList.add("loading");
-				btn_guardar.setAttribute('disabled');
+				btn_guardar.setAttribute('disabled', true);
 				fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
 					btn_guardar.classList.remove("loading");
 					btn_guardar.removeAttribute('disabled');

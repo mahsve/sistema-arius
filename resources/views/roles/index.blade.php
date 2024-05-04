@@ -50,7 +50,7 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$rol->rol}}</td>
+						<td class="py-1 px-2"><b>{{$rol->rol}}</b></td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($rol->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($rol->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">

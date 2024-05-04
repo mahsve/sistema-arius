@@ -25,14 +25,10 @@
 
 			// Elementos del formulario.
 			const c_configuracion = document.getElementById("c_configuracion_r");
-			const c_dispositivo = document.getElementById("c_dispositivo_r");
 			const btn_guardar = document.getElementById("btn_registrar");
 
 			// Validamos los campos.
-			if (c_dispositivo.value == "") {
-				Toast.fire({ icon: 'error', title: '¡Seleccione el dispositivo!' });
-				c_dispositivo.focus();
-			} else if (c_configuracion.value == "") {
+			if (c_configuracion.value == "") {
 				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre de la configuración!' });
 				c_configuracion.focus();
 			} else if (c_configuracion.value.length < 2) {
@@ -75,14 +71,10 @@
 
 			// Elementos del formulario.
 			const c_configuracion = document.getElementById("c_configuracion_m");
-			const c_dispositivo = document.getElementById("c_dispositivo_m");
 			const btn_guardar = document.getElementById("btn_modificar");
 
 			// Validamos los campos.
-			if (c_dispositivo.value == "") {
-				Toast.fire({ icon: 'error', title: '¡Seleccione el dispositivo!' });
-				c_dispositivo.focus();
-			} else if (c_configuracion.value == "") {
+			if (c_configuracion.value == "") {
 				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre de la configuración!' });
 				c_configuracion.focus();
 			} else if (c_configuracion.value.length < 2) {
@@ -130,16 +122,14 @@
 			// Realizamos la consulta AJAX.
 			btn_consultar.classList.add('loading');
 			btn_consultar.setAttribute('disabled', true);
-			fetch(`${url_}/dispositivo_cog/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
+			fetch(`${url_}/configuracion_disp/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
 				btn_consultar.classList.remove('loading');
 				btn_consultar.removeAttribute('disabled');
 
 				// Limpiamos el formulario y cargamos los datos consultados.
 				formulario_actualizacion.reset();
-				formulario_actualizacion.setAttribute('action', `${url_}/dispositivo_cog/${id_data}`);
+				formulario_actualizacion.setAttribute('action', `${url_}/configuracion_disp/${id_data}`);
 				document.getElementById('c_configuracion_m').value = data.configuracion;
-				document.getElementById('c_dispositivo_m').value = data.iddispositivo;
-				document.getElementById('c_descripcion_m').value = data.descripcion;
 				modal_modificar.show();
 			});
 		});
@@ -167,7 +157,7 @@
 					form_check.classList.add('loading');
 
 					// Realizamos la consulta AJAX.
-					fetch(`${url_}/dispositivo_cog/estatus/${switch_element.value}`, {
+					fetch(`${url_}/configuracion_disp/estatus/${switch_element.value}`, {
 						headers: { 'X-CSRF-TOKEN': token_ },
 						method: 'post',
 						body: form_data,

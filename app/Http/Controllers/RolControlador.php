@@ -123,7 +123,7 @@ class RolControlador extends Controller
 				}
 			});
 		} catch (\Throwable $th) {
-			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al registrar el rol con los módulos y los servicios!", "error" => $th]];
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al registrar el rol con los módulos y los servicios!", "error" => $th->getMessage()]];
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
@@ -219,7 +219,7 @@ class RolControlador extends Controller
 				}
 			});
 		} catch (\Throwable $th) {
-			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al modificar el rol con los módulos y los servicios!", "error" => $th]];
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al modificar el rol con los módulos y los servicios!", "error" => $th->getMessage()]];
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 

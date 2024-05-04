@@ -121,7 +121,16 @@
 						</div>
 					</div>
 					<div class="form-group mb-3">
-						<label for="c_modulo_r" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
+						<div class="row align-items-center">
+							<div class="col">
+								<label for="c_modulo_r" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
+							</div>
+							@if (isset($crear_modulo))
+							<div class="col text-end">
+								<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto btn_nuevo_mod" data-form="create"><i class="fas fa-plus"></i></button>
+							</div>
+							@endif
+						</div>
 						<select class="form-control text-uppercase" name="c_modulo" id="c_modulo_r">
 							<option value="">Seleccione el módulo</option>
 							@foreach ($modulos as $modulo)
@@ -187,7 +196,16 @@
 						</div>
 					</div>
 					<div class="form-group mb-3">
-						<label for="c_modulo_m" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
+						<div class="row align-items-center">
+							<div class="col">
+								<label for="c_modulo_m" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
+							</div>
+							@if (isset($crear_modulo))
+							<div class="col text-end">
+								<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto btn_nuevo_mod" data-form="update"><i class="fas fa-plus"></i></button>
+							</div>
+							@endif
+						</div>
 						<select class="form-control text-uppercase" name="c_modulo" id="c_modulo_m">
 							<option value="">Seleccione el módulo</option>
 							@foreach ($modulos as $modulo)
@@ -219,6 +237,48 @@
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
 						<button type="submit" class="btn btn-primary btn-sm" id="btn_modificar"><i class="fas fa-save me-2"></i>Guardar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endif
+
+@if (isset($crear_modulo))
+<div class="modal fade" id="modal_registrar_mod" tabindex="-1" aria-labelledby="modal_registrar_mod_label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header border-0 pb-0">
+				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_mod_label"><i class="fas fa-paste"></i> Registro rápido</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body py-3">
+				<form class="forms-sample" name="formulario_registro_mod" id="formulario_registro_mod" method="POST" action="{{route('modulos.store')}}">
+					@csrf
+					<div class="form-group mb-3">
+						<label for="c_modulo_aux" class="required"><i class="fas fa-sitemap"></i> Módulo</label>
+						<input type="text" class="form-control text-uppercase" name="c_modulo" id="c_modulo_aux" placeholder="Ingrese el nombre del módulo">
+					</div>
+					<div class="form-group mb-3">
+						<label for="c_icono_aux" class="d-flex justify-content-between">
+							<span><i class="fas fa-icons"></i> Icono</span>
+							<a href="https://fontawesome.com/v5/search?o=r&m=free" class="fw-bold text-dark" style="text-decoration: none;" target="blank">
+								<i class="fas fa-icons"></i> Ver lista <i class="fas fa-external-link-alt"></i>
+							</a>
+						</label>
+						<input type="text" class="form-control text-lowercase" name="c_icono" id="c_icono_aux" placeholder="Ejemplo: fas fa-icons">
+					</div>
+					<div class="form-group mb-3">
+						<label><i class="fas fa-desktop"></i> Vista previa</label>
+						<div class="text-center border rounded p-3" style="height: 82px;">
+							<i id="preview_aux" style="font-size: 3rem;"></i>
+						</div>
+					</div>
+					<input type="hidden" name="modulo" id="btn_click_mod" value="servicios">
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar_mod"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
 				</form>
 			</div>

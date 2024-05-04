@@ -32,9 +32,9 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2"><i class="fas fa-id-badge"></i> Cédula</th>
-						<th class="ps-2"><i class="fas fa-address-card"></i> Nombre completo</th>
 						<th class="ps-2"><i class="fas fa-user"></i> Usuario</th>
+						<th class="ps-2"><i class="fas fa-id-badge"></i> Ced.</th>
+						<th class="ps-2"><i class="fas fa-address-card"></i> Nombre completo</th>
 						<th class="ps-2"><i class="fas fa-id-card-alt"></i> Rol</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
@@ -51,9 +51,9 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
+						<td class="py-1 px-2"><b>{{$usuario->usuario}}</b></td>
 						<td class="py-1 px-2">{{$usuario->cedula}}</td>
 						<td class="py-1 px-2">{{$usuario->nombre}}</td>
-						<td class="py-1 px-2">{{$usuario->usuario}}</td>
 						<td class="py-1 px-2">{{$usuario->rol}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($usuario->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($usuario->updated))}}</td>

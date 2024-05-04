@@ -13,8 +13,12 @@ class PersonalControlador extends Controller
 {
 	use SeguridadControlador;
 
-	// Atributos de la clase.
+	// ID de los servicios.
 	public $idservicio = 13;
+	public $idservicio_dep = 5; // ID del submódulo departamento.
+	public $idservicio_car = 9; // ID del submódulo cargo.
+
+	// Atributos de la clase.
 	public $lista_cedula = ["V", "E"];
 	public $lista_prefijos = [
 		"Móvil" => [
@@ -111,6 +115,8 @@ class PersonalControlador extends Controller
 	public function create()
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$crear_dep = $this->verificar_acceso_servicio_metodo($this->idservicio_dep, 'create'); // Buscando también si tiene permiso para registro en este submódulo [departamento].
+		$crear_car = $this->verificar_acceso_servicio_metodo($this->idservicio_car, 'create'); // Buscando también si tiene permiso para registro en este submódulo [cargo].
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'create')) {
 			return $this->error403();
 		}
@@ -118,6 +124,8 @@ class PersonalControlador extends Controller
 		// Cargamos la vista para registrar un nuevo personal con los datos necesarios.
 		$departamentos = Departamento::all();
 		return view('personal.registrar', [
+			'crear_departamento' => $crear_dep,
+			'crear_cargo' => $crear_car,
 			'lista_cedula' => $this->lista_cedula,
 			'lista_prefijos' => $this->lista_prefijos,
 			'departamentos' => $departamentos,

@@ -13,12 +13,14 @@ class ServicioControlador extends Controller
 
 	// Atributos de la clase.
 	public $idservicio = 29;
+	public $idservicio_mod = 25;
 
 	// Display a listing of the resource. 
 	public function index()
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
 		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		$crear_mod = $this->verificar_acceso_servicio_metodo($this->idservicio_mod, 'create'); // Buscando también si tiene permiso para registro en este submódulo [modulos].
 		if (!isset($permisos->index)) {
 			return $this->error403();
 		}
@@ -38,6 +40,7 @@ class ServicioControlador extends Controller
 			->get();
 		return view('servicio.index', [
 			'permisos' => $permisos,
+			'crear_modulo' => $crear_mod,
 			"modulos" => $modulos,
 			"servicios" => $servicios,
 		]);
@@ -248,6 +251,35 @@ class ServicioControlador extends Controller
 	// Remove the specified resource from storage. 
 	public function destroy(string $id)
 	{
+	}
+
+	// Update services's order [submóduls].
+	public function order(Request $request)
+	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'sortable')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el orden!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Ejecutamos una nueva transacción.
+		try {
+			// Recorremos los módulos y actualizamos su orden según lo descrito por el usuario.
+			DB::transaction(function () use ($request) {
+				for ($i = 0; $i < count($request->modulo); $i++) {
+					$submodulo = Servicio::find($request->modulo[$i]);
+					$submodulo->orden = $request->orden[$i];
+					$submodulo->save();
+				}
+			});
+		} catch (\Throwable $th) {
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al actualizar el orden de los módulos!", "error" => $th->getMessage()]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Enviamos un mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Orden actualizado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update status.

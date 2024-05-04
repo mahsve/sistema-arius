@@ -33,6 +33,7 @@
 				<thead>
 					<tr>
 						<th class="ps-2"><i class="fas fa-video"></i> Dispositivo</th>
+						<th class="ps-2"><i class="fas fa-laptop-house"></i> Tipo</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Creado</th>
 						<th class="ps-2"><i class="fas fa-calendar-day"></i> Actualizado</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
@@ -51,7 +52,8 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$dispositivo->dispositivo}}</td>
+						<td class="py-1 px-2"><b>{{$dispositivo->dispositivo}}</b></td>
+						<td class="py-1 px-2">{{$tipos_dispositivos[$dispositivo->tipo]}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($dispositivo->created))}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($dispositivo->updated))}}</td>
 						<td class="py-1 px-2 text-center" id="contenedor_badge{{$idrand}}">
@@ -93,8 +95,41 @@
 				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="{{route('dispositivos.store')}}">
 					@csrf
 					<div class="form-group">
+						<label for="c_tipo_r" class="required"><i class="fas fa-laptop-house"></i> Tipo de dispositivo</label>
+						<select class="form-control text-uppercase" name="c_tipo" id="c_tipo_r">
+							<option value="">Seleccione una opción</option>
+							@foreach ($tipos_dispositivos as $index => $td)
+							<option value="{{$index}}">{{$td}}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="form-group">
 						<label for="c_dispositivo_r" class="required"><i class="fas fa-video"></i> Dispositivo</label>
-						<input type="text" class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_r" placeholder="Ingrese el nombre del dispositivo" minlength="2" required>
+						<input type="text" class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_r" placeholder="Ingrese el nombre del dispositivo">
+					</div>
+					<div class="form-group" id="contenedor_conf_r" style="display: none;">
+						<div class="row align-items-center">
+							<div class="col">
+								<label class="required"><i class="fas fa-laptop-code"></i> Configuraciones</label>
+							</div>
+							@if (isset($crear_configuracion))
+							<div class="col text-end">
+								<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto btn_nuevo_conf" data-form="create"><i class="fas fa-plus"></i></button>
+							</div>
+							@endif
+						</div>
+						<div class="border rounded py-1 px-2">
+							<div class="form-row" id="configuraciones_r">
+								@foreach ($configuraciones as $configuracion)
+								<div class="col-6">
+									<div class="form-check d-flex align-items-center my-1">
+										<input class="form-check-input m-0 configuraciones_r" type="checkbox" name="configuraciones[]" id="r_conf_{{$configuracion->idconfiguracion}}" value="{{$configuracion->idconfiguracion}}">
+										<label class="form-check-label ms-2" for="r_conf_{{$configuracion->idconfiguracion}}">{{$configuracion->configuracion}}</label>
+									</div>
+								</div>
+								@endforeach
+							</div>
+						</div>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
@@ -120,12 +155,72 @@
 					@csrf
 					@method('PATCH')
 					<div class="form-group">
+						<label for="c_tipo_m" class="required"><i class="fas fa-laptop-house"></i> Tipo de dispositivo</label>
+						<select class="form-control text-uppercase" name="c_tipo" id="c_tipo_m">
+							<option value="">Seleccione una opción</option>
+							@foreach ($tipos_dispositivos as $index => $td)
+							<option value="{{$index}}">{{$td}}</option>
+							@endforeach
+						</select>
+					</div>
+					<div class="form-group">
 						<label for="c_dispositivo_m" class="required"><i class="fas fa-video"></i> Dispositivo</label>
-						<input type="text" class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_m" placeholder="Ingrese el nombre del dispositivo" minlength="2" required>
+						<input type="text" class="form-control text-uppercase" name="c_dispositivo" id="c_dispositivo_m" placeholder="Ingrese el nombre del dispositivo">
+					</div>
+					<div class="form-group" id="contenedor_conf_m" style="display: none;">
+						<div class="row align-items-center">
+							<div class="col">
+								<label class="d-block required"><i class="fas fa-laptop-code"></i> Configuraciones</label>
+							</div>
+							@if (isset($crear_configuracion))
+							<div class="col text-end">
+								<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto btn_nuevo_conf" data-form="update"><i class="fas fa-plus"></i></button>
+							</div>
+							@endif
+						</div>
+						<div class="border rounded py-1 px-2">
+							<div class="form-row" id="configuraciones_m">
+								@foreach ($configuraciones as $configuracion)
+								<div class="col-6">
+									<div class="form-check d-flex align-items-center my-1">
+										<input class="form-check-input m-0 configuraciones_m" type="checkbox" name="configuraciones[]" id="m_conf_{{$configuracion->idconfiguracion}}" value="{{$configuracion->idconfiguracion}}">
+										<label class="form-check-label ms-2" for="m_conf_{{$configuracion->idconfiguracion}}">{{$configuracion->configuracion}}</label>
+									</div>
+								</div>
+								@endforeach
+							</div>
+						</div>
 					</div>
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
 						<button type="submit" class="btn btn-primary btn-sm" id="btn_modificar"><i class="fas fa-save me-2"></i>Guardar</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+@endif
+
+@if (isset($crear_configuracion))
+<div class="modal fade" id="modal_registrar_conf" tabindex="-1" aria-labelledby="modal_registrar_conf_label" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header border-0 pb-0">
+				<h1 class="modal-title text-uppercase fs-5" id="modal_registrar_conf_label"><i class="fas fa-paste"></i> Registro rápido</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body py-3">
+				<form class="forms-sample" name="formulario_registro_conf" id="formulario_registro_conf" method="POST" action="{{route('configuracion_disp.store')}}">
+					@csrf
+					<div class="form-group mb-3">
+						<label for="c_configuracion_aux" class="required"><i class="fas fa-laptop-code"></i> Configuración</label>
+						<input type="text" class="form-control text-uppercase" name="c_configuracion" id="c_configuracion_aux" placeholder="Ingrese el nombre de la configuración">
+					</div>
+					<input type="hidden" name="modulo" id="btn_click_conf" value="configuraciones">
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="btn_registrar_conf"><i class="fas fa-save me-2"></i>Guardar</button>
 					</div>
 				</form>
 			</div>

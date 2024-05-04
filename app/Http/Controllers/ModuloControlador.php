@@ -76,8 +76,14 @@ class ModuloControlador extends Controller
 		$modulo->modulo = mb_convert_case($request->c_modulo, MB_CASE_UPPER);
 		$modulo->save();
 
+		// Verificamos si es un registro rápido.
+		$registro = null;
+		if (isset($request->modulo) and !empty($request->modulo)) {
+			$registro = $modulo;
+		}
+
 		// Enviamos mensaje de exito al usuario.
-		$response = ["status" => "success", "response" => ["message" => "¡Módulo registrado exitosamente!"]];
+		$response = ["status" => "success", "response" => ["message" => "¡Módulo registrado exitosamente!", "data" => $registro]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
@@ -153,6 +159,12 @@ class ModuloControlador extends Controller
 	// Update module's order.
 	public function order(Request $request)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'sortable')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el orden!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
 		// Ejecutamos una nueva transacción.
 		try {
 			// Recorremos los módulos y actualizamos su orden según lo descrito por el usuario.
@@ -164,7 +176,7 @@ class ModuloControlador extends Controller
 				}
 			});
 		} catch (\Throwable $th) {
-			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al actualizar el orden de los módulos!", "error" => $th]];
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al actualizar el orden de los módulos!", "error" => $th->getMessage()]];
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 

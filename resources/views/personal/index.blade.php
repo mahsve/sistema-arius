@@ -32,7 +32,7 @@
 			<table class="table table-hover" id="data-table">
 				<thead>
 					<tr>
-						<th class="ps-2"><i class="fas fa-id-badge"></i> Cédula</th>
+						<th class="ps-2"><i class="fas fa-id-badge"></i> Ced.</th>
 						<th class="ps-2"><i class="fas fa-address-card"></i> Nombre completo</th>
 						<th class="ps-2"><i class="fas fa-user"></i> Usuario</th>
 						<th class="ps-2"><i class="fas fa-id-card-alt"></i> Rol</th>
@@ -54,8 +54,8 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$persona->cedula}}</td>
-						<td class="py-1 px-2">{{$persona->nombre}}</td>
+						<td class="py-1 px-2"><b>{{$persona->cedula}}</b></td>
+						<td class="py-1 px-2"><b>{{$persona->nombre}}</b></td>
 						<td class="py-1 px-2">{{$persona->usuario}}</td>
 						<td class="py-1 px-2">{{$persona->rol}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($persona->created))}}</td>

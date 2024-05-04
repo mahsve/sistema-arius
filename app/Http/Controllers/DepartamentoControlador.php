@@ -23,7 +23,11 @@ class DepartamentoControlador extends Controller
 		}
 
 		// Consultamos los datos necesarios y cargamos la vista.
-		$departamentos = Departamento::all();
+		$departamentos = Departamento::select('tb_departamentos.*', DB::raw('count(tb_personal.cedula) AS personal'))
+			->leftjoin('tb_cargos', 'tb_departamentos.iddepartamento', 'tb_cargos.iddepartamento')
+			->leftjoin('tb_personal', 'tb_cargos.idcargo', 'tb_personal.idcargo')
+			->groupBy('iddepartamento')
+			->get();
 		return view('departamento.index', [
 			'permisos' => $permisos,
 			"departamentos" => $departamentos,
@@ -73,8 +77,14 @@ class DepartamentoControlador extends Controller
 		$departamento->departamento = mb_convert_case($request->c_departamento, MB_CASE_UPPER);
 		$departamento->save();
 
+		// Verificamos si es un registro rápido.
+		$registro = null;
+		if (isset($request->modulo) and !empty($request->modulo)) {
+			$registro = $departamento;
+		}
+
 		// Retoramos mensaje de exito al usuario.
-		$response = ["status" => "success", "response" => ["message" => "¡Departamento registrado exitosamente!"]];
+		$response = ["status" => "success", "response" => ["message" => "¡Departamento registrado exitosamente!", "data" => $registro]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 

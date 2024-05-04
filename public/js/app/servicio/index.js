@@ -23,6 +23,12 @@
 	const modal_organizar = document.getElementById('modal_organizar') != null ? new bootstrap.Modal('#modal_organizar') : null;
 	const formulario_organizar = document.getElementById("formulario_organizar");
 	const lista_submodulos = document.getElementById('lista-submodulos');
+	// AUXILIAR.
+	// [Módulos].
+	const btn_nuevo_mod = document.querySelectorAll('.btn_nuevo_mod');
+	const modal_registrar_mod = document.getElementById('modal_registrar_mod') != null ? new bootstrap.Modal('#modal_registrar_mod') : null;
+	const formulario_registro_mod = document.getElementById("formulario_registro_mod");
+	const c_icono_aux = document.getElementById('c_icono_aux');
 
 	// Plugins.
 	if (lista_submodulos != null) {
@@ -126,6 +132,13 @@
 					}
 				});
 			}
+		});
+	}
+
+	// Evento para mostrar una visualización rapida del icono agregado en el formulario del módulo [Registrar].
+	if (c_icono_aux != null) {
+		c_icono_aux.addEventListener('keyup', function () {
+			document.getElementById('preview_aux').setAttribute('class', `${this.value}`);
 		});
 	}
 
@@ -303,6 +316,85 @@
 					willClose: () => location.reload(),
 				});
 			});
+		});
+	}
+
+	// Agregar nuevo registro [Departamento] como un formulario auxiliar para registro rápido.
+	if (btn_nuevo_mod.length > 0) {
+		Array.from(btn_nuevo_mod).forEach(btn => {
+			btn.addEventListener("click", function (e) {
+				e.preventDefault();
+				formulario_registro_mod.reset();
+				document.getElementById('btn_click_mod').value = btn.getAttribute('data-form');
+				if (document.getElementById('btn_click_mod').value == "create") {
+					modal_registrar.hide();
+				} else {
+					modal_modificar.hide();
+				}
+				setTimeout(() => modal_registrar_mod.show(), 200);
+			});
+		});
+
+		// Cuando se oculte este registrar, se cargará nuevamente la ventana principal correspondiente.
+		document.getElementById('modal_registrar_mod').addEventListener('hidden.bs.modal', event => {
+			if (document.getElementById('btn_click_mod').value == "create") {
+				setTimeout(() => modal_registrar.show(), 200);
+			} else {
+				setTimeout(() => modal_modificar.show(), 200);
+			}
+		});
+	}
+
+	// Agregar nuevo registro [modulos] como un formulario auxiliar para registro rápido.
+	if (formulario_registro_mod != null) {
+		formulario_registro_mod.addEventListener("submit", function (e) {
+			e.preventDefault();
+
+			// Elementos del formulario.
+			const c_modulo = document.getElementById("c_modulo_aux");
+			const btn_guardar = document.getElementById("btn_registrar_mod");
+
+			// Validamos los campos.
+			if (c_modulo.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre del módulo!' });
+				c_modulo.focus();
+			} else if (c_modulo.value.length < 3) {
+				Toast.fire({ icon: 'error', title: '¡El módulo debe tener al menos 3 caracteres!' });
+				c_modulo.focus();
+			} else {
+				btn_guardar.classList.add("loading");
+				btn_guardar.setAttribute('disabled', true);
+				fetch(`${formulario_registro_mod.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro_mod) }).then(response => response.json()).then(data => {
+					btn_guardar.classList.remove("loading");
+					btn_guardar.removeAttribute('disabled');
+
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
+						Toast.fire({ icon: data.status, title: data.response.message });
+						return false;
+					}
+
+					// Creamos un nuevo elemento de tipo option con la info para agregar la nueva opción al campo select de ambos formularios.
+					const optionR = document.createElement('option');
+					optionR.setAttribute('value', data.response.data.idmodulo);
+					optionR.innerHTML = data.response.data.modulo;
+					document.getElementById('c_modulo_r').append(optionR); // Campo módulo [registrar].
+					// Nuevo
+					const optionM = document.createElement('option');
+					optionM.setAttribute('value', data.response.data.idmodulo);
+					optionM.innerHTML = data.response.data.modulo;
+					document.getElementById('c_modulo_m').append(optionM); // Campo módulo [modificar].
+
+					// Enviamos mensaje de exito.
+					modal_registrar_mod.hide();
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
+					});
+				});
+			}
 		});
 	}
 

@@ -30,7 +30,7 @@
 							<!-- LOGO -->
 							<div class="brand-logo text-center">
 								<a href="{{route('session.login')}}" class="d-block">
-									<img src="{{url('images/' . env('LOGO_DARK'))}}" alt="Logo {{env('TITLE')}}" class="w-50">
+									<img src="{{url('images/' . env('LOGO_LIGHT'))}}" alt="Logo {{env('TITLE')}}" class="w-50">
 								</a>
 							</div>
 

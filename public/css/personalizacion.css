@@ -168,3 +168,14 @@ div.form-row>.form-group.loading::before {
 	padding-left: 0.25rem !important;
 	padding-right: 0.25rem !important;
 }
+
+.btn.btn-sm.btn-auxilar {
+	display: flex;
+	width: 18px;
+	height: 18px;
+	padding: 0rem;
+}
+
+.btn.btn-sm.btn-auxilar i {
+	font-size: 12px;
+}

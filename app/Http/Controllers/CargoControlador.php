@@ -13,24 +13,28 @@ class CargoControlador extends Controller
 
 	// Atributos de la clase.
 	public $idservicio = 9;
+	public $idservicio_dep = 5; // ID del submódulo departamento.
 
 	// Display a listing of the resource. 
 	public function index()
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
 		$permisos = $this->verificar_acceso_servicio_full($this->idservicio);
+		$crear_dep = $this->verificar_acceso_servicio_metodo($this->idservicio_dep, 'create'); // Buscando también si tiene permiso para registro en este submódulo [departamento].
 		if (!isset($permisos->index)) {
 			return $this->error403();
 		}
 
 		// Consultamos los datos necesarios y cargamos la vista.
-		$departamentos = Departamento::all();
-		$cargos = DB::table('tb_cargos')
-			->select('tb_cargos.*', 'tb_departamentos.departamento')
+		$cargos = Cargo::select('tb_cargos.*', 'tb_departamentos.departamento', DB::raw('count(tb_personal.cedula) AS personal'))
 			->join('tb_departamentos', 'tb_cargos.iddepartamento', 'tb_departamentos.iddepartamento')
+			->leftjoin('tb_personal', 'tb_cargos.idcargo', 'tb_personal.idcargo')
+			->groupBy('idcargo')
 			->get();
+		$departamentos = Departamento::all();
 		return view('cargo.index', [
 			'permisos' => $permisos,
+			'crear_departamento' => $crear_dep,
 			"departamentos" => $departamentos,
 			"cargos" => $cargos,
 		]);
@@ -67,8 +71,7 @@ class CargoControlador extends Controller
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
-		$existente = DB::table('tb_cargos')
-			->select('idcargo')
+		$existente = Cargo::select('idcargo')
 			->where('cargo', '=', mb_convert_case($request->c_cargo, MB_CASE_UPPER))
 			->where('iddepartamento', '=', $request->c_departamento)
 			->first();
@@ -83,8 +86,14 @@ class CargoControlador extends Controller
 		$cargo->iddepartamento = $request->c_departamento;
 		$cargo->save();
 
+		// Verificamos si es un registro rápido.
+		$registro = null;
+		if (isset($request->modulo) and !empty($request->modulo)) {
+			$registro = $cargo;
+		}
+
 		// Retoramos mensaje de exito al usuario.
-		$response = ["status" => "success", "response" => ["message" => "¡Cargo registrado exitosamente!"]];
+		$response = ["status" => "success", "response" => ["message" => "¡Cargo registrado exitosamente!", "data" => $registro]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
@@ -133,8 +142,7 @@ class CargoControlador extends Controller
 		}
 
 		// Verificamos primero si ya se encuentra registrado en la base de datos.
-		$existente = DB::table('tb_cargos')
-			->select('idcargo')
+		$existente = Cargo::select('idcargo')
 			->where('cargo', '=', mb_convert_case($request->c_cargo, MB_CASE_UPPER))
 			->where('iddepartamento', '=', $request->c_departamento)
 			->where('idcargo', '!=', $id)

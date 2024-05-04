@@ -7,6 +7,11 @@
 	const formulario_registro = document.getElementById("formulario_registro");
 	const modal_modificar = document.getElementById('modal_modificar') != null ? new bootstrap.Modal('#modal_modificar') : null;
 	const formulario_actualizacion = document.getElementById("formulario_actualizacion");
+	// AUXILIAR.
+	// [Departamentos].
+	const btn_nuevo_dep = document.querySelectorAll('.btn_nuevo_dep');
+	const modal_registrar_dep = document.getElementById('modal_registrar_dep') != null ? new bootstrap.Modal('#modal_registrar_dep') : null;
+	const formulario_registro_dep = document.getElementById("formulario_registro_dep");
 
 	// Eventos elementos HTML.
 	// Agregar nuevo registro.
@@ -106,6 +111,85 @@
 						text: data.response.message,
 						timer: 2000,
 						willClose: () => location.reload(),
+					});
+				});
+			}
+		});
+	}
+
+	// Agregar nuevo registro [Departamento] como un formulario auxiliar para registro rápido.
+	if (btn_nuevo_dep.length > 0) {
+		Array.from(btn_nuevo_dep).forEach(btn => {
+			btn.addEventListener("click", function (e) {
+				e.preventDefault();
+				formulario_registro_dep.reset();
+				document.getElementById('btn_click_dep').value = btn.getAttribute('data-form');
+				if (document.getElementById('btn_click_dep').value == "create") {
+					modal_registrar.hide();
+				} else {
+					modal_modificar.hide();
+				}
+				setTimeout(() => modal_registrar_dep.show(), 200);
+			});
+		});
+
+		// Cuando se oculte este registrar, se cargará nuevamente la ventana principal correspondiente.
+		document.getElementById('modal_registrar_dep').addEventListener('hidden.bs.modal', event => {
+			if (document.getElementById('btn_click_dep').value == "create") {
+				setTimeout(() => modal_registrar.show(), 200);
+			} else {
+				setTimeout(() => modal_modificar.show(), 200);
+			}
+		});
+	}
+
+	// Función registro rápido [Departamento].
+	if (formulario_registro_dep != null) {
+		formulario_registro_dep.addEventListener("submit", function (e) {
+			e.preventDefault();
+
+			// Elementos del formulario.
+			const c_departamento = document.getElementById("c_departamento_aux");
+			const btn_guardar = document.getElementById("btn_registrar_dep");
+
+			// Validamos los campos.
+			if (c_departamento.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese el nombre del departamento!' });
+				c_departamento.focus();
+			} else if (c_departamento.value.length < 3) {
+				Toast.fire({ icon: 'error', title: '¡El departamento debe tener al menos 3 caracteres!' });
+				c_departamento.focus();
+			} else {
+				btn_guardar.classList.add("loading");
+				btn_guardar.setAttribute('disabled', true);
+				fetch(`${formulario_registro_dep.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro_dep) }).then(response => response.json()).then(data => {
+					btn_guardar.classList.remove("loading");
+					btn_guardar.removeAttribute('disabled');
+
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
+						Toast.fire({ icon: data.status, title: data.response.message });
+						return false;
+					}
+
+					// Creamos un nuevo elemento de tipo option con la info para agregar la nueva opción al campo select de ambos formularios.
+					const optionR = document.createElement('option');
+					optionR.setAttribute('value', data.response.data.iddepartamento);
+					optionR.innerHTML = data.response.data.departamento;
+					document.getElementById('c_departamento_r').append(optionR); // Campo departamento [registrar].
+					// Nuevo
+					const optionM = document.createElement('option');
+					optionM.setAttribute('value', data.response.data.iddepartamento);
+					optionM.innerHTML = data.response.data.departamento;
+					document.getElementById('c_departamento_m').append(optionM); // Campo departamento [modificar].
+
+					// Enviamos mensaje de exito.
+					modal_registrar_dep.hide();
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
 					});
 				});
 			}

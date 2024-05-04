@@ -32,8 +32,8 @@
 			<table id="data-table" class="table table-hover border-bottom m-0">
 				<thead>
 					<tr>
-						<th class="ps-2"><i class="fas fa-id-badge"></i> Tipo ID</th>
-						<th class="ps-2"><i class="fas fa-id-badge"></i> Identificación</th>
+						<th class="ps-2"><i class="fas fa-id-badge"></i> Tipo</th>
+						<th class="ps-2"><i class="fas fa-id-badge"></i> Doc.</th>
 						<th class="ps-2"><i class="fas fa-address-card"></i> Cliente</th>
 						<th class="ps-2"><i class="fas fa-phone-alt"></i> Teléfono</th>
 						<th class="ps-2"><i class="fas fa-envelope"></i> Correo electrónico</th>
@@ -54,9 +54,9 @@
 					$idrand = rand(100000,999999);
 					@endphp
 					<tr>
-						<td class="py-1 px-2">{{$tipos_identificaciones[$cliente->tipo_identificacion]}}</td>
-						<td class="py-1 px-2">{{$cliente->identificacion}}</td>
-						<td class="py-1 px-2">{{$cliente->nombre}}</td>
+						<td class="py-1 px-2"><b>{{$tipos_identificaciones[$cliente->tipo_identificacion]}}</b></td>
+						<td class="py-1 px-2"><b>{{$cliente->identificacion}}</b></td>
+						<td class="py-1 px-2"><b>{{$cliente->nombre}}</b></td>
 						<td class="py-1 px-2">{{$cliente->telefono1}}</td>
 						<td class="py-1 px-2">{{$cliente->correo}}</td>
 						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($cliente->created))}}</td>
