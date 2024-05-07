@@ -7,9 +7,84 @@ use Illuminate\Http\Request;
 
 class PerfilControlador extends Controller
 {
+	// Atributos de la clase.
+	public $lista_cedula = ["V", "E"];
+	public $lista_prefijos = [
+		"Móvil" => [
+			"412",
+			"414",
+			"416",
+			"424",
+			"426",
+		],
+		"Hogar" => [
+			"212",
+			"232",
+			"234",
+			"235",
+			"236",
+			"237",
+			"238",
+			"239",
+			"241",
+			"242",
+			"243",
+			"244",
+			"245",
+			"246",
+			"247",
+			"248",
+			"249",
+			"251",
+			"252",
+			"253",
+			"254",
+			"255",
+			"256",
+			"257",
+			"258",
+			"259",
+			"260",
+			"261",
+			"262",
+			"263",
+			"264",
+			"265",
+			"266",
+			"267",
+			"268",
+			"269",
+			"270",
+			"271",
+			"272",
+			"273",
+			"274",
+			"275",
+			"276",
+			"277",
+			"278",
+			"279",
+			"281",
+			"282",
+			"283",
+			"285",
+			"286",
+			"287",
+			"288",
+			"291",
+			"292",
+			"293",
+			"294",
+			"295",
+		],
+	];
+
 	public function formulario_perfil()
 	{
-		return view('perfil.perfil');
+		return view('perfil.perfil', [
+			'lista_cedula' => $this->lista_cedula,
+			'lista_prefijos' => $this->lista_prefijos,
+		]);
 	}
 
 	public function actualizar_contrasena(Request $request)
@@ -70,9 +145,9 @@ class PerfilControlador extends Controller
 
 		// Procedemos a actualizar la contraseña.
 		$usuario->pregunta1 = $request->pregunta_1;
-		$usuario->respuesta1 = $request->respuesta_1;
+		$usuario->respuesta1 = password_hash($request->respuesta_1, PASSWORD_DEFAULT);
 		$usuario->pregunta2 = $request->pregunta_2;
-		$usuario->respuesta2 = $request->respuesta_2;
+		$usuario->respuesta2 = password_hash($request->respuesta_2, PASSWORD_DEFAULT);
 		$usuario->save();
 
 		// Enviamos mensaje de exito al usuario.

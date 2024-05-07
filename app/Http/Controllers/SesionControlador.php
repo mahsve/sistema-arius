@@ -53,6 +53,10 @@ class SesionControlador extends Controller
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
+		// // Si ocurrió algún error de contraseña invalida, reseteamos los intentos a 0.
+		// $usuario->intentos = 0;
+		// $usuario->save();
+
 		// Iniciamos la sesión.
 		Auth::login($usuario);
 		$request->session()->regenerate();

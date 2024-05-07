@@ -25,8 +25,11 @@
 
 		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown">
+				<a href="javascript:void(0);" id="btn_toggle_todo"><i class="fas fa-clipboard-list"></i></a>
+			</li>
+			<li class="nav-item dropdown">
 				<a class="nav-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-					<img class="img-xs rounded-circle" src="{{url('images/user-default.jpg')}}" alt="Imagen usuario">
+					<img class="img-xs rounded-circle border" src="{{url('images/user-default.jpg')}}" alt="Imagen usuario">
 				</a>
 				<div id="dropdown-user-menu" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded mt-3" aria-labelledby="dropdown-user" style="min-width: 220px;">
 					<div class="dropdown-header text-center mb-2">

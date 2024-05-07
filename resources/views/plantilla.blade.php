@@ -149,9 +149,21 @@
 		});
 
 		// Botón para cerrar y abrir el sidebar en la versión móvil.
-		document.getElementById('btn_toggle_sidebar').addEventListener('click', function (e) {
+		document.getElementById('btn_toggle_sidebar').addEventListener('click', function(e) {
 			e.preventDefault();
 			document.getElementById('sidebar').classList.toggle('active');
+		});
+
+		// right-sidebar
+		document.getElementById("btn_toggle_todo").addEventListener('click', function(e) {
+			e.preventDefault();
+			const sidebar_todo = document.getElementById("right-sidebar");
+			console.log(sidebar_todo.style.right);
+			if (!sidebar_todo.style.right || sidebar_todo.style.right != '0px' || sidebar_todo.style.right == "") {
+				sidebar_todo.style.right = 0;
+			} else {
+				sidebar_todo.style.right = null;
+			}
 		});
 	</script>
 </body>
