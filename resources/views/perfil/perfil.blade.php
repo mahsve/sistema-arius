@@ -1,48 +1,52 @@
 @extends('plantilla')
 
-@section('title', 'Panel principal - Arius Seguridad Integral C.A.')
+@section('title', 'Mi perfil - Arius Seguridad Integral C.A.')
 
-{{dd(session())}}
+@section('styles')
+<style>
+	.image-container::before {
+		content: '';
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, .3);
+		z-index: 1;
+	}
 
-<?php
-// Separar la identificación en tipo y el número.
-$identificacion_ = explode('-', session()->personal->cedula);
-$tipo_identificacion_ = $identificacion_[0];
-$identificacion_ = $identificacion_[1];
-
-// Separar el teléfono 1 en prefijo y número.
-$telefono1_ = explode(' ', session()->personal->telefono1);
-$prefijo_telefono1_ = substr($telefono1_[0], 1, 3);
-$telefono1_ = $telefono1_[1];
-
-// Separar el teléfono 2 en prefijo y número.
-$telefono2_ = "";
-$prefijo_telefono2_ = "";
-if (session()->personal->telefono2 != null and session()->personal->telefono2 != 'null') {
-	$telefono2_ = explode(' ', session()->personal->telefono2);
-	$prefijo_telefono2_ = substr($telefono2_[0], 1, 3);
-	$telefono2_ = $telefono2_[1];
-}
-?>
+	.image-container>* {
+		position: relative;
+		z-index: 2;
+	}
+</style>
+@endsection
 
 @section('scripts')
+<script src="{{url('js/app/perfil/perfil.js')}}"></script>
 @endsection
 
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase my-2"><i class="fas fa-user-circle"></i> Perfil</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-user-circle"></i> Mi perfil</h4>
 		</div>
 	</div>
 </div>
 
+@php
+$ruta_background = url('images/background-camaras.jpg');
+@endphp
+
 <div class="row">
-	<div class="col-4">
-		<div class="card">
+	<div class="col-12 col-md-4 col-lg-12 col-xl-4">
+		<div class="card mb-4 overflow-hidden">
+			<div class="position-relative image-container p-4" style="background-image: url('{{$ruta_background}}'); background-size: cover; background-position: center;">
+				<img src="{{url('/images/user-default.jpg')}}" alt="Imagen usuario" class="rounded-circle d-block border mx-auto shadow" style="width: 120px;">
+			</div>
 			<div class="card-body">
-				<img src="{{url('/images/user-default.jpg')}}" alt="Imagen usuario" class="rounded-circle d-block border mx-auto mb-3" style="width: 120px;">
-				<div class="w-75 mx-auto text-start">
+				<div class="mx-auto text-start" style="width: 100%; max-width: 250px;">
 					<p class="m-0"><i class="fas fa-id-card" style="width: 20px;"></i> <b>Nombre:</b> {{session('personal')->nombre}}</p>
 					<p class="m-0"><i class="fas fa-user" style="width: 20px;"></i> <b>Usuario:</b> {{auth()->user()->usuario}}</p>
 					<p class="m-0 text-capitalize"><i class="fas fa-phone-alt" style="width: 20px;"></i> <b>Tel:</b> {{session('personal')->telefono1}}</p>
@@ -52,30 +56,29 @@ if (session()->personal->telefono2 != null and session()->personal->telefono2 !=
 		</div>
 	</div>
 
-	<div class="col-8">
-		<div class="card">
+	<div class="col-12 col-md-8 col-lg-12 col-xl-8">
+		<div class="card mb-4">
 			<div class="card-body">
 				<h4 class="card-title text-uppercase my-2"><i class="fas fa-user-edit"></i> Datos personales</h4>
-				<form class="forms-sample" name="formulario_registro" id="formulario_registro" method="POST" action="">
+				<form class="forms-sample" name="formulario_perfil" id="formulario_perfil" method="POST" action="{{route('profile.update')}}">
 					@csrf
-					@method('PATCH')
 					<div class="form-row">
-						<div class="form-group col-12 col-lg-2">
+						<div class="form-group col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
 							<label for="c_identificacion" class="required"><i class="fas fa-id-badge"></i> Cédula</label>
 							<div class="input-group">
-								<select class="form-control text-center" name="c_prefijo_identificacion" id="c_prefijo_identificacion" style="height: 31px; margin-top: 1px;" disabled>
+								<select class="form-control text-center" id="c_prefijo_identificacion" style="height: 31px; margin-top: 1px;" disabled>
 									@foreach ($lista_cedula as $index => $cedula)
-									<option value="{{$cedula}}" <?= $tipo_identificacion_ == $cedula ? "selected" : "" ?>>{{$cedula}}</option>
+									<option value="{{$cedula}}" <?= $perfil->ti == $cedula ? "selected" : "" ?>>{{$cedula}}</option>
 									@endforeach
 								</select>
-								<input type="text" class="form-control text-uppercase" name="c_identificacion" id="c_identificacion" value="{{$identificacion_}}" placeholder="Ingrese la cédula" style="width: calc(100% - 65px); height: 33px;" readonly>
+								<input type="text" class="form-control text-uppercase" id="c_identificacion" value="{{$perfil->id}}" placeholder="Ingrese la cédula" style="width: calc(100% - 65px); height: 33px;" readonly>
 							</div>
 						</div>
-						<div class="form-group col-12 col-lg-4">
-							<label for="c_nombre_completo" class="required"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
-							<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" value="{{session()->personal->nombre}}" placeholder="Ingrese el nombre completo">
+						<div class="form-group col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+							<label for="c_nombre_completo" class="d-block text-truncate required"><i class="fas fa-address-card"></i> Nombre / Razón social</label>
+							<input type="text" class="form-control text-uppercase" name="c_nombre_completo" id="c_nombre_completo" value="{{session('personal')->nombre}}" placeholder="Ingrese el nombre completo">
 						</div>
-						<div class="form-group col-6 col-lg-3">
+						<div class="form-group col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
 							<label for="c_telefono1" class="required"><i class="fas fa-phone-alt"></i> Teléfono 1</label>
 							<div class="input-group">
 								<select class="form-control text-center" name="c_prefijo_telefono1" id="c_prefijo_telefono1" style="height: 31px; margin-top: 1px;">
@@ -83,15 +86,15 @@ if (session()->personal->telefono2 != null and session()->personal->telefono2 !=
 									@foreach ($lista_prefijos as $index => $prefijo)
 									<optgroup label="{{$index}}">
 										@foreach ($prefijo as $codigos)
-										<option value="{{$codigos}}" <?= $prefijo_telefono1_ == $codigos ? "selected" : "" ?>>{{$codigos}}</option>
+										<option value="{{$codigos}}" <?= $perfil->pt1 == $codigos ? "selected" : "" ?>>{{$codigos}}</option>
 										@endforeach
 									</optgroup>
 									@endforeach
 								</select>
-								<input type="text" class="form-control text-uppercase" name="c_telefono1" id="c_telefono1" value="{{$telefono1_}}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
+								<input type="text" class="form-control text-uppercase" name="c_telefono1" id="c_telefono1" value="{{$perfil->tl1}}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
 							</div>
 						</div>
-						<div class="form-group col-6 col-lg-3">
+						<div class="form-group col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
 							<label for="c_telefono2"><i class="fas fa-phone-alt"></i> Teléfono 2</label>
 							<div class="input-group">
 								<select class="form-control text-center" name="c_prefijo_telefono2" id="c_prefijo_telefono2" style="height:31px; margin-top: 1px;">
@@ -99,38 +102,47 @@ if (session()->personal->telefono2 != null and session()->personal->telefono2 !=
 									@foreach ($lista_prefijos as $index => $prefijo)
 									<optgroup label="{{$index}}">
 										@foreach ($prefijo as $codigos)
-										<option value="{{$codigos}}" <?= $prefijo_telefono2_ == $codigos ? "selected" : "" ?>>{{$codigos}}</option>
+										<option value="{{$codigos}}" <?= $perfil->pt2 == $codigos ? "selected" : "" ?>>{{$codigos}}</option>
 										@endforeach
 									</optgroup>
 									@endforeach
 								</select>
-								<input type="text" class="form-control text-uppercase" name="c_telefono2" id="c_telefono2" value="{{$telefono2_}}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
+								<input type="text" class="form-control text-uppercase" name="c_telefono2" id="c_telefono2" value="{{$perfil->tl2}}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
 							</div>
 						</div>
-						<div class="form-group col-12 col-lg-6">
+						<div class="form-group col-12 col-lg-8">
 							<label for="c_correo_electronico" class="required"><i class="fas fa-envelope"></i> Correo electrónico</label>
-							<input type="text" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" value="{{session()->personal->correo}}" placeholder="Ingrese el correo electrónico">
+							<input type="text" class="form-control text-uppercase" name="c_correo_electronico" id="c_correo_electronico" value="{{session('personal')->correo}}" placeholder="Ingrese el correo electrónico">
 						</div>
-						<div class="form-group col-6 col-lg-3">
+						<div class="form-group col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
 							<label for="c_departamento" class="required"><i class="fas fa-hotel"></i> Departamento</label>
-							<select class="form-control text-uppercase" name="c_departamento" id="c_departamento">
+							<select class="form-control text-uppercase" id="c_departamento" disabled>
 								<option value="">Seleccione una opción</option>
+								@foreach ($departamentos as $departamento)
+								<option value="{{$departamento->iddepartamento}}" <?= $departamento->iddepartamento == $perfil->iddepartamento ? "selected" : "" ?>>{{$departamento->departamento}}</option>
+								@endforeach
 							</select>
 						</div>
-						<div class="form-group col-6 col-lg-3">
+						<div class="form-group col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
 							<label for="c_cargo" class="required"><i class="fas fa-briefcase"></i> Cargo</label>
-							<select class="form-control text-uppercase" name="c_cargo" id="c_cargo">
+							<select class="form-control text-uppercase" id="c_cargo" disabled>
 								<option value="">Seleccione una opción</option>
+								@foreach ($cargos as $cargo)
+								<option value="{{$cargo->idcargo}}" <?= $cargo->idcargo == $perfil->idcargo ? "selected" : "" ?>>{{$cargo->cargo}}</option>
+								@endforeach
 							</select>
 						</div>
-						<div class="col-12"></div>
+						<div class="form-group col-12 col-sm-6 col-md-6 col-lg-4 col-xl-4">
+							<label for="c_usuario" class="d-block text-truncate required"><i class="fas fa-user"></i> Usuario</label>
+							<input type="text" class="form-control text-uppercase" name="c_usuario" id="c_usuario" value="{{auth()->user()->usuario}}" placeholder="Ingrese el nombre de usuario">
+						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="c_direccion" class="required"><i class="fas fa-map-marked-alt"></i> Dirección</label>
-							<textarea class="form-control text-uppercase" name="c_direccion" id="c_direccion" placeholder="Ingrese la dirección" rows="3">{{session()->personal->direccion}}</textarea>
+							<textarea class="form-control text-uppercase" name="c_direccion" id="c_direccion" placeholder="Ingrese la dirección" rows="3">{{session('personal')->direccion}}</textarea>
 						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="c_referencia"><i class="fas fa-sticky-note"></i> Punto de referencia</label>
-							<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3">{{session()->personal->referencia}}</textarea>
+							<textarea class="form-control text-uppercase" name="c_referencia" id="c_referencia" placeholder="Ingrese el punto de referencia" rows="3">{{session('personal')->referencia}}</textarea>
 						</div>
 					</div>
 

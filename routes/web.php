@@ -55,7 +55,7 @@ Route::middleware('auth')->group(function () {
 		Route::get('/mapas_de_zonas/pdf/{id}', 'generar_pdf')->name('mapas_de_zonas.pdf');
 	});
 
-	// Controlador [Servicio técnico solicitado].
+	// Controlador [Servicio técnico].
 	Route::controller(App\Http\Controllers\ServicioTecnicoSolicitadoControlador::class)->group(function () {
 		Route::get('/servicios_tecnico_solicitados', 'index')->name('servicios_tecnico_solicitados.index');
 		Route::get('/servicios_tecnico_solicitados/clientes/{string}', 'clientes')->name('servicios_tecnico_solicitados.client'); // Buscar clientes.
@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
 		Route::get('/servicios_tecnico_solicitados/pdf/{id}', 'generar_pdf')->name('servicios_tecnico_solicitados.pdf');
 	});
 
-	// Controlador [Reportes diarios de operador].
+	// Controlador [Monitoreo].
 	Route::controller(App\Http\Controllers\ReporteDiarioOperadorControlador::class)->group(function () {
 		Route::get('/reportes_diarios_operador', 'index')->name('reportes_diarios_operador.index');
 		Route::get('/reportes_diarios_operador/registrar', 'create')->name('reportes_diarios_operador.create');
@@ -126,6 +126,7 @@ Route::middleware('auth')->group(function () {
 
 	// Controlador [Servicios].
 	Route::resource('/servicios', App\Http\Controllers\ServicioControlador::class);
+	Route::post('/servicios/orden', [App\Http\Controllers\ServicioControlador::class, 'order'])->name('servicios.order');
 	Route::get('/servicios/submodulos/{id}', [App\Http\Controllers\ServicioControlador::class, 'submodulos'])->name('servicios.submodules');
 	Route::put('/servicios/estatus/{id}', [App\Http\Controllers\ServicioControlador::class, 'toggle'])->name('servicios.status');
 
@@ -146,9 +147,10 @@ Route::middleware('auth')->group(function () {
 	// Controlador [Gestionar perfil del usuario].
 	Route::controller(App\Http\Controllers\PerfilControlador::class)->group(function () {
 		Route::get('/perfil', 'formulario_perfil')->name('profile.index');
-		Route::post('/actualizar_contrasena', 'actualizar_contrasena')->name('profile.update');
+		Route::post('/perfil', 'actualizar_datos')->name('profile.update');
 		Route::get('/seguridad', 'formulario_seguridad')->name('security.index');
-		Route::post('/actualizar_preguntas', 'actualizar_preguntas')->name('security.update');
+		Route::post('/actualizar_contrasena', 'actualizar_contrasena')->name('password.update');
+		Route::post('/actualizar_preguntas', 'actualizar_preguntas')->name('questions.update');
 	});
 
 	// Controlador [Sesión].

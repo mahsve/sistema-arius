@@ -2,6 +2,14 @@
 
 @section('title', 'Seguridad - Arius Seguridad Integral C.A.')
 
+@section('styles')
+<style>
+	.toggle-password {
+		right: 3px !important;
+	}
+</style>
+@endsection
+
 @section('scripts')
 <script src="{{url('js/app/perfil/seguridad.js')}}"></script>
 @endsection
@@ -27,20 +35,29 @@
 				</div>
 
 				<!-- FORMULARIO -->
-				<form class="forms-sample" name="formulario_contrasenas" id="formulario_contrasenas" method="POST" action="{{route('profile.update')}}">
+				<form class="forms-sample" name="formulario_contrasenas" id="formulario_contrasenas" method="POST" action="{{route('password.update')}}">
 					@csrf
 					<div class="form-row">
 						<div class="form-group col-12">
 							<label for="nueva_contrasena" class="required"><i class="fas fa-unlock"></i> Nueva contraseña</label>
-							<input type="password" class="form-control" name="nueva_contrasena" id="nueva_contrasena" placeholder="Ingrese su nueva contraseña">
+							<div class="position-relative">
+								<input type="password" class="form-control" name="nueva_contrasena" id="nueva_contrasena" placeholder="Ingrese su nueva contraseña">
+								<i class="fas fa-eye position-absolute toggle-password" data-toggle="nueva_contrasena"></i>
+							</div>
 						</div>
 						<div class="form-group col-12">
 							<label for="repetir_contrasena" class="required"><i class="fas fa-unlock"></i> Repita su contraseña</label>
-							<input type="password" class="form-control" name="repetir_contrasena" id="repetir_contrasena" placeholder="Repita la nueva contraseña">
+							<div class="position-relative">
+								<input type="password" class="form-control" name="repetir_contrasena" id="repetir_contrasena" placeholder="Repita la nueva contraseña">
+								<i class="fas fa-eye position-absolute toggle-password" data-toggle="repetir_contrasena"></i>
+							</div>
 						</div>
 						<div class="form-group col-12">
 							<label for="actual_contrasena" class="required"><i class="fas fa-unlock"></i> Contraseña actual</label>
-							<input type="password" class="form-control" name="actual_contrasena" id="actual_contrasena" placeholder="Ingrese su contraseña actual">
+							<div class="position-relative">
+								<input type="password" class="form-control" name="actual_contrasena" id="actual_contrasena" placeholder="Ingrese su contraseña actual">
+								<i class="fas fa-eye position-absolute toggle-password" data-toggle="actual_contrasena"></i>
+							</div>
 						</div>
 					</div>
 
@@ -64,7 +81,7 @@
 				</div>
 
 				<!-- FORMULARIO -->
-				<form class="forms-sample" name="formulario_preguntas" id="formulario_preguntas" method="POST" action="{{route('security.update')}}">
+				<form class="forms-sample" name="formulario_preguntas" id="formulario_preguntas" method="POST" action="{{route('questions.update')}}">
 					@csrf
 					<div class="form-row">
 						<div class="form-group col-12 col-lg-6">
@@ -73,7 +90,7 @@
 						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="respuesta_1" class="required"><i class="fas fa-comments"></i> Respuesta</label>
-							<input type="password" class="form-control text-uppercase" name="respuesta_1" id="respuesta_1" placeholder="Ingrese el nombre completo">
+							<input type="password" class="form-control" name="respuesta_1" id="respuesta_1" placeholder="Ingrese el nombre completo">
 						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="pregunta_2" class="required"><i class="fas fa-question-circle"></i> Pregunta de seguridad</label>
@@ -81,11 +98,14 @@
 						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="respuesta_2" class="required"><i class="fas fa-comments"></i> Respuesta</label>
-							<input type="password" class="form-control text-uppercase" name="respuesta_2" id="respuesta_2" placeholder="Ingrese el nombre completo">
+							<input type="password" class="form-control" name="respuesta_2" id="respuesta_2" placeholder="Ingrese el nombre completo">
 						</div>
 						<div class="form-group col-12">
 							<label for="actual_contrasena2" class="required"><i class="fas fa-unlock"></i> Contraseña actual</label>
-							<input type="password" class="form-control" name="actual_contrasena" id="actual_contrasena2" placeholder="Ingrese su contraseña actual">
+							<div class="position-relative">
+								<input type="password" class="form-control" name="actual_contrasena" id="actual_contrasena2" placeholder="Ingrese su contraseña actual">
+								<i class="fas fa-eye position-absolute toggle-password" data-toggle="actual_contrasena2"></i>
+							</div>
 						</div>
 					</div>
 
