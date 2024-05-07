@@ -1,14 +1,10 @@
 (function () {
-	// Variables globales.
-	var dispositivos = const_dispositivos;
-
 	// Elementos HTML.
 	const tipo_contrato = document.getElementById("m_tipo_contrato");
 	const codigo_manual = document.getElementById("codigo_manual");
 	const input_codigo = document.getElementById("m_codigo");
 	const btn_next = document.getElementById("btn_next");
 	const btn_prev = document.getElementById("btn_prev");
-	const btn_save = document.getElementById('btn_save');
 	const cl_tipo_identificacion_ = document.getElementById("cl_tipo_identificacion");
 
 	// Activar plugins
@@ -99,18 +95,18 @@
 			<td class="py-1 px-2">
 				<input type="hidden" name="usuario_registro[]" id="usuario_registro_${idrand}">
 				<input type="hidden" name="usuario_orden[]" id="usuario_orden_${idrand}" value="${tabla_usuarios.children.length + 1}" class="usuario_orden" data-id="${idrand}">
-				<div class="form-group input-group m-0" style="min-width: 150px;">
-					<select class="form-control text-uppercase text-center" name="usuario_prefijo_id[]" id="usuario_prefijoid_${idrand}" data-id="${idrand}" style="height: 31px; margin-top: 1px;">
+				<div class="form-group input-group m-0" style="min-width: 145px;">
+					<select class="form-control text-uppercase text-center usuario_prefijo_id" name="usuario_prefijo_id[]" id="usuario_prefijoid_${idrand}" data-id="${idrand}" style="height: 31px; margin-top: 1px;">
 						${lista_cedula.map(cd => `<option value="${cd}">${cd}</option>`).join('')}
 					</select>
-					<input type="text" class="form-control text-uppercase" name="usuario_cedula[]" id="usuario_cedula_${idrand}" data-id="${idrand}" placeholder="Cédula" style="width: calc(100% - 65px); height: 33px;">
+					<input type="text" class="form-control text-uppercase usuario_cedula" name="usuario_cedula[]" id="usuario_cedula_${idrand}" data-id="${idrand}" placeholder="Cédula" style="width: calc(100% - 65px); height: 33px;">
 				</div>
 			</td>
-			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuario_nombre[]" id="usuario_nombre_${idrand}" placeholder="Nombre completo"></td>
-			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuarios_contrasena[]" id="usuarios_contrasena_${idrand}" placeholder="Contraseña"></td>
+			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase usuario_nombre" name="usuario_nombre[]" id="usuario_nombre_${idrand}" placeholder="Nombre completo"></td>
+			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase usuario_contrasena" name="usuario_contrasena[]" id="usuario_contrasena_${idrand}" placeholder="Contraseña"></td>
 			<td class="py-1 px-2">
-				<div class="input-group" style="min-width: 150px;">
-					<select class="form-control text-center" name="usuario_prefijotl[]" id="usuario_prefijotl_${idrand}" style="height: 31px; margin-top: 1px;">
+				<div class="input-group" style="min-width: 160px;">
+					<select class="form-control text-center usuario_prefijotl" name="usuario_prefijotl[]" id="usuario_prefijotl_${idrand}" style="height: 31px; margin-top: 1px;">
 						<option value="">COD.</option>
 						<optgroup label="Móvil">
 							${lista_prefijos['Móvil'].map(hg => `<option value="${hg}">${hg}</option>`).join('')}
@@ -119,10 +115,10 @@
 							${lista_prefijos['Hogar'].map(hg => `<option value="${hg}">${hg}</option>`).join('')}
 						</optgroup>
 					</select>
-					<input type="text" class="form-control text-uppercase" name="usuarios_telefono[]" id="usuarios_telefono_${idrand}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
+					<input type="text" class="form-control text-uppercase usuarios_telefono" name="usuarios_telefono[]" id="usuarios_telefono_${idrand}" placeholder="Ingrese el teléfono" style="width: calc(100% - 100px); height: 33px;">
 				</div>
 			</td>
-			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="usuarios_nota[]" id="usuarios_nota_${idrand}" style="min-width: 200px;" placeholder="Nota (Opcional)"></td>
+			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase usuarios_nota" name="usuarios_nota[]" id="usuarios_nota_${idrand}" style="min-width: 200px;" placeholder="Nota (Opcional)"></td>
 			<td class="py-1 px-2" style="width: 20px;">
 				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_usuario_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
 			</td>
@@ -134,9 +130,15 @@
 		document.getElementById(`usuario_cedula_${idrand}`).addEventListener("change", consultar_usuario);
 		document.getElementById(`btn_eliminar_usuario_${idrand}`).addEventListener("click", eliminar_usuario);
 
+		// Eliminar border error.
+		document.getElementById(`usuario_cedula_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		document.getElementById(`usuario_nombre_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		document.getElementById(`usuario_prefijotl_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		document.getElementById(`usuarios_telefono_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+
 		// Agregamos mascaras a los campos.
-		IMask(document.getElementById(`usuario_cedula_${idrand}`), { mask: '00000000' })
-		IMask(document.getElementById(`usuarios_telefono_${idrand}`), { mask: '000-0000' })
+		IMask(document.getElementById(`usuario_cedula_${idrand}`), { mask: '00000000' });
+		IMask(document.getElementById(`usuarios_telefono_${idrand}`), { mask: '000-0000' });
 	});
 
 	// Consultamos si ya existe registrado el usuario como cliente en la base de datos según la tabla de usuarios de contactos.
@@ -147,7 +149,13 @@
 		const campo_cedula = document.getElementById(`usuario_cedula_${idrand}`);
 
 		// Válidamos primeramente que el tipo de nacionalidad no este vacía y el número de cédula tampoco.
-		if (campo_prefijo.value != "" && campo_cedula.value != "" && campo_cedula.value.length >= 7) {
+		if (campo_cedula.value == "") {
+			Toast.fire({ icon: 'error', title: '¡Ingrese un número de cédula!' });
+			campo_cedula.focus();
+		} else if (campo_cedula.value.length < 8) {
+			Toast.fire({ icon: 'error', title: '¡El número de cédula debe tener 8 dígitos!' });
+			campo_cedula.focus();
+		} else {
 			// Realizamos la consulta AJAX.
 			let union_cedula = campo_prefijo.value + "-" + campo_cedula.value;
 			campo_cedula.parentElement.classList.add('loading');
@@ -167,11 +175,15 @@
 					// Deshabilitamos los campos.
 					document.getElementById(`usuario_nombre_${idrand}`).setAttribute('readonly', true);
 					document.getElementById(`usuario_prefijotl_${idrand}`).setAttribute('readonly', true);
-					// document.getElementById(`usuario_prefijotl_${idrand}`).setAttribute('disabled', true);
+					document.getElementById(`usuario_prefijotl_${idrand}`).setAttribute('disabled', true);
 					document.getElementById(`usuarios_telefono_${idrand}`).setAttribute('readonly', true);
 					campo_prefijo.setAttribute('readonly', true);
-					// campo_prefijo.setAttribute('disabled', true);
+					campo_prefijo.setAttribute('disabled', true);
 					campo_cedula.setAttribute('readonly', true);
+					// Quitamos border rojo al consultar los datos y encontrar el registro.
+					document.getElementById(`usuario_nombre_${idrand}`).classList.remove('border-danger');
+					document.getElementById(`usuario_prefijotl_${idrand}`).classList.remove('border-danger');
+					document.getElementById(`usuarios_telefono_${idrand}`).classList.remove('border-danger');
 				}
 			});
 		}
@@ -236,22 +248,22 @@
 			<td class="py-1 px-2 text-center n_zonas" id="zona_norden_${idrand}">${tabla_zonas.children.length + 1}</td>
 			<td class="py-1 px-2">
 				<input type="hidden" name="zona_orden[]" id="zona_orden_${idrand}" value="${tabla_zonas.children.length + 1}" class="zona_orden" data-id="${idrand}">
-				<input type="text" class="form-control text-uppercase" name="zona_descripcion[]" id="zona_descripcion_${idrand}" placeholder="Descripción de la zona" style="min-width: 150px;">
+				<input type="text" class="form-control text-uppercase zona_descripcion" name="zona_descripcion[]" id="zona_descripcion_${idrand}" placeholder="Descripción de la zona" style="min-width: 150px;">
 			</td>
 			<td class="py-1 px-2">
 				<div class="form-group m-0" style="min-width: 150px;">
-					<select class="form-control text-uppercase" name="zona_equipos[]" id="zona_equipos_${idrand}" data-id=${idrand}>
+					<select class="form-control text-uppercase zona_equipos" name="zona_equipos[]" id="zona_equipos_${idrand}" data-id=${idrand}>
 						<option value="0">SELC.  EQUIPO</option>
 						${dispositivos.map(dv => dv.tipo == 'Z' ? `<option value="${dv.iddispositivo}">${dv.dispositivo}</option>` : '').join('')}
 					</select>
 				<div>
 			</td>
 			<td class="py-1 px-2">
-				<select class="form-control text-uppercase" name="zona_configuracion[]" id="zona_configuracion_${idrand}" data-id="${idrand}" style="min-width: 150px;">
+				<select class="form-control text-uppercase zona_configuracion" name="zona_configuracion[]" id="zona_configuracion_${idrand}" data-id="${idrand}" style="min-width: 150px;">
 					<option value="0">SELC. CONFIGURACIÓN</option>
 				</select>
 			</td>
-			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase" name="zona_nota[]" id="zona_nota_${idrand}" placeholder="Observación (opcional)" style="min-width: 200px;"></td>
+			<td class="py-1 px-2"><input type="text" class="form-control text-uppercase zona_nota" name="zona_nota[]" id="zona_nota_${idrand}" placeholder="Observación (opcional)" style="min-width: 200px;"></td>
 			<td class="py-1 px-2" style="width: 20px;">
 				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_zona_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
 			</td>
@@ -261,6 +273,11 @@
 		// Agregamos los eventos a los elementos agregados a la tabla.
 		document.getElementById(`zona_equipos_${idrand}`).addEventListener("change", consultar_configuracion);
 		document.getElementById(`btn_eliminar_zona_${idrand}`).addEventListener("click", eliminar_zona);
+
+		// 
+		document.getElementById(`zona_descripcion_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		document.getElementById(`zona_equipos_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		document.getElementById(`zona_configuracion_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
 	});
 
 	// Consultar configuración según el equipos seleccionado en la tabla.
@@ -436,13 +453,76 @@
 	 * VISITAS
 	 */
 	// Elementos HTML.
+	const btn_abrir_modal_anio = document.getElementById('btn_abrir_modal_anio');
+	const modal_visita1 = new bootstrap.Modal('#modal_visita1');
 	const btn_agregar_anio = document.getElementById('btn_agregar_anio');
+	const anio_input = document.getElementById('lista_anios');
 	const contenedor_visitas = document.getElementById('contenedor_visitas');
 
 	// Eventos a los elementos HTML.
-	btn_agregar_anio.addEventListener('click', function (e) {
+	// Abrir la modal para poder seleccionar un año y agregarlo al mapa de zona.
+	btn_abrir_modal_anio.addEventListener('click', function (e) {
 		e.preventDefault();
+
+		// Establecemos un valor que este disponible y mostramos la modal ya preparada.
+		anio_input.value = document.querySelector(`#lista_anios option:not(:disabled)`).value;
+		modal_visita1.show();
 	});
+
+	// Agregar la nueva tabla a las visitas con el año seleccionado en el mapa de zonas.
+	btn_agregar_anio.addEventListener('click', (e) => {
+		e.preventDefault();
+
+		// Si esta el mensaje de "Sin visitas agregadas", procede a eliminarla.
+		if (document.querySelector('#contenedor_visitas .sin_anios') != null) {
+			document.querySelector('#contenedor_visitas .sin_anios').remove();
+		}
+
+		// Agregamos la nueva tabla en el contenedor.
+		const idrand = Math.random().toString().replace('.', '');
+		contenedor_visitas.innerHTML += `
+		<div class="table-responsive border rounded mb-4">
+			<table id="tabla_visitas_${idrand}" class="table table-hover m-0">
+				<thead>
+					<tr>
+						<td colspan="5" class="text-uppercase fw-bold py-1">
+							<div class="d-flex justify-content-between align-items-center">
+								<h4 class="d-inline-block m-0">REGISTROS DE VISITAS TéCNICAS - ${anio_input.value}</h4>
+								<button type="button" class="btn btn-primary btn-sm my-1" id="btn_agg_visita_${idrand}" data-rand="${idrand}"><i class="fas fa-toolbox me-2"></i>Agregar</button>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<th class="py-2 pe-2"><i class="fas fa-calendar-day"></i> <span class="required">Fecha</span></th>
+						<th class="py-2 ps-2"><i class="fas fa-laptop-house"></i> <span class="required">Servicio</span></th>
+						<th class="py-2 ps-2"><i class="fas fa-user-tie"></i> <span class="required">Técnicos</span></th>
+						<th class="py-2 ps-2"><i class="fas fa-sticky-note"></i> <span class="required">Pendientes</span></th>
+						<th class="py-2 px-2 text-center" width="55px"><i class="fas fa-cogs"></i></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="sin_visitas">
+						<td colspan="8" class="text-center"><i class="fas fa-times"></i> Sin visitas registradas</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		`;
+
+		// Ocultamos la modal y deshabilitamos el año agregado para evitar repetir datos.
+		modal_visita1.hide();
+		document.querySelector(`#lista_anios option[value="${anio_input.value}"]`).setAttribute('disabled', true);
+
+		// Agregamos evento al botón.
+		document.getElementById(`btn_agg_visita_${idrand}`).addEventListener('click', agregar_visita);
+	});
+
+	// Función para registrar una nueva visita en el mapa de zona.
+	function agregar_visita(e) {
+		e.preventDefault();
+
+
+	}
 
 
 
@@ -457,37 +537,106 @@
 		const m_ingreso = document.getElementById("m_ingreso");
 		const m_tipo_contrato = document.getElementById("m_tipo_contrato");
 		const m_codigo = document.getElementById("m_codigo");
+		const m_asesor = document.getElementById("m_asesor");
 		const m_cliente = document.getElementById("id_cliente");
 		const c_direccion = document.getElementById("c_direccion");
-		const c_referencia = document.getElementById("c_referencia");
 		const btn_guardar = document.getElementById("btn_save");
 
-		//
-		if (tabla_zonas.children) {
+		// Validamos los campos de los contactos.
+		let usuarios_n = document.querySelectorAll('.n_usuarios');
+		let usuarios_vacios = 0;
+		for (let i = 0; i < usuarios_n.length; i++) {
+			const cedula = document.querySelectorAll('.usuario_cedula')[i];
+			const nombre = document.querySelectorAll('.usuario_nombre')[i];
+			const prefijo = document.querySelectorAll('.usuario_prefijotl')[i];
+			const telefono = document.querySelectorAll('.usuarios_telefono')[i];
 
+			// Remarcamos los campos incorrectos.
+			if (cedula.value == "") {
+				cedula.classList.add("border-danger");
+				usuarios_vacios++;
+			}
+			if (nombre.value == "") {
+				nombre.classList.add("border-danger");
+				usuarios_vacios++;
+			}
+			if (prefijo.value == "") {
+				prefijo.classList.add("border-danger");
+				usuarios_vacios++;
+			}
+			if (telefono.value == "") {
+				telefono.classList.add("border-danger");
+				usuarios_vacios++;
+			}
+		}
+
+		// Validamos los campos de las zonas.
+		let zonas_n = document.querySelectorAll('.n_zonas');
+		let zonas_vacias = 0;
+		for (let i = 0; i < zonas_n.length; i++) {
+			const descripcion = document.querySelectorAll('.zona_descripcion')[i];
+			const equipos = document.querySelectorAll('.zona_equipos')[i];
+			const configuracion = document.querySelectorAll('.zona_configuracion')[i];
+
+			// Remarcamos los campos incorrectos.
+			if (descripcion.value == "") {
+				descripcion.classList.add("border-danger");
+				zonas_vacias++;
+			}
+			if (equipos.value == "0") {
+				equipos.classList.add("border-danger");
+				zonas_vacias++;
+			}
+			if (configuracion.value == "0") {
+				configuracion.classList.add("border-danger");
+				zonas_vacias++;
+			}
 		}
 
 		// Validamos los campos.
 		if (m_ingreso.value == "") {
 			Toast.fire({ icon: 'error', title: '¡La fecha de registro no debe estar vacía!' });
+			document.getElementById('pills-cliente-tab').click();
 			m_ingreso.focus();
 		} else if (m_tipo_contrato.value == "") {
 			Toast.fire({ icon: 'error', title: '¡Seleccione el tipo contrato!' });
+			document.getElementById('pills-cliente-tab').click();
 			m_tipo_contrato.focus();
 		} else if (m_codigo.value == "") {
 			Toast.fire({ icon: 'error', title: '¡El código de abonado no debe estar vacío!' });
+			document.getElementById('pills-cliente-tab').click();
 			m_codigo.focus();
 		} else if (m_codigo.value.length < 4) {
 			Toast.fire({ icon: 'error', title: '¡El código debe tener 4 números!' });
+			document.getElementById('pills-cliente-tab').click();
 			m_codigo.focus();
+		} else if (m_asesor.value == "") {
+			Toast.fire({ icon: 'error', title: '¡Seleccione el asesor responsable!' });
+			document.getElementById('pills-cliente-tab').click();
+			m_asesor.focus();
 		} else if (m_cliente.value == "") {
 			Toast.fire({ icon: 'error', title: '¡Debe asignar un cliente para el mapa de zona!' });
+			document.getElementById('pills-cliente-tab').click();
 		} else if (c_direccion.value == "") {
 			Toast.fire({ icon: 'error', title: '¡La dirección no debe estar vacía!' });
+			document.getElementById('pills-cliente-tab').click();
 			c_direccion.focus();
 		} else if (c_direccion.value.length < 10) {
 			Toast.fire({ icon: 'error', title: '¡La dirección debe tener al menos 10 caracteres!' });
+			document.getElementById('pills-cliente-tab').click();
 			c_direccion.focus();
+		} else if (document.querySelectorAll('.n_usuarios').length == 0) {
+			Toast.fire({ icon: 'error', title: '¡Ingrese al menos un contacto!' });
+			document.getElementById('pills-usuarios-tab').click();
+		} else if (usuarios_vacios > 0) {
+			swal.fire({ icon: 'error', title: '¡Ateción!', html: '¡Debe llenar todos los campos del contacto!<br><small style="font-weight: bold;">Cédula, Nombre, Teléfono</small>' });
+			document.getElementById('pills-usuarios-tab').click();
+		} else if (document.querySelectorAll('.n_zonas').length == 0) {
+			Toast.fire({ icon: 'error', title: '¡Ingrese al menos una zona del mapa!' });
+			document.getElementById('pills-zonas-tab').click();
+		} else if (zonas_vacias > 0) {
+			swal.fire({ icon: 'error', title: '¡Ateción!', html: '¡Debe llenar todos los campos de la zona!<br><small style="font-weight: bold;">Descripción, Equipo, Configuración</small>' });
+			document.getElementById('pills-zonas-tab').click();
 		} else {
 			btn_guardar.classList.add("loading");
 			btn_guardar.setAttribute('disabled', true);

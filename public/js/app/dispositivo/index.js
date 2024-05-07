@@ -10,7 +10,7 @@
 	const c_tipo_mod = document.getElementById("c_tipo_m");
 	const formulario_actualizacion = document.getElementById("formulario_actualizacion");
 	// AUXILIAR.
-	// [Departamentos].
+	// [Configuraciones].
 	const btn_nuevo_conf = document.querySelectorAll('.btn_nuevo_conf');
 	const modal_registrar_conf = document.getElementById('modal_registrar_conf') != null ? new bootstrap.Modal('#modal_registrar_conf') : null;
 	const formulario_registro_conf = document.getElementById("formulario_registro_conf");
@@ -155,7 +155,7 @@
 		});
 	}
 
-	// Agregar nuevo registro [Departamento] como un formulario auxiliar para registro rápido.
+	// Agregar nuevo registro [Configuracion] como un formulario auxiliar para registro rápido.
 	if (btn_nuevo_conf.length > 0) {
 		Array.from(btn_nuevo_conf).forEach(btn => {
 			btn.addEventListener("click", function (e) {

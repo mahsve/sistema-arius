@@ -65,8 +65,10 @@
 
 		} else {
 			btn_registrar_cliente.classList.add("loading");
+			btn_registrar_cliente.setAttribute('disabled', true);
 			fetch(`${formulario_registro_cl.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro_cl) }).then(response => response.json()).then(data => {
 				btn_registrar_cliente.classList.remove("loading");
+				btn_registrar_cliente.removeAttribute('disabled');
 
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
@@ -146,8 +148,14 @@
 			tabla_clientes.innerHTML = `<tr><td colspan="5" class="text-center"><i class="fas fa-clock me-2"></i> Esperando la consulta</td></tr>`;
 		} else {
 			btn_buscar_cliente.classList.add('loading');
+			btn_buscar_cliente.setAttribute('disabled', true);
+			input_buscar_cliente.setAttribute('readonly', true);
 			fetch(`${url_}/mapas_de_zonas/clientes/${input_buscar_cliente.value}`).then(response => response.json()).then((data) => {
 				btn_buscar_cliente.classList.remove('loading');
+				btn_buscar_cliente.removeAttribute('disabled');
+				input_buscar_cliente.removeAttribute('readonly');
+
+				// Verificamos si encontró clientes.
 				if (data == null) {
 					tabla_clientes.innerHTML = `<tr><td colspan="5" class="text-center text-danger"><i class="fas fa-user-times me-2"></i> Clientes no encontrados</td></tr>`;
 					return;
@@ -191,8 +199,10 @@
 
 		// Realizamos la consulta a la base de datos.
 		button_.classList.add('loading');
+		button_.setAttribute('disabled', true);
 		fetch(`${url_}/mapas_de_zonas/cliente/${identificacion}`).then(response => response.json()).then((data) => {
 			button_.classList.remove('loading');
+			button_.removeAttribute('disabled');
 
 			// Válidamos si realmente se encontraba la información del cliente.
 			if (data == null) {

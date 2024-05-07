@@ -17,7 +17,9 @@
 		<ul class="navbar-nav">
 			<li class="nav-item font-weight-semibold d-none d-lg-block ms-0">
 				<h1 class="welcome-text">Bienvenido <span class="text-black fw-bold">{{session('personal')->nombre}}</span></h1>
+				@if ($_SERVER['REQUEST_URI'] == '/')
 				<h3 class="welcome-sub-text">Su resumen de desempeño esta semana</h3>
+				@endif
 			</li>
 		</ul>
 

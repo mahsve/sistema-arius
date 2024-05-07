@@ -85,11 +85,12 @@ class DispositivoControlador extends Controller
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
+		
 		// Ejecutamos una nueva transacción.
+		$dispositivo = new Dispositivo(); // Lo definimos afuera para poder hacer uso de el una vez finalice la transacción exitosamente.
 		try {
-			DB::transaction(function () use ($request) {
+			DB::transaction(function () use ($request, $dispositivo) {
 				// Creamos el nuevo registro del dispositivo.
-				$dispositivo = new Dispositivo();
 				$dispositivo->tipo = $request->c_tipo;
 				$dispositivo->dispositivo = mb_convert_case($request->c_dispositivo, MB_CASE_UPPER);
 				$dispositivo->save();
@@ -109,8 +110,14 @@ class DispositivoControlador extends Controller
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
+		// Verificamos si es un registro rápido.
+		$registro = null;
+		if (isset($request->modulo) and !empty($request->modulo)) {
+			$registro = $dispositivo;
+		}
+
 		// Retoramos mensaje de exito al usuario.
-		$response = ["status" => "success", "response" => ["message" => "¡Dispositivo registrado exitosamente!"]];
+		$response = ["status" => "success", "response" => ["message" => "¡Dispositivo registrado exitosamente!", "data" => $registro]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 

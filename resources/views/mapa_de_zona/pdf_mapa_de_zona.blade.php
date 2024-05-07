@@ -60,7 +60,7 @@
 		<table class="page_header">
 			<tr>
 				<td style="width: 50%; text-align: left">
-					<!-- <img src="{{url('')}}/images/logo.png" style="width: 40mm"> -->
+					<img src="{{public_path('images/logo.png')}}" style="width: 40mm"/>
 				</td>
 				<td style="width: 50%; text-align: right">
 				</td>
@@ -180,7 +180,7 @@
 		<tr>
 			<td class="tc bg-2 bdr-1" colspan="3" style="width: 22%;"><b>LUNES A VIERNES</b></td>
 			<td class="tc bg-2 bdr-1" style="width: 20%;"><b>SABADO Y DOMINGO</b></td>
-			<td class="bdr-1" colspan="2" rowspan="2" style="width: 50%;">{{$instalador->panel_version}}</td>
+			<td class="bdr-1" colspan="2" rowspan="2" style="width: 50%;">{{$mapa->panel_version}}</td>
 		</tr>
 		<tr>
 			<td class="bdr-1">08:00 AM</td>
@@ -194,7 +194,7 @@
 			<td class="bdr-1">08:00 PM</td>
 			<td class="bdr-1">8:00</td>
 			<td class="bg-2 bdr-1" style="width: 25%;"><b>REPORTA POR:</b></td>
-			<td class="bdr-1" style="width: 25%;">CANTV</td>
+			<td class="bdr-1" style="width: 25%;">{{$mapa->idcodigo}}</td>
 		</tr>
 		<tr>
 			<td class="bg-2 bdr-1" colspan="3"><b>MODELO DE TECLADO:</b></td>
@@ -224,11 +224,11 @@
 		</tr>
 		<tr>
 			<td class="bg-2 bdr-1" colspan="3"><b>UBICACIÓN DE PANEL:</b></td>
-			<td class="bdr-1" colspan="3">{{$instalador->ubicacion}}</td>
+			<td class="bdr-1" colspan="3">{{$mapa->ubicacion}}</td>
 		</tr>
 		<tr>
 			<td class="bg-2 bdr-1" colspan="3"><b>PARTICIONES DEL SISTEMA:</b></td>
-			<td class="bdr-1" colspan="3">{{$instalador->panel_version}}</td>
+			<td class="bdr-1" colspan="3">{{$mapa->panel_version}}</td>
 		</tr>
 		<tr>
 			<td class="bg-2 bdr-1" colspan="3"><b>IMEI:</b></td>
@@ -241,7 +241,7 @@
 
 		<tr>
 			<td class="bg-2 bdr-1" colspan="3"><b>LINEA PRINCIPAL:</b></td>
-			<td class="bdr-1">L1</td>
+			<td class="bdr-1"></td>
 			<td class="bg-2 bdr-1"><b>LINEA DE RESPALDO:</b></td>
 			<td class="bdr-1">L2</td>
 		</tr>

@@ -34,7 +34,7 @@
 						<th class="ps-2"><i class="fas fa-id-badge"></i> Identificación</th>
 						<th class="ps-2"><i class="fas fa-address-card"></i> Cliente</th>
 						<th class="ps-2"><i class="fas fa-address-card"></i> Asesor</th>
-						<th class="ps-2"><i class="fas fa-calendar-day"></i> Registrado</th>
+						<th class="ps-2"><i class="fas fa-desktop"></i> Monitoreo</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
 						<th class="ps-2 text-center"><i class="fas fa-cogs"></i></th>
 					</tr>
@@ -47,7 +47,7 @@
 						<td class="py-1 px-2">{{$mapa_de_zona->idcliente}}</td>
 						<td class="py-1 px-2">{{$mapa_de_zona->cliente}}</td>
 						<td class="py-1 px-2">{{$mapa_de_zona->asesor}}</td>
-						<td class="py-1 px-2">{{date('h:i:s A d/m/y', strtotime($mapa_de_zona->created))}}</td>
+						<td class="py-1 px-2">{{$mapa_de_zona->asesor}}</td>
 						<td class="py-1 px-2">
 							@if ($mapa_de_zona->estatus == "A")
 							<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
