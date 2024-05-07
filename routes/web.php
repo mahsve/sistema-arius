@@ -19,7 +19,12 @@ Route::middleware('guest')->group(function () {
 	Route::controller(App\Http\Controllers\SesionControlador::class)->group(function () {
 		Route::get('/iniciar_sesion', 'formulario_iniciar_sesion')->name('session.login');
 		Route::post('/iniciar_sesion', 'iniciar_sesion')->name('session.login');
-		Route::post('/asdasd', 'iniciar_sesion')->name('session.recover');
+		Route::get('/recuperar_cuenta', 'formulario_recuperar')->name('session.recover');
+		Route::post('/recuperar_cuenta', 'recuperar_cuenta')->name('session.recover');
+		Route::get('/preguntas_seguridad', 'formulario_preguntas')->name('session.questions');
+		Route::post('/preguntas_seguridad', 'verificar_respuestas')->name('session.verify_answers');
+		Route::get('/restablecer', 'formulario_contrasena')->name('session.form_password');
+		Route::post('/restablecer', 'restablecer')->name('session.reset_password');
 	});
 });
 

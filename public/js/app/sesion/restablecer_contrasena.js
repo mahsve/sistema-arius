@@ -1,9 +1,8 @@
 (function () {
 	// Elementos HTML.
-	const formulario_sesion = document.getElementById("formulario_sesion");
+	const formulario_contrasenas = document.getElementById("formulario_contrasenas");
 	const btn_toggle_pw = document.querySelectorAll(".toggle-password");
 
-	// Eventos HTML.
 	// Mostrar/Ocultar contraseña
 	Array.from(btn_toggle_pw).forEach(btn => {
 		btn.addEventListener('click', function (e) {
@@ -23,36 +22,40 @@
 		});
 	});
 
-	// Enviar formulario.
-	formulario_sesion.addEventListener("submit", function (e) {
+	// Eventos HTML.
+	formulario_contrasenas.addEventListener("submit", function (e) {
 		e.preventDefault();
 
 		// Elementos HTML.
-		const usuario = document.getElementById("usuario");
-		const contrasena = document.getElementById("contrasena");
+		const contrasena1 = document.getElementById("contrasena1");
+		const contrasena2 = document.getElementById("contrasena2");
 		const btn_submit = document.getElementById("btn_submit");
 
 		// Válidamos los campos del formulario.
-		if (usuario.value == "") {
-			Toast.fire({ icon: "error", title: "¡Ingrese su nombre de usuario!" });
-			usuario.focus();
-		} else if (contrasena.value == "") {
-			Toast.fire({ icon: "error", title: "¡Ingrese su contraseña!" });
-			contrasena.focus();
+		if (contrasena1.value == "") {
+			Toast.fire({ icon: "error", title: "¡Ingrese su nueva contraseña!" });
+			contrasena1.focus();
+		} else if (contrasena1.value.length < 6) {
+			Toast.fire({ icon: "error", title: "¡La contraseña debe tener al menos 6 caracteres!" });
+			contrasena1.focus();
+		} else if (contrasena2.value == "") {
+			Toast.fire({ icon: "error", title: "¡Por favor repita la contraseña!" });
+			contrasena2.focus();
+		} else if (contrasena1.value != contrasena2.value) {
+			Toast.fire({ icon: "error", title: "¡Las contraseñas ingresadas no coinciden!" });
+			contrasena1.focus();
 		} else {
 			btn_submit.classList.add("loading");
 			btn_submit.setAttribute('disabled', true);
-			fetch(`${formulario_sesion.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_sesion) }).then(response => response.json()).then(data => {
+			fetch(`${formulario_contrasenas.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_contrasenas) }).then(response => response.json()).then(data => {
 				btn_submit.classList.remove("loading");
 				btn_submit.removeAttribute('disabled');
 
 				// Verificamos si ocurrió algún error.
 				if (data.status == "error") {
-					if (!data.response.type)
-						Toast.fire({ icon: data.status, title: data.response.message });
-					else
-						Swal.fire({ icon: data.status, title: data.response.title, text: data.response.message });
-					return false;
+					Toast.fire({ icon: data.status, title: data.response.message });
+					if (data.response.reload) location.reload();
+					return;
 				}
 
 				// Enviamos mensaje de exito.
@@ -61,7 +64,7 @@
 					icon: data.status,
 					text: data.response.message,
 					timer: 2000,
-					willClose: () => location.reload(),
+					willClose: () => location.href = `${url_}/iniciar_sesion`,
 				});
 			});
 		}

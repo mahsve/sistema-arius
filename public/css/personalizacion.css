@@ -19,7 +19,8 @@
 	color: #1C264F;
 }
 
-.form-group label.required::after {
+.form-group label.required::after,
+span.required::after {
 	content: '*';
 	color: red;
 	font-weight: bold;
@@ -133,6 +134,25 @@ div.form-row>.form-group.loading::before {
 	z-index: 2;
 }
 
+.toggle-password {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	right: 15px;
+	bottom: 0;
+	width: 25px;
+	height: 25px;
+	margin: auto;
+	background: #D6EAF8;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.toggle-password:active {
+	background: #C0D8E8;
+}
+
 .btn.loading {
 	color: transparent !important;
 	position: relative;
@@ -178,4 +198,10 @@ div.form-row>.form-group.loading::before {
 
 .btn.btn-sm.btn-auxilar i {
 	font-size: 12px;
+}
+
+/* SWAL ALERT */
+.swal2-modal .swal2-icon,
+.swal2-modal .swal2-success-ring {
+	margin: 0;
 }
