@@ -26,11 +26,11 @@
 		<ul class="navbar-nav ms-auto">
 			<li class="nav-item dropdown">
 				<a class="nav-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-expanded="false">
-					<img class="img-xs rounded-circle" src="{{url('images/faces/face8.jpg')}}" alt="Imagen usuario">
+					<img class="img-xs rounded-circle" src="{{url('images/user-default.jpg')}}" alt="Imagen usuario">
 				</a>
 				<div id="dropdown-user-menu" class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list p-2 rounded mt-3" aria-labelledby="dropdown-user" style="min-width: 220px;">
 					<div class="dropdown-header text-center mb-2">
-						<img class="img-md rounded-circle w-50 mt-2" src="{{url('images/faces/face8.jpg')}}" alt="Imagen usuario">
+						<img class="img-md rounded-circle w-50 mt-2" src="{{url('images/user-default.jpg')}}" alt="Imagen usuario">
 						<p class="mb-1 mt-3 fw-bold">{{session('personal')->nombre}}</p>
 						<p class="fw-bold text-muted mb-0">{{auth()->user()->usuario}}</p>
 					</div>
