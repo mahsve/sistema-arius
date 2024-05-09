@@ -7,6 +7,7 @@ use App\Models\ConfiguracionDis;
 use App\Models\Dispositivo;
 use App\Models\MapaDeZona;
 use App\Models\Contacto;
+use App\Models\DetallesDisConf;
 use App\Models\Instaladores;
 use App\Models\Personal;
 use App\Models\Usuario;
@@ -137,6 +138,12 @@ class MapaDeZonaControlador extends Controller
 		"Radio",
 		"IP150",
 	];
+	public $lineas = [
+		"L1",
+		"L2",
+		"L3",
+		"L4",
+	];
 
 	// Display a listing of the resource. 
 	public function index()
@@ -185,6 +192,7 @@ class MapaDeZonaControlador extends Controller
 			"tipos_dispositivos" => $this->tiposDispositivos,
 			"configuraciones" => $configuraciones,
 			'canales_reportes' => $this->canales_reportes,
+			'lineas' => $this->lineas,
 			'personal' => $personal,
 		]);
 	}
@@ -295,38 +303,34 @@ class MapaDeZonaControlador extends Controller
 		try {
 			// Llamamos la función transaction para procesar la operación como una transacción.
 			DB::transaction(function () use ($request) {
-				$MapaDeZona = new MapaDeZona();
-				$contract_monitoreo = (isset($request->m_observacion) and !empty($request->m_observacion)) ? "S" : "N";
+				$mapa_de_zona = new MapaDeZona();
 
 				// Detalles cliente y contrato.
-				$MapaDeZona->idcodigo = $request->m_codigo;
-				$MapaDeZona->registro = $request->m_ingreso;
-				$MapaDeZona->tipocontracto = $request->m_tipo_contrato;
-				$MapaDeZona->idcliente = $request->id_cliente;
-				$MapaDeZona->direccion = $request->c_direccion;
-				$MapaDeZona->referencia = $request->c_referencia;
-				$MapaDeZona->cedula_asesor = auth()->user()->cedula;
-				$MapaDeZona->observaciones = $request->m_observacion;
-
+				$mapa_de_zona->idcodigo = $request->m_codigo;
+				$mapa_de_zona->registro = $request->m_ingreso;
+				$mapa_de_zona->tipocontrato = $request->m_tipo_contrato;
+				$mapa_de_zona->idcliente = $request->id_cliente;
+				$mapa_de_zona->direccion = $request->c_direccion;
+				$mapa_de_zona->referencia = $request->c_referencia;
+				$mapa_de_zona->cedula_asesor = auth()->user()->cedula;
+				$mapa_de_zona->observaciones = $request->m_observacion;
+				$mapa_de_zona->monitoreo_contratado = $request->m_monitoreo;
+				$mapa_de_zona->monitoreo_estatus = "A";
 				// Detalles técnicos.
-				if (isset($request->omitir_datos_tecnicos)) {
-					$MapaDeZona->panel_version = $request->m_observacion;
-					$MapaDeZona->modelo_teclado = $request->m_modelo;
-					$MapaDeZona->reporta_por = $request->m_reporta;
-					$MapaDeZona->fecha_instalacion = $request->m_instalacion;
-					$MapaDeZona->fecha_entrega = $request->m_entrega;
-					$MapaDeZona->cedula_asesor = $request->m_asesor;
-					$MapaDeZona->ubicacion_panel = $request->m_ubicacion_panel;
-					$MapaDeZona->particiones_sistema = $request->m_particiones;
-					$MapaDeZona->imei = $request->m_imei;
-					$MapaDeZona->linea_principal = $request->m_linea_principal;
-					$MapaDeZona->linea_respaldo = $request->m_linea_respaldo;
+				if (!isset($request->omitir_datos_tecnicos)) {
+					$mapa_de_zona->panel_version = $request->m_panel_version;
+					$mapa_de_zona->idteclado = $request->m_teclado;
+					$mapa_de_zona->reporta_por = $request->m_reporta;
+					$mapa_de_zona->fecha_instalacion = $request->m_instalacion;
+					$mapa_de_zona->fecha_entrega = $request->m_entrega;
+					$mapa_de_zona->ubicacion_panel = $request->m_ubicacion_panel;
+					$mapa_de_zona->particiones_sistema = $request->m_particiones;
+					$mapa_de_zona->imei = $request->m_imei;
+					$mapa_de_zona->linea_principal = $request->m_linea_principal;
+					$mapa_de_zona->linea_respaldo = $request->m_linea_respaldo;
 				}
-
-				// Detalles monitoreo.
-				$MapaDeZona->monitoreo_contratado = $contract_monitoreo;
-				$MapaDeZona->monitoreo_estatus = "A";
-				$MapaDeZona->save();
+				// Guardamos todos los cambios.
+				$mapa_de_zona->save();
 
 				// Instalamos los tecnicos encargados de instalar.
 				if (isset($request->cedula_instalador)) {
@@ -338,11 +342,11 @@ class MapaDeZonaControlador extends Controller
 				}
 
 				// Registramos los usuarios de contacto.
-				if (isset($request->usuario_registro)) {
-					$var2 = 0;
-					for ($var = 0; $var < count($request->usuario_registro); $var++) { // $var = contador general | $var2 = contador de campos habilitados.
+				$var2 = 0;
+				if (isset($request->usuario_rcedula)) {
+					for ($var = 0; $var < count($request->usuario_rcedula); $var++) { // $var = contador general | $var2 = contador de campos habilitados.
 						// Verificamos si ya existe en la base de datos.
-						if ($request->usuario_registro[$var] == "") {
+						if ($request->usuario_rcedula[$var] == null) {
 							// Capturamos los datos del usuario.
 							$prefijo		= $request->usuario_prefijo_id[$var2];
 							$cedula			= $request->usuario_cedula[$var2];
@@ -368,14 +372,14 @@ class MapaDeZonaControlador extends Controller
 								$usuario->save();
 							}
 						} else {
-							$identificacion = $request->usuario_registro[$var];
+							$identificacion = $request->usuario_rcedula[$var];
 						}
 
 						// Agregamos como contacto del cliente en el mapa de zona.
 						$contacto = new Contacto();
 						$contacto->idcliente = $identificacion;
 						$contacto->contrasena = $request->usuario_contrasena[$var];
-						$contacto->nota = mb_convert_case($request->usuarios_nota[$var], MB_CASE_UPPER);
+						$contacto->nota = $request->usuarios_nota[$var];
 						$contacto->idcodigo = $request->m_codigo;
 						$contacto->save();
 					}
@@ -384,18 +388,12 @@ class MapaDeZonaControlador extends Controller
 				// Registramos las zonas en el mapa.
 				if (isset($request->zona_descripcion)) {
 					for ($var = 0; $var < count($request->zona_descripcion); $var++) {
-						// Capturamos los datos de la usuario.
-						$descripcion = $request->zona_descripcion[$var];
-						$equipo = $request->zona_equipos[$var];
-						$configuracion = $request->zona_configuracion[$var];
-						$nota = $request->zona_nota[$var];
-
 						// Agregamos la zona en el mapa de zona.
 						$zona = new Zona();
-						$zona->zona = mb_convert_case($descripcion, MB_CASE_UPPER);
-						$zona->iddispositivo = $equipo;
-						$zona->idconfiguracion = $configuracion;
-						$zona->nota = mb_convert_case($nota, MB_CASE_UPPER);
+						$zona->zona = mb_convert_case($request->zona_descripcion[$var], MB_CASE_UPPER);
+						$zona->iddispositivo = $request->zona_equipos[$var];
+						$zona->idconfiguracion = $request->zona_configuracion[$var];
+						$zona->nota = $request->zona_nota[$var];
 						$zona->idcodigo = $request->m_codigo;
 						$zona->save();
 					}
@@ -420,66 +418,239 @@ class MapaDeZonaControlador extends Controller
 	public function edit(string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		$crear_disp = $this->verificar_acceso_servicio_metodo($this->idservicio_disp, 'create'); // Buscando también si tiene permiso para registro en este submódulo [dispositivos].
+		$crear_conf = $this->verificar_acceso_servicio_metodo($this->idservicio_conf, 'create'); // Buscando también si tiene permiso para registro en este submódulo [configuraciones].
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
 			return $this->error403();
 		}
 
-		return "ejemplo";
-		// Cargamos la vista para modificar un cliente con los datos necesarios.
-		// return view('zonemaps.update', ['client' => $client, 'contacts' => $contacts]);
+		// Cargamos la vista para registrar un nuevo mapa de zona con los datos necesarios.
+		$dispositivos	= Dispositivo::all();
+		$configuraciones = ConfiguracionDis::all();
+		$personal = Personal::all();
+		$mapa	= MapaDeZona::select('tb_mapa_zonas.*', 'tb_personal.nombre AS asesor')
+			->join('tb_personal', 'tb_mapa_zonas.cedula_asesor', 'tb_personal.cedula')
+			->where('idcodigo', '=', $id)
+			->first();
+		$cliente = Cliente::find($mapa->idcliente);
+		$contactos = Contacto::select('tb_contactos.*', 'tb_clientes.nombre', 'tb_clientes.telefono1')
+			->join('tb_clientes', 'tb_contactos.idcliente', 'tb_clientes.identificacion')
+			->where('tb_contactos.idcodigo', '=', $mapa->idcodigo)
+			->get();
+		$zonas = Zona::where('idcodigo', '=', $mapa->idcodigo)->get();
+		if ($zonas) {
+			for ($var = 0; $var < count($zonas); $var++) {
+				$zonas[$var]->configuraciones = ConfiguracionDis::select('tb_config_disp.*')
+					->join('tb_detalles_conf', 'tb_config_disp.idconfiguracion', 'tb_detalles_conf.idconfiguracion')
+					->where('tb_detalles_conf.iddispositivo', '=', $zonas[$var]->iddispositivo)
+					->get();
+			}
+		}
+
+		// Separar la identificación en tipo y el número.
+		$identificacion				= explode('-', $cliente->identificacion);
+		$tipo_identificacion	= $identificacion[0];
+		$identificacion				= $identificacion[1];
+		// Separar el teléfono 1 en prefijo y número.
+		$telefono1	= explode(' ', $cliente->telefono1);
+		$prefijo_t1	= substr($telefono1[0], 1, 3);
+		$telefono1	= $telefono1[1];
+		// Separar el teléfono 2 en prefijo y número.
+		$telefono2	= "";
+		$prefijo_t2	= "";
+		if ($cliente->telefono2 != null) {
+			$telefono2	= explode(' ', $cliente->telefono2);
+			$prefijo_t2	= substr($telefono2[0], 1, 3);
+			$telefono2	= $telefono2[1];
+		}
+		// Actualizamos los datos del objeto.
+		$cliente->id	= $identificacion;
+		$cliente->ti	= $tipo_identificacion;
+		$cliente->pt1	= $prefijo_t1;
+		$cliente->tl1	= $telefono1;
+		$cliente->pt2	= $prefijo_t2;
+		$cliente->tl2	= $telefono2;
+
+		// Separar el teléfono del mapa de zona
+		$telefono	= "";
+		$prefijo	= "";
+		if ($mapa->telefono_asig != null) {
+			$telefono	= explode(' ', $mapa->telefono_asig);
+			$prefijo	= substr($telefono[0], 1, 3);
+			$telefono	= $telefono[1];
+		}
+		// Actualizamos los dato del telefono en caso de existir datos.
+		$mapa->pt = $prefijo;
+		$mapa->tl = $telefono;
+
+		// Retornamos la vista con todos los datos correspondientes.
+		return view('mapa_de_zona.modificar', [
+			'lista_contratos' => $this->lista_contratos,
+			'tipos_identificaciones' => $this->tipos_identificaciones,
+			'lista_cedula' => $this->lista_cedula,
+			'lista_rif' => $this->lista_rif,
+			'lista_prefijos' => $this->lista_prefijos,
+			'crear_dispositivo' => $crear_disp,
+			'crear_configuracion' => $crear_conf,
+			'dispositivos' => $dispositivos,
+			"tipos_dispositivos" => $this->tiposDispositivos,
+			"configuraciones" => $configuraciones,
+			'canales_reportes' => $this->canales_reportes,
+			'lineas' => $this->lineas,
+			'personal' => $personal,
+			// Datos del mapa de zona.
+			"mapa" => $mapa,
+			"cliente" => $cliente,
+			"contactos" => $contactos,
+			"zonas" => $zonas,
+		]);
 	}
 
 	// Update the specified resource in storage. 
 	public function update(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
-		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
-			return $this->error403();
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// Llamamos la función transaction para procesar la operación como una transacción.
-		DB::transaction(function () use ($request, $id) {
-			// Registramos un nuevo mapa de zona.
-			$MapaDeZona = MapaDeZona::find($id);
-			$MapaDeZona->direccion = $request->address;
-			$MapaDeZona->punto_referencia = $request->references;
-			$MapaDeZona->observaciones = $request->observation;
-			$MapaDeZona->save();
+		// Ejecutamos una nueva transacción.
+		try {
+			// Llamamos la función transaction para procesar la operación como una transacción.
+			DB::transaction(function () use ($request, $id) {
+				$mapa_de_zona = MapaDeZona::find($id); // Consultamos el objeto del mapa de zona.
 
-			/*
-			for ($var = 0; $var < count($request->cedula_); $var++) {
-				// Consultamos si ya existe el contacto registrado en la tabla de clientes.
-				if ($contact = Client::find($request->cedula_[$var])) {
-				} else {
-					$contact = new Client();
-					$contact->identificacion = $request->cedula_[$var];
-					$contact->tipo_cliente = "N";
-					$contact->estatus = "A";
+				// Detalles cliente y contrato.
+				$mapa_de_zona->direccion = $request->c_direccion;
+				$mapa_de_zona->referencia = $request->c_referencia;
+				$mapa_de_zona->observaciones = $request->m_observacion;
+				$mapa_de_zona->monitoreo_contratado = $request->m_monitoreo;
+				// $mapa_de_zona->monitoreo_estatus = "A";
+
+				// Detalles técnicos.
+				if (!isset($request->omitir_datos_tecnicos)) {
+					// Telefono asignado.
+					$telefono_as = "";
+					if ($request->m_reporta == 0) {
+						$telefonox		= "(" . $request->c_prefijo_telefono_asg . ") " . $request->c_telefono_assig;
+						$telefono_as	= $telefonox != "() " ? $telefonox : "";
+					}
+
+					// Guardamos los datos técnicos agregados por el usuario.
+					$mapa_de_zona->panel_version = $request->m_panel_version;
+					$mapa_de_zona->idteclado = $request->m_teclado;
+					$mapa_de_zona->reporta_por = $request->m_reporta;
+					$mapa_de_zona->telefono_asig = $telefono_as;
+					$mapa_de_zona->fecha_instalacion = $request->m_instalacion;
+					$mapa_de_zona->fecha_entrega = $request->m_entrega;
+					$mapa_de_zona->ubicacion_panel = $request->m_ubicacion_panel;
+					$mapa_de_zona->particiones_sistema = $request->m_particiones;
+					$mapa_de_zona->imei = $request->m_imei;
+					$mapa_de_zona->linea_principal = $request->m_linea_principal;
+					$mapa_de_zona->linea_respaldo = $request->m_linea_respaldo;
+				}
+				// Guardamos todos los cambios.
+				$mapa_de_zona->save();
+
+				// Instalamos los tecnicos encargados de instalar.
+				if (isset($request->cedula_instalador)) {
+					for ($var = 0; $var < count($request->cedula_instalador); $var++) {
+						$instalador = new Instaladores();
+						$instalador->cedula = $request->cedula_instalador[$var];
+						$instalador->idcodigo = $id;
+					}
 				}
 
-				// [Registramos|Actualizamos] los datos del contacto.
-				$contact->nombre_completo = $request->fullname_[$var];
-				$contact->telefono1 = $request->phone_[$var];
-				$contact->save();
+				// Eliminamos los contactos de la base de datos que haya eliminado el usuario desde la interfaz.
+				$idcontactos = isset($request->idcontacto) ? $request->idcontacto : []; // Si no existe, quiere decir que elimino todos por lo que dejamos solo un array vacío.
+				Contacto::where('idcodigo', '=', $id)->whereNotIn('idcontacto', $idcontactos)->delete();
 
-				// Verificamos si es un nuevo registro o una modificación de la tabla contactos.
-				if ($request->idcontact_[$var] != "0") {
-					$contact_dt = Contacts::find($request->idcontact_[$var]);
-				} else {
-					$contact_dt = new Contacts();
-					$contact_dt->id_cliente = $request->cedula_[$var];
-					$contact_dt->id_codigo = $id;
+				// Verificamos primero si hay contactos registrados en el mapa de zona.
+				$var2 = 0;
+				if (isset($request->usuario_rcedula)) {
+					for ($var = 0; $var < count($request->usuario_rcedula); $var++) { // $var = contador general | $var2 = contador de campos habilitados.
+						if ($request->idcontacto[$var] == null) { // Verificamos si no tiene un ID registrado en la base de datos.
+							if ($request->usuario_rcedula[$var] == null) { // Verificamos si no existe en la base de datos para registrarlo.
+								// Capturamos los datos del usuario.
+								$prefijo		= $request->usuario_prefijo_id[$var2];
+								$cedula			= $request->usuario_cedula[$var2];
+								$nombre			= $request->usuario_nombre[$var2];
+								$prefijo_t	= $request->usuario_prefijotl[$var2];
+								$telefono		= $request->usuarios_telefono[$var2];
+								$var2++;
+
+								// Concatenamos los valores.
+								$identificacion	= $prefijo . "-" . $cedula;
+								$telefono = "(" . $prefijo_t . ") " . $telefono;
+
+								// Verificamos si existe registrado en la base de datos.
+								$existe	= Cliente::find($identificacion);
+								if (!$existe) {
+									// Realizamos el registro del usuario en la tabla cliente.
+									$usuario = new Cliente();
+									$usuario->identificacion = $identificacion;
+									$usuario->tipo_identificacion = "C"; // CÉDULA POR DEFECTO.
+									$usuario->nombre = mb_convert_case($nombre, MB_CASE_UPPER);
+									$usuario->telefono1 = $telefono;
+									$usuario->direccion = "-";
+									$usuario->save();
+								}
+							} else { // De lo contrario solo tomamos la Cédula/RIF y la guardamos en la variable identificacion.
+								$identificacion = $request->usuario_rcedula[$var];
+							}
+
+							// Agregamos como contacto del cliente en el mapa de zona.
+							$contacto = new Contacto();
+							$contacto->idcliente = $identificacion;
+							$contacto->contrasena = $request->usuario_contrasena[$var];
+							$contacto->nota = $request->usuarios_nota[$var];
+							$contacto->idcodigo = $id;
+							$contacto->save();
+						} else { // De lo contrario solo actualizamos los datos existentes.
+							$contacto = Contacto::find($request->idcontacto[$var]);
+							$contacto->contrasena = $request->usuario_contrasena[$var];
+							$contacto->nota = $request->usuarios_nota[$var];
+							$contacto->save();
+						}
+					}
 				}
 
-				// Lo agregamos como contacto del cliente en el mapa de zona.
-				$contact_dt->contrasena = $request->password_[$var];
-				$contact_dt->observacion = $request->note_[$var];
-				$contact_dt->save();
-			}
-			*/
-		});
+				// Eliminamos las zonas de la base de datos que haya eliminado el usuario desde la interfaz.
+				$idzonas = isset($request->idzona) ? $request->idzona : []; // Si no existe, quiere decir que elimino todos por lo que dejamos solo un array vacío.
+				Zona::where('idcodigo', '=', $id)->whereNotIn('idzona', $idzonas)->delete();
 
-		return redirect()->route('mapa_de_zonaindex')->with('success', '¡Mapa de zona actualizado exitosamente!');
+				// Verificamos primero si hay zonas registradas en el mapa.
+				if (isset($request->idzona)) {
+					for ($var = 0; $var < count($request->idzona); $var++) { // Recorremos cada uno de los registros agregados en el documento.
+						if ($request->idzona[$var] == null) { // Verificamos si no tiene un ID registrado en la base de datos.
+							// Procedemos a registrar una nueva zona.
+							$zona = new Zona();
+							$zona->zona = mb_convert_case($request->zona_descripcion[$var], MB_CASE_UPPER);
+							$zona->iddispositivo = $request->zona_equipos[$var];
+							$zona->idconfiguracion = $request->zona_configuracion[$var];
+							$zona->nota = $request->zona_nota[$var];
+							$zona->idcodigo = $id;
+							$zona->save();
+						} else { // De lo contrario solo actualizamos los datos existentes.
+							$zona = Zona::find($request->idzona[$var]);
+							$zona->zona = mb_convert_case($request->zona_descripcion[$var], MB_CASE_UPPER);
+							$zona->iddispositivo = $request->zona_equipos[$var];
+							$zona->idconfiguracion = $request->zona_configuracion[$var];
+							$zona->nota = $request->zona_nota[$var];
+							$zona->save();
+						}
+					}
+				}
+			});
+		} catch (\Throwable $th) {
+			$response = ["status" => "error", "response" => ["message" => "¡Ocurrió un error al registrar el mapa de zona!", "error" => "Línea: " . $th->getLine() .  " - Error: " . $th->getMessage()]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Retoramos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Mapa de zona registrado exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Generar pdf.

@@ -1,66 +1,10 @@
 (function () {
 	// Elementos HTML.
-	const tipo_contrato = document.getElementById("m_tipo_contrato");
-	const codigo_manual = document.getElementById("codigo_manual");
-	const input_codigo = document.getElementById("m_codigo");
 	const btn_next = document.getElementById("btn_next");
 	const btn_prev = document.getElementById("btn_prev");
-	const cl_tipo_identificacion_ = document.getElementById("cl_tipo_identificacion");
 
 	// Activar plugins
 	const telefonoAsigMask = IMask(document.getElementById('c_telefono_assig'), { mask: '000-0000' });
-	const codigoMapaMask = IMask(input_codigo, { mask: '0000' });
-
-	// Eventos elementos HTML.
-	// Consultar el código según el tipo de contrato a realizar.
-	tipo_contrato.addEventListener('change', function () {
-		// Capturamos el elemento que provoco el evento.
-		const select_element = this;
-
-		// Verificamos primeramente que el campo no sea vacío.
-		if (select_element.value != "") {
-			// Realizamos la consulta AJAX.
-			select_element.parentElement.classList.add('loading');
-			fetch(`${url_}/mapas_de_zonas/codigo/${select_element.value}`).then(response => response.json()).then((data) => {
-				select_element.parentElement.classList.remove('loading');
-				// Limpiamos el formulario y cargamos los datos consultados.
-				document.getElementById('m_codigo').value = data;
-			});
-		} else {
-			document.getElementById('m_codigo').value = "";
-		}
-	});
-
-	// Habilitar/Deshabilitar el campo para ingresar código manual.
-	codigo_manual.addEventListener("change", function () {
-		if (codigo_manual.checked) {
-			input_codigo.removeAttribute("readonly");
-		} else {
-			input_codigo.setAttribute("readonly", true);
-		}
-	});
-
-	// Cambiar el tipo de identificación de manera dinamica.
-	cl_tipo_identificacion_.addEventListener("change", function () {
-		const label_ = document.querySelector('#contenedor_identificacion_f label');
-		const input_ = document.querySelector('#contenedor_identificacion_f input');
-		const selec_ = document.querySelector('#contenedor_identificacion_f select');
-		selec_.innerHTML = '';
-		if (this.value == "C") {
-			label_.innerHTML = '<i class="fas fa-id-badge"></i> Cédula';
-			input_.setAttribute("placeholder", "Ingrese la cédula");
-			lista_cedula.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
-		} else if (this.value == "R") {
-			label_.innerHTML = '<i class="fas fa-id-badge"></i> RIF';
-			input_.setAttribute("placeholder", "Ingrese el RIF");
-			lista_rif.forEach(text => selec_.innerHTML += `<option value="${text}">${text}</option>`);
-		}
-	});
-
-	// Disparamos el evento change para restablecer el tipo de identificacion [Solo una vez al abrir el formulario].
-	cl_tipo_identificacion_.dispatchEvent(new Event('change'));
-
-
 
 	/**
 	 * USUARIOS.
@@ -79,6 +23,7 @@
 			});
 		}
 	});
+	
 
 	// Eventos elementos HTML.
 	// Agregar nuevo fila para contactos del cliente.
@@ -353,15 +298,17 @@
 
 	// Eventos elementos HTML.
 	// Deshabilitar los campos si desea omitirlos.
-	omitir_datos.addEventListener('change', () => {
-		Array.from(document.querySelectorAll('.form-tecnicos')).forEach(field => {
-			if (omitir_datos.checked) {
-				field.setAttribute('disabled', true);
-			} else {
-				field.removeAttribute('disabled');
-			}
+	if (omitir_datos != null) {
+		omitir_datos.addEventListener('change', () => {
+			Array.from(document.querySelectorAll('.form-tecnicos')).forEach(field => {
+				if (omitir_datos.checked) {
+					field.setAttribute('disabled', true);
+				} else {
+					field.removeAttribute('disabled');
+				}
+			});
 		});
-	});
+	}
 
 	// Mostramos/Ocultamos los campos de telefono según el canal de reporte.
 	m_reporta_.addEventListener('change', function () {
@@ -456,6 +403,9 @@
 		});
 	};
 
+	// Una vez cargado los campos, disparamos el evento change en el campo "Reporta por:", en caso de mostrar u ocultar ciertos campos extras [Teléfono Asig.].
+	m_reporta_.dispatchEvent(new Event('change'));
+
 
 
 	/**
@@ -543,11 +493,6 @@
 		e.preventDefault();
 
 		// Elementos del formulario.
-		const m_ingreso = document.getElementById("m_ingreso");
-		const m_tipo_contrato = document.getElementById("m_tipo_contrato");
-		const m_codigo = document.getElementById("m_codigo");
-		const m_asesor = document.getElementById("m_asesor");
-		const m_cliente = document.getElementById("id_cliente");
 		const c_direccion = document.getElementById("c_direccion");
 		const btn_guardar = document.getElementById("btn_save");
 
@@ -603,30 +548,7 @@
 		}
 
 		// Validamos los campos.
-		if (m_ingreso.value == "") {
-			Toast.fire({ icon: 'error', title: '¡La fecha de registro no debe estar vacía!' });
-			document.getElementById('pills-cliente-tab').click();
-			m_ingreso.focus();
-		} else if (m_tipo_contrato.value == "") {
-			Toast.fire({ icon: 'error', title: '¡Seleccione el tipo contrato!' });
-			document.getElementById('pills-cliente-tab').click();
-			m_tipo_contrato.focus();
-		} else if (m_codigo.value == "") {
-			Toast.fire({ icon: 'error', title: '¡El código de abonado no debe estar vacío!' });
-			document.getElementById('pills-cliente-tab').click();
-			m_codigo.focus();
-		} else if (m_codigo.value.length < 4) {
-			Toast.fire({ icon: 'error', title: '¡El código debe tener 4 números!' });
-			document.getElementById('pills-cliente-tab').click();
-			m_codigo.focus();
-		} else if (m_asesor.value == "") {
-			Toast.fire({ icon: 'error', title: '¡Seleccione el asesor responsable!' });
-			document.getElementById('pills-cliente-tab').click();
-			m_asesor.focus();
-		} else if (m_cliente.value == "") {
-			Toast.fire({ icon: 'error', title: '¡Debe asignar un cliente para el mapa de zona!' });
-			document.getElementById('pills-cliente-tab').click();
-		} else if (c_direccion.value == "") {
+		if (c_direccion.value == "") {
 			Toast.fire({ icon: 'error', title: '¡La dirección no debe estar vacía!' });
 			document.getElementById('pills-cliente-tab').click();
 			c_direccion.focus();

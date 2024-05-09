@@ -51,7 +51,7 @@ Route::middleware('auth')->group(function () {
 		Route::get('/mapas_de_zonas/configuracion/{id}', 'configuraciones')->name('mapas_de_zonas.cogs'); // Consultar la configuración del equipos seleccionado en la tabla ZONAS.
 		Route::post('/mapas_de_zonas', 'store')->name('mapas_de_zonas.store');
 		Route::get('/mapas_de_zonas/modificar/{id}', 'edit')->name('mapas_de_zonas.edit');
-		Route::patch('/mapas_de_zonas', 'update')->name('mapas_de_zonas.update');
+		Route::patch('/mapas_de_zonas/modificar/{id}', 'update')->name('mapas_de_zonas.update');
 		Route::get('/mapas_de_zonas/pdf/{id}', 'generar_pdf')->name('mapas_de_zonas.pdf');
 	});
 

@@ -2,10 +2,6 @@
 
 @section('title', 'Registrar mapa de zona - ' . env('TITLE'))
 
-@section('styles')
-<link rel="stylesheet" href="{{url('libraries/tom-select/css/tom-select.min.css')}}">
-@endsection
-
 @section('scripts')
 <script id="contenedor_script_variables_2">
 	const tipos_identificaciones = <?= json_encode($tipos_identificaciones) ?>;
@@ -17,7 +13,6 @@
 	document.getElementById('contenedor_script_variables_2').remove();
 </script>
 <script src="{{url('libraries/sortable/sortable.min.js')}}"></script>
-<script src="{{url('libraries/tom-select/js/tom-select.base.min.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar_cliente.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar_auxiliares.js')}}"></script>
@@ -30,7 +25,7 @@
 			<h4 class="card-title text-uppercase my-2"><i class="fas fa-folder-plus"></i> Registrar</h4>
 		</div>
 		<div class="col-6 text-end">
-			<a href="{{route('mapas_de_zonas.index')}}" class="btn btn-primary btn-sm "><i class="fas fa-chevron-left me-2"></i>Regresar</a>
+			<a href="{{route('mapas_de_zonas.index')}}" class="btn btn-primary btn-sm"><i class="fas fa-chevron-left me-2"></i>Regresar</a>
 		</div>
 	</div>
 </div>
@@ -319,9 +314,9 @@
 							<select class="form-control text-uppercase form-tecnicos" name="m_teclado" id="m_teclado">
 								<option value="">Seleccione un modelo</option>
 								@foreach ($dispositivos as $dispositivo)
-								@if ($dispositivo->tipo == "T")
+								<?php if ($dispositivo->tipo == "T") { ?>
 								<option value="{{$dispositivo->iddispositivo}}">{{$dispositivo->dispositivo}}</option>
-								@endif
+								<?php } ?>
 								@endforeach
 							</select>
 						</div>
@@ -370,7 +365,7 @@
 
 						<div class="form-group col-6 col-md-3 mb-3">
 							<label for="m_imei"><i class="fas fa-microchip"></i> imei</label>
-							<input type="text" class="form-control text-uppercase form-tecnicos" name="m_imei" id="m_imei" placeholder="Ingrese el IMEI">
+							<input type="text" class="form-control text-uppercase form-tecnicos" name="m_imei" id="m_imei" placeholder="Ingrese el IMEI" maxlength="15">
 						</div>
 						<div class="form-group col-6 col-md-3 mb-3">
 							<label for="m_linea_principal" class="d-block text-truncate"><i class="fas fa-sim-card"></i> Linea principal</label>
