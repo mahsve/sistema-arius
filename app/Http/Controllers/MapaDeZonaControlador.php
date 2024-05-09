@@ -7,10 +7,8 @@ use App\Models\ConfiguracionDis;
 use App\Models\Dispositivo;
 use App\Models\MapaDeZona;
 use App\Models\Contacto;
-use App\Models\DetallesDisConf;
 use App\Models\Instaladores;
 use App\Models\Personal;
-use App\Models\Usuario;
 use App\Models\Zona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -316,11 +314,21 @@ class MapaDeZonaControlador extends Controller
 				$mapa_de_zona->observaciones = $request->m_observacion;
 				$mapa_de_zona->monitoreo_contratado = $request->m_monitoreo;
 				$mapa_de_zona->monitoreo_estatus = "A";
+
 				// Detalles técnicos.
 				if (!isset($request->omitir_datos_tecnicos)) {
+					// Telefono asignado.
+					$telefono_as = "";
+					if ($request->m_reporta == 0) {
+						$telefonox		= "(" . $request->c_prefijo_telefono_asg . ") " . $request->c_telefono_assig;
+						$telefono_as	= $telefonox != "() " ? $telefonox : "";
+					}
+
+					// Guardamos los datos técnicos agregados por el usuario.
 					$mapa_de_zona->panel_version = $request->m_panel_version;
 					$mapa_de_zona->idteclado = $request->m_teclado;
 					$mapa_de_zona->reporta_por = $request->m_reporta;
+					$mapa_de_zona->telefono_asig = $telefono_as;
 					$mapa_de_zona->fecha_instalacion = $request->m_instalacion;
 					$mapa_de_zona->fecha_entrega = $request->m_entrega;
 					$mapa_de_zona->ubicacion_panel = $request->m_ubicacion_panel;
@@ -338,6 +346,7 @@ class MapaDeZonaControlador extends Controller
 						$instalador = new Instaladores();
 						$instalador->cedula = $request->cedula_instalador[$var];
 						$instalador->idcodigo = $request->m_codigo;
+						$instalador->save();
 					}
 				}
 
@@ -437,6 +446,10 @@ class MapaDeZonaControlador extends Controller
 			->join('tb_clientes', 'tb_contactos.idcliente', 'tb_clientes.identificacion')
 			->where('tb_contactos.idcodigo', '=', $mapa->idcodigo)
 			->get();
+		$instaladores = Instaladores::select('tb_personal.*', 'tb_instalacion_tecnicos.iddetalle')
+			->join('tb_personal', 'tb_instalacion_tecnicos.cedula', 'tb_personal.cedula')
+			->where('tb_instalacion_tecnicos.idcodigo', '=', $mapa->idcodigo)
+			->get();
 		$zonas = Zona::where('idcodigo', '=', $mapa->idcodigo)->get();
 		if ($zonas) {
 			for ($var = 0; $var < count($zonas); $var++) {
@@ -503,6 +516,7 @@ class MapaDeZonaControlador extends Controller
 			"cliente" => $cliente,
 			"contactos" => $contactos,
 			"zonas" => $zonas,
+			"insts" => $instaladores,
 		]);
 	}
 
@@ -553,12 +567,19 @@ class MapaDeZonaControlador extends Controller
 				// Guardamos todos los cambios.
 				$mapa_de_zona->save();
 
+				// Eliminamos los instaladores de la base de datos que haya eliminado el usuario desde la interfaz.
+				$idinstaladores = isset($request->idinstalador) ? $request->idinstalador : []; // Si no existe, quiere decir que elimino todos por lo que dejamos solo un array vacío.
+				Instaladores::where('idcodigo', '=', $id)->whereNotIn('cedula', $idinstaladores)->delete();
+
 				// Instalamos los tecnicos encargados de instalar.
 				if (isset($request->cedula_instalador)) {
 					for ($var = 0; $var < count($request->cedula_instalador); $var++) {
-						$instalador = new Instaladores();
-						$instalador->cedula = $request->cedula_instalador[$var];
-						$instalador->idcodigo = $id;
+						if ($request->idinstalador[$var] == null) {
+							$instalador = new Instaladores();
+							$instalador->cedula = $request->cedula_instalador[$var];
+							$instalador->idcodigo = $id;
+							$instalador->save();
+						}
 					}
 				}
 

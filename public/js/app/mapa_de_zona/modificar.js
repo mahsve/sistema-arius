@@ -23,7 +23,7 @@
 			});
 		}
 	});
-	
+
 
 	// Eventos elementos HTML.
 	// Agregar nuevo fila para contactos del cliente.
@@ -290,6 +290,7 @@
 	const omitir_datos = document.getElementById('omitir_datos_tecnicos');
 	const m_reporta_ = document.getElementById("m_reporta");
 	const btn_agregar_instalador = document.getElementById('btn_agregar_instalador');
+	const btn_auxiliar_instaladores = document.getElementById('btn_auxiliar_instaladores');
 	const tabla_tecnicos = document.querySelector('#tabla_tecnicos tbody');
 	const tabla_tecnicos_vacio = tabla_tecnicos.innerHTML;
 	const tecnicos = document.getElementById('lista_tecnicos');
@@ -351,38 +352,53 @@
 				return;
 			}
 
-			// Válidamos la tabla.
-			if (tabla_tecnicos.children.length > 0 && tabla_tecnicos.children[0].classList.contains('sin_tecnicos')) tabla_tecnicos.innerHTML = '';
-
-			// GENERAMOS UN NUEVO ELEMENTO.
-			const idrand = Math.random().toString().replace('.', ''); // GENERAMOS UN ID UNICO PARA MANEJAR LA FILA DEL INSTALADOR.
-			const elemento = document.createElement('tr'); // GENERAMOS UN NUEVO ELEMENTO.
-			elemento.id = `tr_instalador_${idrand}`;
-
-			// Definimos toda la estructura de la nueva fila.
-			const tecnico_ = lista_tecnicos[tecnicos.value];
-			elemento.innerHTML = `
-				<td class="py-1 px-2 text-center n_tecnicos" class="tecnico_norden" id="tecnico_norden_${idrand}" data-id="${idrand}">${tabla_tecnicos.children.length + 1}</td>
-				<td class="py-1 px-2">
-					<input type="hidden" class="cedula_instalador" name="cedula_instalador[]" value="${tecnico_.cedula}" data-id="${idrand}">
-					<span>${tecnico_.cedula}</span>
-				</td>
-				<td class="py-1 px-2">
-					<span>${tecnico_.nombre}</span>
-				</td>
-				<td class="py-1 px-2">
-					<span>${tecnico_.telefono1}</span>
-				</td>
-				<td class="py-1 px-2" style="width: 20px;">
-					<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_instalador_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
-				</td>`;
-			tabla_tecnicos.appendChild(elemento);
+			const tecnico_seleccionado = lista_tecnicos[tecnicos.value];
+			html_tecnico(tecnico_seleccionado);
 			modal_instaladores.hide();
-
-			// Agregamos los eventos a los elementos agregados a la tabla.
-			document.getElementById(`btn_eliminar_instalador_${idrand}`).addEventListener("click", eliminar_instalador);
 		}
 	});
+
+	// Botón auxiliar.
+	if (btn_auxiliar_instaladores != null) {
+		btn_auxiliar_instaladores.addEventListener("click", (e) => {
+			e.preventDefault();
+			html_tecnico();
+		});
+	}
+
+	// Función para agregar el HTML a la tabla de técnicos.
+	function html_tecnico(_tecnico_) {
+		// Válidamos la tabla.
+		if (tabla_tecnicos.children.length > 0 && tabla_tecnicos.children[0].classList.contains('sin_tecnicos')) tabla_tecnicos.innerHTML = '';
+
+		// GENERAMOS UN NUEVO ELEMENTO.
+		const idrand = Math.random().toString().replace('.', ''); // GENERAMOS UN ID UNICO PARA MANEJAR LA FILA DEL INSTALADOR.
+		const elemento = document.createElement('tr'); // GENERAMOS UN NUEVO ELEMENTO.
+		elemento.id = `tr_instalador_${idrand}`;
+		elemento.setAttribute('data-rand', idrand);
+
+		// Definimos toda la estructura de la nueva fila.
+		elemento.innerHTML = `
+		<td class="py-1 px-2 text-center n_tecnicos" class="tecnico_norden" id="tecnico_norden_${idrand}" data-id="${idrand}">${tabla_tecnicos.children.length + 1}</td>
+		<td class="py-1 px-2">
+			<input type="hidden" name="idinstalador[]" id="idinstalador_${idrand}">
+			<input type="hidden" class="cedula_instalador" name="cedula_instalador[]" id="cedula_instalador_${idrand}" value="${_tecnico_ ? _tecnico_.cedula : ''}" data-id="${idrand}">
+			<span id="nombre_tecnico_${idrand}">${_tecnico_ ? _tecnico_.cedula : ""}</span>
+		</td>
+		<td class="py-1 px-2">
+			<span id="cedula_tecnico_${idrand}">${_tecnico_ ? _tecnico_.nombre : ""}</span>
+		</td>
+		<td class="py-1 px-2">
+			<span id="telefono_tecnico_${idrand}">${_tecnico_ ? _tecnico_.telefono1 : ""}</span>
+		</td>
+		<td class="py-1 px-2" style="width: 20px;">
+			<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_instalador_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
+		</td>`;
+		tabla_tecnicos.appendChild(elemento);
+
+		// Agregamos los eventos a los elementos agregados a la tabla.
+		document.getElementById(`btn_eliminar_instalador_${idrand}`).addEventListener("click", eliminar_instalador);
+	}
 
 	// Evento para eliminar instalador de la tabla.
 	function eliminar_instalador() {
@@ -570,7 +586,7 @@
 			document.getElementById('pills-zonas-tab').click();
 		} else {
 			btn_guardar.classList.add("loading");
-			btn_guardar.setAttribute('disabled', true);
+			// btn_guardar.setAttribute('disabled', true);
 			fetch(`${formulario_registro.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_registro) }).then(response => response.json()).then(data => {
 				btn_guardar.classList.remove("loading");
 				btn_guardar.removeAttribute('disabled');

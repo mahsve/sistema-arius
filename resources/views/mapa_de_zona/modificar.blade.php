@@ -32,6 +32,7 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 </script>
 <script src="{{url('libraries/sortable/sortable.min.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/modificar.js')}}"></script>
+<script src="{{url('js/app/mapa_de_zona/registrar_auxiliares.js')}}"></script>
 
 @foreach($contactos as $index => $contacto)
 <script class="script_auxiliar">
@@ -103,6 +104,32 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 	document.querySelector('.script_auxiliar').remove();
 </script>
 @endforeach
+
+@foreach($insts as $index => $inst)
+<script class="script_auxiliar">
+	document.getElementById('btn_auxiliar_instaladores').dispatchEvent(new Event('click')); // Ejecutamos el evento click del botón agregar nuevo instalador.
+
+	// Capturamos el ID rand para acceder a los id de cada td y empezar a rellenar los datos.
+	var tc = document.querySelectorAll('#tabla_tecnicos tbody tr').length; // Capturamos el total de tr en la tabla.
+	var idrand = document.querySelectorAll('#tabla_tecnicos tbody tr')[tc - 1].getAttribute('data-rand');
+	document.getElementById(`idinstalador_${idrand}`).value = "{{$inst->iddetalle}}";
+	document.getElementById(`cedula_instalador_${idrand}`).value = "{{$inst->cedula}}";
+	document.getElementById(`nombre_tecnico_${idrand}`).innerText = "{{$inst->nombre}}";
+	document.getElementById(`cedula_tecnico_${idrand}`).innerText = "{{$inst->cedula}}";
+	document.getElementById(`telefono_tecnico_${idrand}`).innerText = "{{$inst->telefono1}}";
+
+	// Eliminamos estas variables para evitar filtrar información.
+	tc = null;
+	idrand = null;
+
+	// Eliminamos toda esta etiqueca con el código Javascript.
+	document.querySelector('.script_auxiliar').remove();
+</script>
+@endforeach
+<script class="script_auxiliar2">
+	document.getElementById('btn_auxiliar_instaladores').remove();
+	document.querySelector('.script_auxiliar2').remove();
+</script>
 @endsection
 
 @section('content')
@@ -464,6 +491,7 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 							<div class="form-row justify-content-end">
 								<div class="col-12 col-md-6">
 									<button type="button" class="btn btn-primary btn-sm w-100 form-tecnicos" id="btn_agregar_instalador"><i class="fas fa-folder-plus me-2"></i>Agregar técnico</button>
+									<button type="button" class="d-none" id="btn_auxiliar_instaladores"></button>
 								</div>
 							</div>
 						</div>
