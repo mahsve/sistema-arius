@@ -6,7 +6,7 @@ use Spipu\Html2Pdf\Html2Pdf;
 use App\Models\ReporteDiarioOperador;
 use Illuminate\Http\Request;
 
-class ReporteDiarioOperadorControlador extends Controller
+class MonitoreoControlador extends Controller
 {
 	use SeguridadControlador;
 
@@ -24,7 +24,7 @@ class ReporteDiarioOperadorControlador extends Controller
 
 		// Consultamos los datos necesarios y cargamos la vista.
 		$reportes = ReporteDiarioOperador::all();
-		return view('reporte_diario_operador.index', [
+		return view('monitoreo.index', [
 			'permisos' => $permisos,
 			'reportes' => $reportes
 		]);
@@ -37,7 +37,7 @@ class ReporteDiarioOperadorControlador extends Controller
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, '')) {
 			return $this->error403();
 		}
-		return view('reporte_diario_operador.registrar');
+		return view('monitoreo.registrar');
 	}
 
 	// Store a newly created resource in storage
@@ -78,11 +78,11 @@ class ReporteDiarioOperadorControlador extends Controller
 
 		// Generamos el nuevo PDF.
 		$variable	= "Ejemplo";
-		$pdf			= view('reporte_diario_operador.pdf_reporte_diario', ["variable" => $variable]);
+		$pdf			= view('monitoreo.pdf_reporte_diario', ["variable" => $variable]);
 		$html2pdf = new Html2Pdf('L', 'LETTER', 'es'); // Orientación [P=Vertical|L=Horizontal] | TAMAÑO [LETTER = CARTA] | Lenguaje [es]
 		$html2pdf->pdf->SetTitle('Reporte diario de operador ');
 		$html2pdf->writeHTML($pdf);
-		$html2pdf->output('reporte_diario_operador.pdf');
+		$html2pdf->output('monitoreo.pdf');
 	}
 
 	// Remove the specified resource from storage. 

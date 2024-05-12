@@ -13,6 +13,11 @@ class ServicioTecnicoSolicitadoControlador extends Controller
 
 	// Atributos de la clase.
 	public $idservicio = 48;
+	public $motivos = [
+		'Instalación',
+		'Avería',
+		'Mantenimiento',
+	];
 
 	// Display a listing of the resource.
 	public function index()
@@ -24,12 +29,14 @@ class ServicioTecnicoSolicitadoControlador extends Controller
 		}
 
 		// Consultamos los datos necesarios y cargamos la vista.
-		$servicios = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.identificacion', 'tb_clientes.nombre')
+		$servicios = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.identificacion', 'tb_clientes.nombre', 'tb_personal.nombre as personal')
+			->join('tb_personal', 'tb_servicios_solicitados.cedula', 'tb_personal.cedula')
 			->join('tb_mapa_zonas', 'tb_servicios_solicitados.idcodigo', 'tb_mapa_zonas.idcodigo')
 			->join('tb_clientes', 'tb_mapa_zonas.idcliente', 'tb_clientes.identificacion')
 			->get();
-		return view('servicio_tecnico_solicitado.index', [
+		return view('servicio_tecnico.index', [
 			'permisos' => $permisos,
+			'motivos' => $this->motivos,
 			'servicios' => $servicios,
 		]);
 	}
@@ -74,12 +81,16 @@ class ServicioTecnicoSolicitadoControlador extends Controller
 
 		// Validamos.
 		$message = "";
-		if ($request->c_fecha == "") {
-			$message = "¡Selecccione la fecha de la solicitud!";
+		if ($request->c_codigo == "") {
+			$message = "¡Ingrese el código del cliente!";
+		} else if (strlen($request->c_codigo) < 4) {
+			$message = "¡El código debe tener 4 caracteres!";
+		} else if ($request->c_codigo2 == "") {
+			$message = "¡Ingrese el código de un cliente registrado!";
+		} else if ($request->c_fecha == "") {
+			$message = "¡Ingrese la fecha de la solicitud!";
 		} else if ($request->c_motivo == "") {
-			$message = "¡Ingrese el motivo de la solicitud del servicio!";
-		} else if (strlen($request->c_motivo) < 10) {
-			$message = "¡El motivo de la solicitud debe tener al menos 10 caracteres!";
+			$message = "¡Seleccione el motivo de la solicitud!";
 		}
 
 		// Verificamos si ocurrió algún error en la válidación.
@@ -89,24 +100,27 @@ class ServicioTecnicoSolicitadoControlador extends Controller
 		}
 
 		// Validamos que no este ya registrado.
-		// $existente = DB::table('tb_departamentos')
-		// 	->select('departamento')
-		// 	->where('departamento', '=', mb_convert_case($request->c_departamento, MB_CASE_UPPER))
-		// 	->first();
-		// if ($existente) {
-		// 	$response = ["status" => "error", "response" => ["message" => "¡Esta departamento ya se encuentra registrado!"]];
-		// 	return response($response, 200)->header('Content-Type', 'text/json');
-		// }
+		$existente = ServicioTecnicoSolicitado::select('idsolicitud')
+			->where('idcodigo', '=', $request->c_codigo)
+			->where('fecha', '=', $request->c_fecha)
+			->where('motivo', '=', $request->c_motivo)
+			->first();
+		if ($existente) {
+			$response = ["status" => "error", "response" => ["message" => "¡Ya hay una solicitud similar registrada!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
 
 		// Creamos el nuevo registro del departamento.
 		$servicio = new ServicioTecnicoSolicitado();
 		$servicio->idcodigo = $request->c_codigo;
 		$servicio->fecha = $request->c_fecha;
 		$servicio->motivo = $request->c_motivo;
+		$servicio->descripcion = $request->c_descripcion;
+		$servicio->cedula = auth()->user()->cedula;
 		$servicio->save();
 
 		// Retoramos mensaje de exito al usuario.
-		$response = ["status" => "success", "response" => ["message" => "¡Departamento registrado exitosamente!"]];
+		$response = ["status" => "success", "response" => ["message" => "¡Solicitud registrada exitosamente!"]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 

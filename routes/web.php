@@ -67,13 +67,13 @@ Route::middleware('auth')->group(function () {
 	});
 
 	// Controlador [Monitoreo].
-	Route::controller(App\Http\Controllers\ReporteDiarioOperadorControlador::class)->group(function () {
-		Route::get('/reportes_diarios_operador', 'index')->name('reportes_diarios_operador.index');
-		Route::get('/reportes_diarios_operador/registrar', 'create')->name('reportes_diarios_operador.create');
-		Route::post('/reportes_diarios_operador', 'store')->name('reportes_diarios_operador.store');
-		Route::get('/reportes_diarios_operador/modificar/{id}', 'edit')->name('reportes_diarios_operador.edit');
-		Route::patch('/reportes_diarios_operador', 'update')->name('reportes_diarios_operador.update');
-		Route::get('/reportes_diarios_operador/pdf/{id}', 'generar_pdf')->name('reportes_diarios_operador.pdf');
+	Route::controller(App\Http\Controllers\MonitoreoControlador::class)->group(function () {
+		Route::get('/monitoreo', 'index')->name('monitoreo.index');
+		Route::get('/monitoreo/registrar', 'create')->name('monitoreo.create');
+		Route::post('/monitoreo', 'store')->name('monitoreo.store');
+		Route::get('/monitoreo/modificar/{id}', 'edit')->name('monitoreo.edit');
+		Route::patch('/monitoreo', 'update')->name('monitoreo.update');
+		Route::get('/monitoreo/pdf/{id}', 'generar_pdf')->name('monitoreo.pdf');
 	});
 
 	/**

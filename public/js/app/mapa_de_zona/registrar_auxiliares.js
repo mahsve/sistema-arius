@@ -12,24 +12,28 @@
 	const formulario_registro_conf = document.getElementById("formulario_registro_conf");
 
 	// Abrir modal para registrar dispositivos [Equipos de zona].
-	btn_modal_equipos.addEventListener("click", function (e) {
-		e.preventDefault();
-		formulario_registro_disp.reset();
-		input_tipo.value = "Z";
-		input_tipo.dispatchEvent(new Event('change'));
-		document.getElementById('text_label_devices').innerText = "Equipo general";
-		modal_registrar_disp.show();
-	});
+	if (btn_modal_equipos != null) {
+		btn_modal_equipos.addEventListener("click", function (e) {
+			e.preventDefault();
+			formulario_registro_disp.reset();
+			input_tipo.value = "Z";
+			input_tipo.dispatchEvent(new Event('change'));
+			document.getElementById('text_label_devices').innerText = "Equipo general";
+			modal_registrar_disp.show();
+		});
+	}
 
 	// Abrir modal para registrar dispositivos [Teclados].
-	btn_modal_teclados.addEventListener("click", function (e) {
-		e.preventDefault();
-		formulario_registro_disp.reset();
-		input_tipo.value = "T";
-		input_tipo.dispatchEvent(new Event('change'));
-		document.getElementById('text_label_devices').innerText = "Modelo teclado";
-		modal_registrar_disp.show();
-	});
+	if (btn_modal_teclados != null) {
+		btn_modal_teclados.addEventListener("click", function (e) {
+			e.preventDefault();
+			formulario_registro_disp.reset();
+			input_tipo.value = "T";
+			input_tipo.dispatchEvent(new Event('change'));
+			document.getElementById('text_label_devices').innerText = "Modelo teclado";
+			modal_registrar_disp.show();
+		});
+	}
 
 	// Evento en el campo tipo de dispositivo.
 	// [REGISTRAR]

@@ -105,77 +105,81 @@
 	}
 
 	// Consultar registro.
-	Array.from(btn_editar).forEach(btn_ => {
-		btn_.addEventListener('click', function (e) {
-			e.preventDefault();
-
-			// Capturamos el elemento que provoco el evento.
-			const btn_consultar = this;
-			const id_data = btn_consultar.getAttribute('data-id');
-
-			// Realizamos la consulta AJAX.
-			btn_consultar.classList.add('loading');
-			btn_consultar.setAttribute('disabled', true);
-			fetch(`${url_}/departamentos/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
-				btn_consultar.classList.remove('loading');
-				btn_consultar.removeAttribute('disabled');
-
-				// Limpiamos el formulario y cargamos los datos consultados.
-				formulario_actualizacion.reset();
-				formulario_actualizacion.setAttribute('action', `${url_}/departamentos/${id_data}`);
-				document.getElementById('c_departamento_m').value = data.departamento;
-				modal_modificar.show();
+	if (btn_editar.length > 0) {
+		Array.from(btn_editar).forEach(btn_ => {
+			btn_.addEventListener('click', function (e) {
+				e.preventDefault();
+	
+				// Capturamos el elemento que provoco el evento.
+				const btn_consultar = this;
+				const id_data = btn_consultar.getAttribute('data-id');
+	
+				// Realizamos la consulta AJAX.
+				btn_consultar.classList.add('loading');
+				btn_consultar.setAttribute('disabled', true);
+				fetch(`${url_}/departamentos/${id_data}/edit`, { method: 'get' }).then(response => response.json()).then((data) => {
+					btn_consultar.classList.remove('loading');
+					btn_consultar.removeAttribute('disabled');
+	
+					// Limpiamos el formulario y cargamos los datos consultados.
+					formulario_actualizacion.reset();
+					formulario_actualizacion.setAttribute('action', `${url_}/departamentos/${id_data}`);
+					document.getElementById('c_departamento_m').value = data.departamento;
+					modal_modificar.show();
+				});
 			});
 		});
-	});
+	}
 
 	// Cambiar estatus.
-	Array.from(switch_estatus).forEach(switch_ => {
-		switch_.addEventListener('change', function () {
-			// Capturamos el elemento que provoco el evento.
-			switch_element = this;
-			switch_element.checked = !switch_element.checked;
-
-			// Pedimos confirmar que desea desactivar este registro.
-			Swal.fire({
-				title: '¿Seguro que quieres cambiar el estatus de este departamento?',
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonText: 'Cambiar',
-				cancelButtonText: 'Cancelar',
-			}).then((result) => {
-				if (result.isConfirmed) {
-					const form_data = new FormData();
-					const form_check = switch_element.parentElement;
-					form_data.append('_method', 'PUT');
-					form_check.classList.add('loading');
-
-					// Realizamos la consulta AJAX.
-					fetch(`${url_}/departamentos/estatus/${switch_element.value}`, {
-						headers: { 'X-CSRF-TOKEN': token_ },
-						method: 'post',
-						body: form_data,
-					}).then(response => response.json()).then(data => {
-						form_check.classList.remove('loading');
-
-						// Verificamos si ocurrió algún error.
-						if (data.status == "error") {
+	if (switch_estatus.length > 0) {
+		Array.from(switch_estatus).forEach(switch_ => {
+			switch_.addEventListener('change', function () {
+				// Capturamos el elemento que provoco el evento.
+				switch_element = this;
+				switch_element.checked = !switch_element.checked;
+	
+				// Pedimos confirmar que desea desactivar este registro.
+				Swal.fire({
+					title: '¿Seguro que quieres cambiar el estatus de este departamento?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonText: 'Cambiar',
+					cancelButtonText: 'Cancelar',
+				}).then((result) => {
+					if (result.isConfirmed) {
+						const form_data = new FormData();
+						const form_check = switch_element.parentElement;
+						form_data.append('_method', 'PUT');
+						form_check.classList.add('loading');
+	
+						// Realizamos la consulta AJAX.
+						fetch(`${url_}/departamentos/estatus/${switch_element.value}`, {
+							headers: { 'X-CSRF-TOKEN': token_ },
+							method: 'post',
+							body: form_data,
+						}).then(response => response.json()).then(data => {
+							form_check.classList.remove('loading');
+	
+							// Verificamos si ocurrió algún error.
+							if (data.status == "error") {
+								Toast.fire({ icon: data.status, title: data.response.message });
+								return false;
+							}
+	
+							// Enviamos mensaje de exito al usuario.
 							Toast.fire({ icon: data.status, title: data.response.message });
-							return false;
-						}
-
-						// Enviamos mensaje de exito al usuario.
-						Toast.fire({ icon: data.status, title: data.response.message });
-						switch_element.checked = !switch_element.checked;
-						const idrand = switch_element.getAttribute('data-id');
-						if (switch_element.checked) {
-							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>`;
-						} else {
-							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>`;
-						}
-					});
-				}
+							switch_element.checked = !switch_element.checked;
+							const idrand = switch_element.getAttribute('data-id');
+							if (switch_element.checked) {
+								document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>`;
+							} else {
+								document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>`;
+							}
+						});
+					}
+				});
 			});
 		});
-	});
+	}
 })();

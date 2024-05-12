@@ -1,6 +1,6 @@
 @extends('plantilla')
 
-@section('title', 'Reportes diarios de operadores - ' . env('TITLE'))
+@section('title', 'Monitoreo - ' . env('TITLE'))
 
 @section('styles')
 <link href="{{url('css/datatable/datatables.min.css')}}" rel="stylesheet">
@@ -16,10 +16,10 @@
 <div class="mb-3">
 	<div class="row align-items-center">
 		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase my-2"><i class="fas fa-map-marked-alt"></i> Reportes diarios de operadores</h4>
+			<h4 class="card-title text-uppercase my-2"><i class="fas fa-map-marked-alt"></i> Monitoreo</h4>
 		</div>
 		<div class="col-6 text-end">
-			<a href="{{route('reportes_diarios_operador.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-folder-plus me-2"></i>Agregar</a>
+			<a href="{{route('monitoreo.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-folder-plus me-2"></i>Agregar</a>
 		</div>
 	</div>
 </div>
