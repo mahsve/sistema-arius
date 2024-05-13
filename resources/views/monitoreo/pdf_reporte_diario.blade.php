@@ -91,21 +91,21 @@
 			<td class="bdr-none" style="border-top-color: white;"></td>
 			<td class="bdr-1" style="width: 50mm; background: #00B0F0;">AP FUERA DE HORARIO SIN CLO</td>
 			<td class="bdr-1" style="width: 50mm; background: #FF0000;">PRUEBAS REALIZADAS</td>
-			<td class="bdr-1" style=""><b style="color: red;">SERVIDOR MENSAJERIA:</b></td>
+			<td class="bdr-1"><b style="color: red;">SERVIDOR MENSAJERIA:</b></td>
 			<td class="bdr-1" style="width: 100mm;">{{$reporte->servidormensajeria}}</td>
 		</tr>
 		<tr style="font-size: 7pt;">
 			<td class="bdr-none" style="border-top-color: white;"></td>
 			<td class="bdr-1" style="background: #00B0F0;">AP Y CLO FUERA DE HORARIO</td>
 			<td class="bdr-1" style="background: #FFC000;">TÉCNICOS EN EL ÁREA</td>
-			<td class="bdr-1" style=""><b style="color: red;">RADIO:</b></td>
+			<td class="bdr-1"><b style="color: red;">RADIO:</b></td>
 			<td class="bdr-1" style="width: 0;">{{$reporte->radio}}</td>
 		</tr>
 		<tr style="font-size: 7pt;">
 			<td class="bdr-none" style="border-top-color: white;"></td>
 			<td class="bdr-1" style="background: black; color: white;">EVENTUALIDADES EN LA EMPRESA</td>
 			<td class="bdr-1" style="background: #FFFF00;">EVENTOS ACUMULADOS</td>
-			<td class="bdr-1" style=""><b style="color: red;">LINEAS DE REPORTE: L1, L2, L3, L4:</b></td>
+			<td class="bdr-1"><b style="color: red;">LINEAS DE REPORTE: L1, L2, L3, L4:</b></td>
 			<td class="bdr-1" style="width: 0;">{{$reporte->lineasreportes}}</td>
 		</tr>
 		<tr style="font-size: 7pt;">

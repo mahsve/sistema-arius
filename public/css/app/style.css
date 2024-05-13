@@ -13744,6 +13744,7 @@ code {
 }
 
 @media (max-width: 766px) {
+
 	.ajax-upload-dragdrop #proBanner .buy-now-btn.ajax-file-upload,
 	.swal2-modal .swal2-buttonswrapper #proBanner .buy-now-btn.swal2-styled {
 		min-width: 80px;
@@ -13759,6 +13760,7 @@ code {
 }
 
 @media (max-width: 766px) {
+
 	.ajax-upload-dragdrop #proBanner #bannerClose.ajax-file-upload i,
 	.swal2-modal .swal2-buttonswrapper #proBanner #bannerClose.swal2-styled i {
 		font-size: 1rem;
@@ -14376,8 +14378,10 @@ code {
 }
 
 .badge-primary {
-	color: #1F3BB3;
-	border: 1px solid #1F3BB3;
+	--color-primary: #1F3BB3;
+	color: white;
+	border: 1px solid var(--color-primary);
+	background: var(--color-primary);
 }
 
 .badge-secondary {
@@ -14395,8 +14399,10 @@ code {
 
 .badge-info,
 .preview-list .preview-item .preview-thumbnail .badge.badge-offline {
-	color: #52CDFF;
-	border: 1px solid #52CDFF;
+	--color-info: #52CDFF;
+	color: black;
+	border: 1px solid var(--color-info);
+	background: var(--color-info);
 }
 
 .badge-warning,
