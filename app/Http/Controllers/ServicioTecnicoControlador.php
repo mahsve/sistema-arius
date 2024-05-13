@@ -7,7 +7,7 @@ use App\Models\MapaDeZona;
 use App\Models\ServicioTecnicoSolicitado;
 use Illuminate\Http\Request;
 
-class ServicioTecnicoSolicitadoControlador extends Controller
+class ServicioTecnicoControlador extends Controller
 {
 	use SeguridadControlador;
 
@@ -29,10 +29,15 @@ class ServicioTecnicoSolicitadoControlador extends Controller
 		}
 
 		// Consultamos los datos necesarios y cargamos la vista.
+		$mes	= date('m');
+		$anio	= date('Y');
+		$fecha_inicio	= $anio . "-" . $mes . "-01";
+		$fecha_final	= cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
 		$servicios = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.identificacion', 'tb_clientes.nombre', 'tb_personal.nombre as personal')
 			->join('tb_personal', 'tb_servicios_solicitados.cedula', 'tb_personal.cedula')
 			->join('tb_mapa_zonas', 'tb_servicios_solicitados.idcodigo', 'tb_mapa_zonas.idcodigo')
 			->join('tb_clientes', 'tb_mapa_zonas.idcliente', 'tb_clientes.identificacion')
+			->whereBetween('fecha', [$fecha_inicio, $fecha_final])
 			->get();
 		return view('servicio_tecnico.index', [
 			'permisos' => $permisos,
@@ -132,11 +137,66 @@ class ServicioTecnicoSolicitadoControlador extends Controller
 	// Show the form for editing the specified resource.
 	public function edit(string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Consultamos el registro a modificar.
+		$servicioTecnico = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.nombre')
+			->join('tb_mapa_zonas', 'tb_servicios_solicitados.idcodigo', 'tb_mapa_zonas.idcodigo')
+			->join('tb_clientes', 'tb_mapa_zonas.idcliente', 'tb_clientes.identificacion')
+			->where('idsolicitud', '=', $id)
+			->first();
+		return response($servicioTecnico, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Update the specified resource in storage.
 	public function update(Request $request, string $id)
 	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'update')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para modificar!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Validamos.
+		$message = "";
+		if ($request->c_fecha == "") {
+			$message = "¡Ingrese la fecha de la solicitud!";
+		} else if ($request->c_motivo == "") {
+			$message = "¡Seleccione el motivo de la solicitud!";
+		}
+
+		// Verificamos si ocurrió algún error en la válidación.
+		if ($message != "") {
+			$response = ["status" => "error", "response" => ["message" => $message]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Validamos que no este ya registrado.
+		$existente = ServicioTecnicoSolicitado::select('idsolicitud')
+			->where('idcodigo', '=', $request->c_codigo)
+			->where('fecha', '=', $request->c_fecha)
+			->where('motivo', '=', $request->c_motivo)
+			->where('idsolicitud', '!=', $id)
+			->first();
+		if ($existente) {
+			$response = ["status" => "error", "response" => ["message" => "¡Ya hay una solicitud similar registrada!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Creamos el nuevo registro del departamento.
+		$servicio = ServicioTecnicoSolicitado::find($id);
+		$servicio->fecha = $request->c_fecha;
+		$servicio->motivo = $request->c_motivo;
+		$servicio->descripcion = $request->c_descripcion;
+		$servicio->save();
+
+		// Retoramos mensaje de exito al usuario.
+		$response = ["status" => "success", "response" => ["message" => "¡Solicitud actualizada exitosamente!"]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
 	// Remove the specified resource from storage.

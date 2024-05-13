@@ -1,26 +1,25 @@
 (function () {
 	// Elementos HTML.
-	const btn_nueva_solicitud = document.getElementById('btn_nueva_solicitud');
-	const btn_detalles = document.querySelectorAll(".btn_detalles");
-	const btn_editar = document.querySelectorAll(".btn_editar");
-	const switch_estatus = document.querySelectorAll(".switch_estatus");
+	const btn_guardar_up = document.getElementById('btn_guardar');
+	const btn_agregar_evento = document.getElementById('btn_agregar_evento');
+	const add_html_eventos = document.getElementById('add_html_eventos');
+	const codigo_r = document.getElementById("c_codigo_r");
 	const modal_registrar = document.getElementById('modal_registrar') != null ? new bootstrap.Modal('#modal_registrar') : null;
 	const formulario_registro = document.getElementById("formulario_registro");
-	const codigo_r = document.getElementById("c_codigo_r");
 	const modal_modificar = document.getElementById('modal_modificar') != null ? new bootstrap.Modal('#modal_modificar') : null;
 	const formulario_actualizacion = document.getElementById("formulario_actualizacion");
-	const modal_detalles = document.getElementById('modal_detalles') != null ? new bootstrap.Modal('#modal_detalles') : null;
+	const formulario_gestionar = document.getElementById("formulario_gestionar");
+	// Elementos de la tabla.
+	const tabla_eventos = document.querySelector('#tabla_eventos tbody');
+	const tabla_eventos_vacio = tabla_eventos.innerHTML;
 
 	// Registrar dato.
-	if (btn_nueva_solicitud != null) {
-		btn_nueva_solicitud.addEventListener('click', function (e) {
+	if (btn_agregar_evento != null) {
+		btn_agregar_evento.addEventListener('click', function (e) {
 			e.preventDefault();
 
 			// Limpiamos el formulario y mostramos la ventana emergente.
 			formulario_registro.reset();
-			btn_modal_cliente.style.display = "";
-			btn_borrar_cliente.style.display = "none";
-			document.getElementById("c_codigo_auxr").value = "";
 			modal_registrar.show();
 		});
 	}
@@ -72,8 +71,9 @@
 			// Elementos del formulario.
 			const c_codigo = document.getElementById("c_codigo_r");
 			const c_codigo2 = document.getElementById("c_codigo_auxr")
-			const c_fecha = document.getElementById("c_fecha_r");
-			const c_motivo = document.getElementById("c_motivo_r");
+			const c_cliente = document.getElementById("c_cliente_r")
+			const c_hora = document.getElementById("c_hora_r");
+			const c_evento = document.getElementById("c_evento_r");
 			const btn_guardar = document.getElementById("btn_registrar");
 
 			// Validamos los campos.
@@ -86,12 +86,12 @@
 			} else if (c_codigo2.value == "") {
 				Toast.fire({ icon: 'error', title: '¡Ingrese el código de un cliente registrado!' });
 				c_codigo.focus();
-			} else if (c_fecha.value == "") {
-				Toast.fire({ icon: 'error', title: '¡Ingrese la fecha de la solicitud!' });
-				c_fecha.focus();
-			} else if (c_motivo.value == "") {
-				Toast.fire({ icon: 'error', title: '¡Seleccione el motivo de la solicitud!' });
-				c_motivo.focus();
+			} else if (c_hora.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese la hora del evento ocurrido!' });
+				c_hora.focus();
+			} else if (c_evento.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese la descripción del evento!' });
+				c_hora.focus();
 			} else {
 				btn_guardar.classList.add("loading");
 				btn_guardar.setAttribute('disabled', true);
@@ -112,10 +112,91 @@
 						icon: data.status,
 						text: data.response.message,
 						timer: 2000,
-						willClose: () => location.reload(),
 					});
+
+					// Añadimos el evento en el HTML.
+					evento_html();
+					// Capturamos el ID rand para acceder a los id de cada td y empezar a rellenar los datos.
+					const tc = document.querySelectorAll('#tabla_eventos tbody tr').length; // Capturamos el total de tr en la tabla.
+					const idrand = document.querySelectorAll('#tabla_eventos tbody tr')[tc - 1].getAttribute('data-rand');
+					document.getElementById(`evento_codigo_${idrand}`).innerHTML = c_codigo.value;
+					document.getElementById(`evento_hora_${idrand}`).innerHTML = hora(c_hora.value);
+					document.getElementById(`evento_cliente_${idrand}`).innerHTML = c_cliente.value.split(' - ')[1];
+					document.getElementById(`evento_evento_${idrand}`).innerHTML = c_evento.value;
+					document.getElementById(`btn_editar_evento_${idrand}`).setAttribute('data-id', data.response.data.id);
+					document.getElementById(`btn_eliminar_evento_${idrand}`).setAttribute('data-id', data.response.data.id);
 				});
 			}
+		});
+	}
+
+	// Botón para añadir html en 
+	if (add_html_eventos != null) {
+		add_html_eventos.addEventListener('click', (e) => {
+			e.preventDefault();
+			evento_html();
+		});
+	}
+
+	// Agregar el html del evento registrado en el DOM.
+	function evento_html() {
+		// ELEMENTOS.
+		if (tabla_eventos.children.length > 0 && tabla_eventos.children[0].classList.contains('sin_eventos')) tabla_eventos.innerHTML = '';
+
+		// GENERAMOS UN NUEVO ELEMENTO.
+		const idrand = Math.random().toString().replace('.', ''); // GENERAMOS UN ID UNICO PARA MANEJAR LA FILA DEL USUARIO.
+		const elemento = document.createElement('tr'); // GENERAMOS UN NUEVO ELEMENTO.
+		elemento.id = `tr_evento_${idrand}`;
+		elemento.setAttribute('data-rand', idrand);
+
+		// Definimos toda la estructura de la nueva fila.
+		elemento.innerHTML = `
+			<td class="py-1 px-2 text-center h_eventos"><i class="fas fa-arrows-alt"></i></td>
+			<td class="py-1 px-2 text-center n_eventos" id="evento_norden_${idrand}">${tabla_eventos.children.length + 1}</td>
+			<td class="py-1 px-2 text-center">
+				<input type="hidden" name="evento_orden[]" id="evento_orden_${idrand}" value="${tabla_eventos.children.length + 1}" class="evento_orden" data-id="${idrand}">
+				<span id="evento_codigo_${idrand}"></span>
+			</td>
+			<td class="py-1 px-2"><span id="evento_hora_${idrand}"></span></td>
+			<td class="py-1 px-2"><span id="evento_cliente_${idrand}" class="d-block text-truncate" style="max-width: 200px;"></span></td>
+			<td class="py-1 px-2"><span id="evento_evento_${idrand}" class="d-block text-truncate"></span></td>
+			<td class="py-1 px-2" style="width: 20px;">
+				<button type="button" class="btn btn-primary btn-sm btn-icon" id="btn_editar_evento_${idrand}" data-rand="${idrand}"><i class="fas fa-edit"></i></button>
+				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_evento_${idrand}" data-rand="${idrand}"><i class="fas fa-times"></i></button>
+			</td>
+		`;
+		tabla_eventos.appendChild(elemento);
+
+		// Agregamos los eventos a los elementos agregados a la tabla.
+		document.getElementById(`btn_editar_evento_${idrand}`).addEventListener("click", consultar_evento);
+		document.getElementById(`btn_eliminar_evento_${idrand}`).addEventListener("click", eliminar_evento);
+	}
+
+	// Consultar los datos del evento para proceder a editarlos.
+	function consultar_evento(e) {
+		e.preventDefault();
+
+		// Capturamos el elemento que provoco el evento.
+		const btn_consultar = this;
+		const id_data = btn_consultar.getAttribute('data-id');
+		const id_rand = btn_consultar.getAttribute('data-rand');
+
+		// Realizamos la consulta AJAX.
+		btn_consultar.classList.add('loading');
+		btn_consultar.setAttribute('disabled', true);
+		fetch(`${url_}/monitoreo/evento/${id_data}`, { method: 'get' }).then(response => response.json()).then((data) => {
+			btn_consultar.classList.remove('loading');
+			btn_consultar.removeAttribute('disabled');
+
+			// Limpiamos el formulario y cargamos los datos consultados.
+			formulario_actualizacion.reset();
+			formulario_actualizacion.setAttribute('action', `${url_}/monitoreo/evento/${id_data}`);
+			document.getElementById('c_codigo_m').value = data.idcodigo;
+			document.getElementById('c_cliente_m').value = data.identificacion + " - " + data.nombre;
+			document.getElementById('c_hora_m').value = data.hora;
+			document.getElementById('c_evento_m').value = data.evento;
+			document.getElementById('btn_modificar').setAttribute('data-rand', id_rand);
+			modal_modificar.show();
 		});
 	}
 
@@ -125,17 +206,17 @@
 			e.preventDefault();
 
 			// Elementos del formulario.
-			const c_fecha = document.getElementById("c_fecha_m");
-			const c_motivo = document.getElementById("c_motivo_m");
+			const c_hora = document.getElementById("c_hora_m");
+			const c_evento = document.getElementById("c_evento_m");
 			const btn_guardar = document.getElementById("btn_modificar");
 
 			// Validamos los campos.
-			if (c_fecha.value == "") {
-				Toast.fire({ icon: 'error', title: '¡Ingrese la fecha de la solicitud!' });
-				c_fecha.focus();
-			} else if (c_motivo.value == "") {
-				Toast.fire({ icon: 'error', title: '¡Seleccione el motivo de la solicitud!' });
-				c_motivo.focus();
+			if (c_hora.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese la hora del evento ocurrido!' });
+				c_hora.focus();
+			} else if (c_evento.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese la descripción del evento!' });
+				c_hora.focus();
 			} else {
 				btn_guardar.classList.add("loading");
 				btn_guardar.setAttribute('disabled', true);
@@ -156,146 +237,96 @@
 						icon: data.status,
 						text: data.response.message,
 						timer: 2000,
-						willClose: () => location.reload(),
 					});
+
+					// Capturamos el ID rand para acceder a los id de cada td y empezar a rellenar los datos.
+					const idrand = btn_guardar.getAttribute('data-rand');
+					document.getElementById(`evento_hora_${idrand}`).innerHTML = hora(c_hora.value);
+					document.getElementById(`evento_evento_${idrand}`).innerHTML = c_evento.value;
 				});
 			}
 		});
 	}
 
-	// Mostrar detalles.
-	Array.from(btn_detalles).forEach(btn_ => {
-		btn_.addEventListener('click', function (e) {
-			e.preventDefault();
+	function eliminar_evento(e) {
+		e.preventDefault();
 
-			// Capturamos el elemento que provoco el evento.
-			const btn_consultar = this;
-			const id_data = btn_consultar.getAttribute('data-id');
+		// Capturamos el elemento que provoco el evento.
+		const btn_consultar = this;
+		const id_data = btn_consultar.getAttribute('data-id');
+		const id_rand = btn_consultar.getAttribute('data-rand');
+		const formData = new FormData();
+		formData.append('_method', 'DELETE');
 
-			// Realizamos la consulta AJAX.
-			btn_consultar.classList.add('loading');
-			btn_consultar.setAttribute('disabled', true);
-			fetch(`${url_}/servicios_tecnico/modificar/${id_data}`, { method: 'get' }).then(response => response.json()).then((data) => {
-				btn_consultar.classList.remove('loading');
-				btn_consultar.removeAttribute('disabled');
+		Swal.fire({
+			icon: 'question',
+			title: "¿Seguro que quieres eliminar este evento?",
+			showCancelButton: true,
+			confirmButtonText: "Eliminar",
+			cancelButtonText: "Cancelar",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				// Realizamos la consulta AJAX.
+				btn_consultar.classList.add('loading');
+				btn_consultar.setAttribute('disabled', true);
+				fetch(`${url_}/monitoreo/evento/${id_data}`, {
+					headers: { 'X-CSRF-TOKEN': token_ },
+					method: 'post',
+					body: formData
+				}).then(response => response.json()).then((data) => {
+					btn_consultar.classList.remove('loading');
+					btn_consultar.removeAttribute('disabled');
 
-				// Agregamos los detalles en el HTML y abrimos la modal.
-				document.getElementById('modal_detalles_label').innerHTML = `<i class="fas fa-file-invoice"></i> Solicitud #${id_data.toString().padStart(8, '0')}`;
-				document.getElementById('detalles_solicitud').innerHTML = `<div class="form-row">
-					<div class="col-12 col-xl-3">
-						<div class="form-group mb-3">
-							<label for="c_codigo_r" class="required"><i class="fas fa-barcode"></i> Código</label>
-							<span class="d-block">${data.idcodigo}</span>
-						</div>
-					</div>
-					<div class="col-12 col-xl-9">
-						<div class="form-group mb-3">
-							<label for="c_cliente_r" class="required"><i class="fas fa-address-card"></i> Nombre/Razón social</label>
-							<span class="d-block">${data.nombre}</span>
-						</div>
-					</div>
-					<div class="col-12 col-md-4">
-						<div class="form-group mb-3">
-							<label for="c_fecha_r" class="required"><i class="fas fa-calendar-day"></i> Fecha</label>
-							<span class="d-block">${data.fecha}</span>
-						</div>
-					</div>
-					<div class="col-12 col-md-8">
-						<div class="form-group mb-3">
-							<label for="c_motivo_r" class="required"><i class="fas fa-tools"></i> Motivo</label>
-							<span class="d-block">${motivos[data.motivo]}</span>
-						</div>
-					</div>
-					<div class="col-12">
-						<div class="form-group">
-							<label for="c_descripcion_r"><i class="fas fa-sticky-note"></i> Descripción de la solicitud</label>
-							<span class="d-block">${data.descripcion}</span>
-						</div>
-					</div>
-				</div>`;
-				modal_detalles.show();
-			});
-		});
-	});
-
-	// Consultar registro.
-	Array.from(btn_editar).forEach(btn_ => {
-		btn_.addEventListener('click', function (e) {
-			e.preventDefault();
-
-			// Capturamos el elemento que provoco el evento.
-			const btn_consultar = this;
-			const id_data = btn_consultar.getAttribute('data-id');
-
-			// Realizamos la consulta AJAX.
-			btn_consultar.classList.add('loading');
-			btn_consultar.setAttribute('disabled', true);
-			fetch(`${url_}/servicios_tecnico/modificar/${id_data}`, { method: 'get' }).then(response => response.json()).then((data) => {
-				btn_consultar.classList.remove('loading');
-				btn_consultar.removeAttribute('disabled');
-
-				// Limpiamos el formulario y cargamos los datos consultados.
-				formulario_actualizacion.reset();
-				formulario_actualizacion.setAttribute('action', `${url_}/servicios_tecnico/modificar/${id_data}`);
-				document.getElementById('c_codigo_m').value = data.idcodigo;
-				document.getElementById('c_cliente_m').value = data.nombre;
-				document.getElementById('c_fecha_m').value = data.fecha;
-				document.getElementById('c_motivo_m').value = data.motivo;
-				document.getElementById('c_descripcion_m').value = data.descripcion;
-				modal_modificar.show();
-			});
-		});
-	});
-
-	// Cambiar estatus.
-	Array.from(switch_estatus).forEach(switch_ => {
-		switch_.addEventListener('change', function () {
-			// Capturamos el elemento que provoco el evento.
-			switch_element = this;
-			switch_element.checked = !switch_element.checked;
-
-			// Pedimos confirmar que desea desactivar este registro.
-			Swal.fire({
-				title: '¿Seguro que quieres cambiar el estatus de este departamento?',
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonText: 'Cambiar',
-				cancelButtonText: 'Cancelar',
-			}).then((result) => {
-				if (result.isConfirmed) {
-					const form_data = new FormData();
-					const form_check = switch_element.parentElement;
-					form_data.append('_method', 'PUT');
-					form_check.classList.add('loading');
-
-					// Realizamos la consulta AJAX.
-					fetch(`${url_}/departamentos/estatus/${switch_element.value}`, {
-						headers: { 'X-CSRF-TOKEN': token_ },
-						method: 'post',
-						body: form_data,
-					}).then(response => response.json()).then(data => {
-						form_check.classList.remove('loading');
-
-						// Verificamos si ocurrió algún error.
-						if (data.status == "error") {
-							Toast.fire({ icon: data.status, title: data.response.message });
-							return false;
-						}
-
-						// Enviamos mensaje de exito al usuario.
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
 						Toast.fire({ icon: data.status, title: data.response.message });
-						switch_element.checked = !switch_element.checked;
-						const idrand = switch_element.getAttribute('data-id');
-						if (switch_element.checked) {
-							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>`;
-						} else {
-							document.querySelector(`#contenedor_badge${idrand}`).innerHTML = `<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>`;
-						}
+						return false;
+					}
+
+					// Enviamos mensaje de exito.
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
 					});
+
+					// Capturamos el ID rand para acceder a los id de cada td y empezar a rellenar los datos.
+					document.getElementById(`tr_evento_${id_rand}`).remove();
+				});
+			}
+		});
+	}
+
+	// Guardar los cambios en general del reporte diario.
+	if (btn_guardar_up != null) {
+		btn_guardar_up.addEventListener("click", function (e) {
+			e.preventDefault();
+
+			btn_guardar_up.classList.add("loading");
+			btn_guardar_up.classList.add('disabled');
+			fetch(`${formulario_gestionar.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_gestionar) }).then(response => response.json()).then(data => {
+				btn_guardar_up.classList.remove("loading");
+				btn_guardar_up.classList.remove('disabled');
+
+				// Verificamos si ocurrió algún error.
+				if (data.status == "error") {
+					Toast.fire({ icon: data.status, title: data.response.message });
+					return false;
 				}
+
+				// Enviamos mensaje de exito.
+				modal_modificar.hide();
+				Swal.fire({
+					title: "Exito",
+					icon: data.status,
+					text: data.response.message,
+					timer: 2000,
+				});
 			});
 		});
-	});
+	}
+
 
 
 	/**

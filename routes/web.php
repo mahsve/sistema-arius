@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 	Route::resource('/tareas', App\Http\Controllers\TareaControlador::class);
 
 	/**
-	 * MONITOREO
+	 * MOVIMIENTOS
 	 */
 	// Controlador [Mapa de zona].
 	Route::controller(App\Http\Controllers\MapaDeZonaControlador::class)->group(function () {
@@ -56,24 +56,28 @@ Route::middleware('auth')->group(function () {
 	});
 
 	// Controlador [Servicio técnico].
-	Route::controller(App\Http\Controllers\ServicioTecnicoSolicitadoControlador::class)->group(function () {
-		Route::get('/servicios_tecnico_solicitados', 'index')->name('servicios_tecnico_solicitados.index');
-		Route::get('/servicios_tecnico_solicitados/clientes/{string}', 'clientes')->name('servicios_tecnico_solicitados.client'); // Buscar clientes.
-		Route::get('/servicios_tecnico_solicitados/mapa_de_zona/{id}', 'mapa_de_zona')->name('servicios_tecnico_solicitados.selected'); // Consultar cliente seleccionado por ID.
-		Route::post('/servicios_tecnico_solicitados', 'store')->name('servicios_tecnico_solicitados.store');
-		Route::get('/servicios_tecnico_solicitados/modificar/{id}', 'edit')->name('servicios_tecnico_solicitados.edit');
-		Route::patch('/servicios_tecnico_solicitados', 'update')->name('servicios_tecnico_solicitados.update');
-		Route::get('/servicios_tecnico_solicitados/pdf/{id}', 'generar_pdf')->name('servicios_tecnico_solicitados.pdf');
+	Route::controller(App\Http\Controllers\ServicioTecnicoControlador::class)->group(function () {
+		Route::get('/servicios_tecnico', 'index')->name('servicios_tecnico.index');
+		Route::get('/servicios_tecnico/clientes/{string}', 'clientes')->name('servicios_tecnico.client'); // Buscar clientes.
+		Route::get('/servicios_tecnico/mapa_de_zona/{id}', 'mapa_de_zona')->name('servicios_tecnico.selected'); // Consultar cliente seleccionado por ID.
+		Route::post('/servicios_tecnico', 'store')->name('servicios_tecnico.store');
+		Route::get('/servicios_tecnico/modificar/{id}', 'edit')->name('servicios_tecnico.edit');
+		Route::patch('/servicios_tecnico/modificar/{id}', 'update')->name('servicios_tecnico.update');
+		Route::get('/servicios_tecnico/pdf/{id}', 'generar_pdf')->name('servicios_tecnico.pdf');
 	});
 
 	// Controlador [Monitoreo].
 	Route::controller(App\Http\Controllers\MonitoreoControlador::class)->group(function () {
 		Route::get('/monitoreo', 'index')->name('monitoreo.index');
-		Route::get('/monitoreo/registrar', 'create')->name('monitoreo.create');
 		Route::post('/monitoreo', 'store')->name('monitoreo.store');
-		Route::get('/monitoreo/modificar/{id}', 'edit')->name('monitoreo.edit');
-		Route::patch('/monitoreo', 'update')->name('monitoreo.update');
+		Route::get('/monitoreo/gestionar/{id}', 'edit')->name('monitoreo.edit');
+		Route::patch('/monitoreo/gestionar/{id}', 'update')->name('monitoreo.update');
+		Route::post('/monitoreo/evento/{id}', 'create_event')->name('monitoreo.event');
+		Route::get('/monitoreo/evento/{id}', 'consult_event')->name('monitoreo.consult_event');
+		Route::patch('/monitoreo/evento/{id}', 'update_event')->name('monitoreo.event');
+		Route::delete('/monitoreo/evento/{id}', 'delete_event')->name('monitoreo.event');
 		Route::get('/monitoreo/pdf/{id}', 'generar_pdf')->name('monitoreo.pdf');
+		Route::put('/monitoreo/estatus/{id}', 'toggle')->name('monitoreo.status');
 	});
 
 	/**
