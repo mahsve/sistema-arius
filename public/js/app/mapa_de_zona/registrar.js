@@ -502,8 +502,8 @@
 					<tr>
 						<td colspan="5" class="text-uppercase fw-bold py-1">
 							<div class="d-flex justify-content-between align-items-center">
-								<h4 class="d-inline-block m-0">REGISTROS DE VISITAS TéCNICAS - ${anio_input.value}</h4>
-								<button type="button" class="btn btn-primary btn-sm my-1" id="btn_agg_visita_${idrand}" data-rand="${idrand}"><i class="fas fa-toolbox me-2"></i>Agregar</button>
+								<h4 class="d-inline-block m-0">REGISTROS DE VISITAS TÉCNICAS - ${anio_input.value}</h4>
+								<button type="button" class="btn btn-primary btn-sm my-1" id="btn_agg_visita_${idrand}" data-rand="${idrand}" data-anio="${anio_input.value}"><i class="fas fa-toolbox me-2"></i>Agregar</button>
 							</div>
 						</td>
 					</tr>
@@ -536,7 +536,48 @@
 	function agregar_visita(e) {
 		e.preventDefault();
 
+		// Elementos HTML.
+		const idrand1	= this.getAttribute('data-rand');
+		const tabla_visitas = document.querySelector(`#tabla_visitas_${idrand1} tbody`);
 
+		// ELEMENTOS.
+		if (tabla_visitas.children.length > 0 && tabla_visitas.children[0].classList.contains('sin_visitas')) tabla_visitas.innerHTML = '';
+
+		// GENERAMOS UN NUEVO ELEMENTO.
+		const idrand = Math.random().toString().replace('.', ''); // GENERAMOS UN ID UNICO PARA MANEJAR LA FILA DEL USUARIO.
+		const elemento = document.createElement('tr'); // GENERAMOS UN NUEVO ELEMENTO.
+		elemento.id = `tr_visita_${idrand}`;
+		elemento.setAttribute('data-rand', idrand);
+
+		// Definimos toda la estructura de la nueva fila.
+		elemento.innerHTML = `
+			<td class="py-1 px-2 text-center h_visita"><i class="fas fa-arrows-alt"></i></td>
+			<td class="py-1 px-2 text-center n_visitas" id="visita_norden_${idrand}">${tabla_visitas.children.length + 1}</td>
+			<td class="py-1 px-2">
+				<input type="hidden" name="idvisita[]" id="idvisita_${idrand}">
+				<input type="hidden" name="visita_orden[]" id="visita_orden_${idrand}" value="${tabla_visitas.children.length + 1}" class="visita_orden" data-id="${idrand}">
+				<input type="text" class="form-control text-uppercase visita_descripcion" name="visita_descripcion[]" id="visita_descripcion_${idrand}" placeholder="Descripción de la visita" style="min-width: 150px;">
+			</td>
+			<td class="py-1 px-2">
+				<select class="form-control text-uppercase visita_configuracion" name="visita_configuracion[]" id="visita_configuracion_${idrand}" data-id="${idrand}" style="min-width: 150px;">
+					<option value="0">SELC. CONFIGURACIÓN</option>
+				</select>
+			</td>
+			<td class="py-1 px-2"><input type="text" class="form-control visita_nota" name="visita_nota[]" id="visita_nota_${idrand}" placeholder="Observación (opcional)" style="min-width: 200px;"></td>
+			<td class="py-1 px-2" style="width: 20px;">
+				<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_visita_${idrand}" data-id="${idrand}"><i class="fas fa-times"></i></button>
+			</td>
+		`;
+		tabla_visitas.appendChild(elemento);
+
+		// // Agregamos los eventos a los elementos agregados a la tabla.
+		// document.getElementById(`zona_equipos_${idrand}`).addEventListener("change", consultar_configuracion);
+		// document.getElementById(`btn_eliminar_zona_${idrand}`).addEventListener("click", eliminar_zona);
+
+		// // 
+		// document.getElementById(`zona_descripcion_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		// document.getElementById(`zona_equipos_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		// document.getElementById(`zona_configuracion_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
 	}
 
 

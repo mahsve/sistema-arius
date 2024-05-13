@@ -3,7 +3,9 @@
 	const btn_nueva_solicitud = document.getElementById('btn_nueva_solicitud');
 	const btn_detalles = document.querySelectorAll(".btn_detalles");
 	const btn_editar = document.querySelectorAll(".btn_editar");
+	const btn_buscar_por_fecha = document.getElementById("btn_buscar_por_fecha");
 	const switch_estatus = document.querySelectorAll(".switch_estatus");
+	// Formularios.
 	const modal_registrar = document.getElementById('modal_registrar') != null ? new bootstrap.Modal('#modal_registrar') : null;
 	const formulario_registro = document.getElementById("formulario_registro");
 	const codigo_r = document.getElementById("c_codigo_r");
@@ -296,6 +298,32 @@
 			});
 		});
 	});
+
+	// Manejar el fitro para buscar por fechas.
+	if (btn_buscar_por_fecha != null) {
+		btn_buscar_por_fecha.addEventListener("click", function (e) {
+			e.preventDefault();
+
+			// Elementos del formulario.
+			const fecha_inicio = document.getElementById("fecha_inicio");
+			const fecha_final = document.getElementById("fecha_final");
+
+			// Validamos los campos.
+			if (fecha_inicio.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese la fecha de inicio!' });
+				fecha_inicio.focus();
+			} else if (fecha_final.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese la fecha tope!' });
+				fecha_final.focus();
+			} else if (fecha_inicio.value > fecha_final.value) {
+				Toast.fire({ icon: 'error', title: '¡La fecha de inicio no puede ser superior a la fecha tope!' });
+				fecha_inicio.focus();
+			} else {
+				location.href = `${url_}/servicios_tecnico?fecha_inicio=${fecha_inicio.value}&fecha_tope=${fecha_final.value}`;
+			}
+		});
+	}
+
 
 
 	/**

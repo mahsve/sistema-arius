@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
 		Route::post('/servicios_tecnico', 'store')->name('servicios_tecnico.store');
 		Route::get('/servicios_tecnico/modificar/{id}', 'edit')->name('servicios_tecnico.edit');
 		Route::patch('/servicios_tecnico/modificar/{id}', 'update')->name('servicios_tecnico.update');
-		Route::get('/servicios_tecnico/pdf/{id}', 'generar_pdf')->name('servicios_tecnico.pdf');
+		Route::get('/servicios_tecnico/pdf', 'generar_pdf')->name('servicios_tecnico.pdf');
 	});
 
 	// Controlador [Monitoreo].

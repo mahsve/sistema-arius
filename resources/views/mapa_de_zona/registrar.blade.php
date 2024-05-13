@@ -39,7 +39,7 @@
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="1" class="nav-link tab_mapa" id="pills-usuarios-tab" data-bs-toggle="pill" data-bs-target="#pills-usuarios" role="tab" aria-controls="pills-usuarios" aria-selected="false"><i class="fas fa-address-card"></i> Contactos</button></li>
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="2" class="nav-link tab_mapa" id="pills-zonas-tab" data-bs-toggle="pill" data-bs-target="#pills-zonas" role="tab" aria-controls="pills-zonas" aria-selected="false"><i class="fas fa-door-open"></i> Zonas</button></li>
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="3" class="nav-link tab_mapa" id="pills-tecnicos-tab" data-bs-toggle="pill" data-bs-target="#pills-tecnicos" role="tab" aria-controls="pills-tecnicos" aria-selected="false"><i class="fas fa-digital-tachograph"></i> Datos técnico</button></li>
-				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="4" class="nav-link tab_mapa" id="pills-visitas-tab" data-bs-toggle="pill" data-bs-target="#pills-visitas" role="tab" aria-controls="pills-visitas" aria-selected="false"><i class="fas fa-map-marked-alt"></i> Visitas</button></li>
+				<!-- <li class="nav-item mb-2" role="presentation"><button type="button" data-vista="4" class="nav-link tab_mapa" id="pills-visitas-tab" data-bs-toggle="pill" data-bs-target="#pills-visitas" role="tab" aria-controls="pills-visitas" aria-selected="false"><i class="fas fa-map-marked-alt"></i> Visitas</button></li> -->
 			</ul>
 
 			<div class="tab-content border rounded pt-3 pb-0" id="pills-tabContent">

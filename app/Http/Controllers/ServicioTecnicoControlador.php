@@ -6,6 +6,7 @@ use App\Models\Cliente;
 use App\Models\MapaDeZona;
 use App\Models\ServicioTecnicoSolicitado;
 use Illuminate\Http\Request;
+use Spipu\Html2Pdf\Html2Pdf;
 
 class ServicioTecnicoControlador extends Controller
 {
@@ -32,7 +33,11 @@ class ServicioTecnicoControlador extends Controller
 		$mes	= date('m');
 		$anio	= date('Y');
 		$fecha_inicio	= $anio . "-" . $mes . "-01";
-		$fecha_final	= cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
+		$fecha_final	= $anio . "-" . $mes . "-" . cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
+		if (isset($_GET["fecha_inicio"]) and !empty($_GET["fecha_inicio"]) and isset($_GET["fecha_tope"]) and !empty($_GET["fecha_tope"])) {
+			$fecha_inicio	= $_GET["fecha_inicio"];
+			$fecha_final	= $_GET["fecha_tope"];
+		}
 		$servicios = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.identificacion', 'tb_clientes.nombre', 'tb_personal.nombre as personal')
 			->join('tb_personal', 'tb_servicios_solicitados.cedula', 'tb_personal.cedula')
 			->join('tb_mapa_zonas', 'tb_servicios_solicitados.idcodigo', 'tb_mapa_zonas.idcodigo')
@@ -42,6 +47,8 @@ class ServicioTecnicoControlador extends Controller
 		return view('servicio_tecnico.index', [
 			'permisos' => $permisos,
 			'motivos' => $this->motivos,
+			'fecha_inicio' => $fecha_inicio,
+			'fecha_final' => $fecha_final,
 			'servicios' => $servicios,
 		]);
 	}
@@ -199,8 +206,60 @@ class ServicioTecnicoControlador extends Controller
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 
+	// Generar pdf.
+	public function generar_pdf()
+	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'generar_pdf')) {
+			return $this->error403();
+		}
+
+		// Consultamos los datos necesarios y cargamos la vista.
+		$mes	= date('m');
+		$anio	= date('Y');
+		$fecha_inicio	= $anio . "-" . $mes . "-01";
+		$fecha_final	= $anio . "-" . $mes . "-" . cal_days_in_month(CAL_GREGORIAN, $mes, $anio);
+		if (isset($_GET["fecha_inicio"]) and !empty($_GET["fecha_inicio"]) and isset($_GET["fecha_tope"]) and !empty($_GET["fecha_tope"])) {
+			$fecha_inicio	= $_GET["fecha_inicio"];
+			$fecha_final	= $_GET["fecha_tope"];
+		}
+		$servicios = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.identificacion', 'tb_clientes.nombre', 'tb_personal.nombre as personal')
+			->join('tb_personal', 'tb_servicios_solicitados.cedula', 'tb_personal.cedula')
+			->join('tb_mapa_zonas', 'tb_servicios_solicitados.idcodigo', 'tb_mapa_zonas.idcodigo')
+			->join('tb_clientes', 'tb_mapa_zonas.idcliente', 'tb_clientes.identificacion')
+			->whereBetween('fecha', [$fecha_inicio, $fecha_final])
+			->get();
+
+		// Generamos el nuevo PDF.
+		$pdf			= view('servicio_tecnico.pdf_servicio_tecnico', ['motivos' => $this->motivos, "servicios" => $servicios]);
+		$html2pdf = new Html2Pdf('L', 'LETTER', 'es'); // Orientación [P=Vertical|L=Horizontal] | TAMAÑO [LETTER = CARTA] | Lenguaje [es]
+		$html2pdf->pdf->SetTitle('Reporte diario de operador ');
+		$html2pdf->writeHTML($pdf);
+		$html2pdf->output("servicio_tecnico_" . $mes . "_" . $anio . ".pdf");
+	}
+
 	// Remove the specified resource from storage.
 	public function destroy(string $id)
 	{
+	}
+
+	// Update status.
+	public function toggle(string $id)
+	{
+		// Verificamos primeramente si tiene acceso al metodo del controlador.
+		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
+			$response = ["status" => "error", "response" => ["message" => "¡No tiene permiso para cambiar el estatus!"]];
+			return response($response, 200)->header('Content-Type', 'text/json');
+		}
+
+		// Consultamos el registro a actualizar el estatus.
+		$monitoreo = ServicioTecnicoSolicitado::find($id);
+		$monitoreo->estatus = $monitoreo->estatus != "A" ? "A" : "C";
+		$monitoreo->save();
+
+		// Enviamos un mensaje de exito al usuario.
+		$message	= $monitoreo->estatus == "A" ? "¡Reporte abierto exitosamente!" : "¡Reporte cerrado exitosamente!";
+		$response = ["status" => "success", "response" => ["message" => $message, "data" => ["estatus" => $monitoreo->estatus]]];
+		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

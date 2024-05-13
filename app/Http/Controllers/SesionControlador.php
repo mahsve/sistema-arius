@@ -53,9 +53,9 @@ class SesionControlador extends Controller
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// // Si ocurrió algún error de contraseña invalida, reseteamos los intentos a 0.
-		// $usuario->intentos = 0;
-		// $usuario->save();
+		// Si ocurrió algún error de contraseña invalida, reseteamos los intentos a 0.
+		$usuario->intentos = 0;
+		$usuario->save();
 
 		// Iniciamos la sesión.
 		Auth::login($usuario);
@@ -126,7 +126,7 @@ class SesionControlador extends Controller
 	{
 		session_start();
 		// Verificamos que haya consultado la información del usuario primero para verificar las preguntas de seguridad, procede a denegar el acceso y redireccionar.
-		if (isset($_SESSION['usuario']) and !empty($_SESSION['usuario'])) {
+		if (!isset($_SESSION['usuario']) or empty($_SESSION['usuario'])) {
 			$response = ["status" => "error", "response" => ["type" => "swal", "title" => "¡Usuario no validado!", "message" => "Usted debe validar primero su usuario para contestar las preguntas de seguridad.", "reload" => true]];
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
@@ -193,6 +193,7 @@ class SesionControlador extends Controller
 		$usuario = Usuario::find($_SESSION['usuario']->idusuario);
 		$usuario->contrasena = password_hash($request->contrasena1, PASSWORD_DEFAULT);
 		$usuario->estatus = "A";
+		$usuario->intentos = 0;
 		$usuario->save();
 
 		// Destruimos todos los datos de las sessiones y mandamos mensaje de exito al usuario.

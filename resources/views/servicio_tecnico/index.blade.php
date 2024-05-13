@@ -16,20 +16,64 @@
 </script>
 @endsection
 
+<?php
+$class_nuevo	= "w-75";
+$class_pdf		= "w-25";
+$class_filtro	= "w-25";
+if (isset($permisos->generar_pdf) and !isset($permisos->create)) {
+	$class_pdf		= "w-50";
+	$class_filtro	= "w-50";
+}
+if (!isset($permisos->generar_pdf) and isset($permisos->create)) {
+	$class_nuevo	= "w-75";
+	$class_filtro	= "w-25";
+}
+if (!isset($permisos->generar_pdf) and !isset($permisos->create)) {
+	$class_filtro	= "w-100";
+}
+?>
+
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
-		<div class="col-12 col-md-7 col-lg-6 text-start">
-			<h4 class="card-title text-uppercase mb-3 my-md-2"><i class="fas fa-tools"></i> Servicios técnicos solicitados</h4>
+		<div class="col-12 col-sm-7 col-lg-6 text-start">
+			<h4 class="card-title text-uppercase mb-3 my-sm-2"><i class="fas fa-tools"></i> Servicios técnicos solicitados</h4>
 		</div>
-		<div class="col-12 col-md-5 col-lg-6 text-end">
-			@if (isset($permisos->create))
+		<div class="col-12 col-sm-5 col-lg-6 text-end">
 			<div class="form-row justify-content-end">
-				<div class="col-12 col-md-8 col-lg-6">
-					<button type="button" class="btn btn-primary btn-sm w-100" id="btn_nueva_solicitud"><i class="fas fa-folder-plus me-2"></i>Agregar solicitud</button>
+				<div class="col-12 col-sm-10 col-md-8 col-lg-8 col-xl-6 d-flex">
+					@if (isset($permisos->create))
+					<button type="button" class="btn btn-primary btn-sm {{$class_nuevo}}" id="btn_nueva_solicitud"><i class="fas fa-folder-plus me-2"></i>Agregar</button>
+					@endif
+					@if (isset($permisos->generar_pdf))
+					<a href="{{route('servicios_tecnico.pdf')}}?fecha_inicio={{$fecha_inicio}}&fecha_tope={{$fecha_final}}" class="btn btn-primary btn-sm {{$class_pdf}} ms-1" target="_blank"><i class="fas fa-print"></i></a>
+					@endif
+					<button type="button" class="btn btn-primary btn-sm {{$class_filtro}} ms-1" data-bs-toggle="collapse" data-bs-target="#collapse-filtro" aria-expanded="false" aria-controls="collapse-filtro"><i class="fas fa-filter"></i></button>
 				</div>
 			</div>
-			@endif
+		</div>
+	</div>
+</div>
+
+<!-- Filtro -->
+<div class="collapse" id="collapse-filtro">
+	<div class="form-row justify-content-end align-items-end">
+		<div class="col-2">
+			<div class="form-group mb-3">
+				<label for="c_cliente_m"><i class="fas fa-calendar-day"></i> Fecha inicio</label>
+				<input type="date" class="form-control text-uppercase" name="fecha_inicio" id="fecha_inicio" value="{{$fecha_inicio}}">
+			</div>
+		</div>
+		<div class="col-2">
+			<div class="form-group mb-3">
+				<label for="c_cliente_m"><i class="fas fa-calendar-day"></i> Fecha tope</label>
+				<input type="date" class="form-control text-uppercase" name="fecha_final" id="fecha_final" value="{{$fecha_final}}">
+			</div>
+		</div>
+		<div class="col-1">
+			<div class="form-group mb-3">
+				<button type="button" class="btn btn-primary btn-sm w-100" id="btn_buscar_por_fecha"><i class="fas fa-search"></i></button>
+			</div>
 		</div>
 	</div>
 </div>
