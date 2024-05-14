@@ -28,16 +28,24 @@ class RolControlador extends Controller
 		// Permitimos el acceso en caso de tener permisos.
 		$roles = Rol::all();
 		$modulos = []; // Variable vacía para ordenar los módulos y dentro sus servicios asosciados [Matríz].
-		$servicios = Servicio::select('tb_servicios.*', 'tb_modulos.orden', 'tb_modulos.icono', 'tb_modulos.modulo', 'tb_modulos.estatus as m_estatus')
-			->join('tb_modulos', 'tb_servicios.idmodulo', 'tb_modulos.idmodulo')
+
+		$servicios = Servicio::select(
+			DB::raw("CASE WHEN `idservicio_raiz` IS NOT NULL THEN CONCAT(`idservicio_raiz`,'_',`idservicio`) ELSE CONCAT(`idservicio`,'_',0) END AS 'group'"),
+			'tb_servicios.*',
+			'tb_modulos.orden as morden',
+			'tb_modulos.icono',
+			'tb_modulos.modulo',
+			'tb_modulos.estatus as m_estatus'
+		)->join('tb_modulos', 'tb_servicios.idmodulo', 'tb_modulos.idmodulo')
 			->orderBy('tb_modulos.orden', 'ASC')
+			->orderBy('group', 'ASC')
 			->get();
 
 		// Recorremos todos los servicios encontrados y su módulo correspondiente.
 		foreach ($servicios as $servicio) {
 			// Creamos en el primer nivel la información del módulo y dentro un nuevo arreglo vacío para guardar los servicios.
-			if (!isset($modulos[$servicio->orden])) {
-				$modulos[$servicio->orden] = [
+			if (!isset($modulos[$servicio->morden])) {
+				$modulos[$servicio->morden] = [
 					'idmodulo' => $servicio->idmodulo,
 					'icono' => $servicio->icono,
 					'modulo' => $servicio->modulo,
@@ -47,7 +55,7 @@ class RolControlador extends Controller
 			}
 
 			// Agregamos la info del servicio dentro del arreglo.
-			$modulos[$servicio->orden]['servicios'][] = $servicio;
+			$modulos[$servicio->morden]['servicios'][] = $servicio;
 		}
 
 		// Consultamos los datos necesarios y cargamos la vista.
