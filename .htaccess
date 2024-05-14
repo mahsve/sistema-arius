@@ -3,7 +3,3 @@ RewriteCond %{HTTP:X-Forwarded-Proto} !https
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:CF-Visitor} !{"scheme":"https"}
 RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-RewriteEngine on
-RewriteCond %{REQUEST_URI} !^public
-RewriteRule ^(.*)$ public/$1 [L]
