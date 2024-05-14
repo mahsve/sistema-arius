@@ -240,13 +240,17 @@ class PersonalControlador extends Controller
 			->first();
 		$departamentos = Departamento::all();
 		$cargos = Cargo::select('*')->where('iddepartamento', '=', $personal->iddepartamento)->get();
-		return view('personal.modificar', [
-			'personal' => $personal,
-			'lista_cedula' => $this->lista_cedula,
-			'lista_prefijos' => $this->lista_prefijos,
-			'departamentos' => $departamentos,
-			'cargos' => $cargos,
-		]);
+		if ($personal->cedula != session('personal')->cedula) {
+			return view('personal.modificar', [
+				'personal' => $personal,
+				'lista_cedula' => $this->lista_cedula,
+				'lista_prefijos' => $this->lista_prefijos,
+				'departamentos' => $departamentos,
+				'cargos' => $cargos,
+			]);
+		} else {
+			return redirect()->route('personal.index');
+		}
 	}
 
 	// Update the specified resource in storage. 

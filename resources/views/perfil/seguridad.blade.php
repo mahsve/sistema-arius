@@ -90,7 +90,10 @@
 						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="respuesta_1" class="required"><i class="fas fa-comments"></i> Respuesta</label>
-							<input type="password" class="form-control" name="respuesta_1" id="respuesta_1" placeholder="Ingrese el nombre completo">
+							<div class="position-relative">
+								<input type="password" class="form-control" name="respuesta_1" id="respuesta_1" placeholder="Ingrese el nombre completo">
+								<i class="fas fa-eye position-absolute toggle-password" data-toggle="respuesta_1"></i>
+							</div>
 						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="pregunta_2" class="required"><i class="fas fa-question-circle"></i> Pregunta de seguridad</label>
@@ -98,7 +101,10 @@
 						</div>
 						<div class="form-group col-12 col-lg-6">
 							<label for="respuesta_2" class="required"><i class="fas fa-comments"></i> Respuesta</label>
-							<input type="password" class="form-control" name="respuesta_2" id="respuesta_2" placeholder="Ingrese el nombre completo">
+							<div class="position-relative">
+								<input type="password" class="form-control" name="respuesta_2" id="respuesta_2" placeholder="Ingrese el nombre completo">
+								<i class="fas fa-eye position-absolute toggle-password" data-toggle="respuesta_2"></i>
+							</div>
 						</div>
 						<div class="form-group col-12">
 							<label for="actual_contrasena2" class="required"><i class="fas fa-unlock"></i> Contraseña actual</label>
