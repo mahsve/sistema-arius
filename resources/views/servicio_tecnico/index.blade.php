@@ -58,19 +58,19 @@ if (!isset($permisos->generar_pdf) and !isset($permisos->create)) {
 <!-- Filtro -->
 <div class="collapse" id="collapse-filtro">
 	<div class="form-row justify-content-end align-items-end">
-		<div class="col-2">
+		<div class="col-5 col-md-3 col-xl-2">
 			<div class="form-group mb-3">
 				<label for="c_cliente_m"><i class="fas fa-calendar-day"></i> Fecha inicio</label>
 				<input type="date" class="form-control text-uppercase" name="fecha_inicio" id="fecha_inicio" value="{{$fecha_inicio}}">
 			</div>
 		</div>
-		<div class="col-2">
+		<div class="col-5 col-md-3 col-xl-2">
 			<div class="form-group mb-3">
 				<label for="c_cliente_m"><i class="fas fa-calendar-day"></i> Fecha tope</label>
 				<input type="date" class="form-control text-uppercase" name="fecha_final" id="fecha_final" value="{{$fecha_final}}">
 			</div>
 		</div>
-		<div class="col-1">
+		<div class="col-2 col-md-2 col-xl-1">
 			<div class="form-group mb-3">
 				<button type="button" class="btn btn-primary btn-sm w-100" id="btn_buscar_por_fecha"><i class="fas fa-search"></i></button>
 			</div>

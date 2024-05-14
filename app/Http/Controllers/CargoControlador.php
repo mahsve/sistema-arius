@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 class CargoControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// Atributos de la clase.
 	public $idservicio = 9;
@@ -86,6 +87,9 @@ class CargoControlador extends Controller
 		$cargo->iddepartamento = $request->c_departamento;
 		$cargo->save();
 
+		// Hacemos el registro en la bitacora.
+		$this->guardar_registro_bitacora('Registro', "Nuevo cargo agregado");
+
 		// Verificamos si es un registro rápido.
 		$registro = null;
 		if (isset($request->modulo) and !empty($request->modulo)) {
@@ -152,11 +156,30 @@ class CargoControlador extends Controller
 			return response($response, 200)->header('Content-Type', 'text/json');
 		}
 
-		// Consultamos y modificamos el registro del cargo.
+		// Consultamos.
 		$cargo = Cargo::find($id);
+
+		// Guadamos un listado de las modificaciones.
+		$modificaciones = "";
+		if ($cargo->cargo != mb_convert_case($request->c_cargo, MB_CASE_UPPER)) {
+			$modificaciones .= "Nombre de '" . $cargo->cargo . "' a '" . mb_convert_case($request->c_cargo, MB_CASE_UPPER) . "'\n";
+		}
+		if ($cargo->iddepartamento != $request->c_departamento) {
+			$_nombres_ = [];
+			$consultas = Departamento::where('iddepartamento', '=', $cargo->iddepartamento)->orWhere('iddepartamento', '=', $request->c_departamento)->get();
+			foreach ($consultas as $consulta) $_nombres_[$consulta->iddepartamento] = $consulta->departamento;
+			$modificaciones .= "Departamento de '" . $_nombres_[$cargo->iddepartamento] . "' a '" . $_nombres_[$request->c_departamento] . "'\n";
+		}
+
+		//modificamos el registro del cargo.
 		$cargo->cargo = mb_convert_case($request->c_cargo, MB_CASE_UPPER);
 		$cargo->iddepartamento = $request->c_departamento;
 		$cargo->save();
+
+		// Hacemos el registro en la bitacora.
+		if ($modificaciones != "") { // Verificamos si hubo cambios.
+			$this->guardar_registro_bitacora('Modificación', "Cargo modificado: $modificaciones");
+		}
 
 		// Enviamos mensaje de exito al usuario.
 		$response = ["status" => "success", "response" => ["message" => "¡Cargo modificado exitosamente!"]];
@@ -181,6 +204,9 @@ class CargoControlador extends Controller
 		$cargo = Cargo::find($id);
 		$cargo->estatus = $cargo->estatus != "A" ? "A" : "I";
 		$cargo->save();
+
+		// Hacemos el registro en la bitacora.
+		$this->guardar_registro_bitacora('Estatus', "Cambio el estatus de '" . $cargo->cargo . "' a '" . ($cargo->estatus == "A" ? 'Activo' : 'Inactivo') . "'");
 
 		// Enviamos un mensaje de exito al usuario.
 		$message	= $cargo->estatus == "A" ? "¡Estatus cambiado a activo!" : "¡Estatus cambiado a inactivo!";

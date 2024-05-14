@@ -12,6 +12,7 @@ use PhpParser\Node\Stmt\TryCatch;
 class PersonalControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// ID de los servicios.
 	public $idservicio = 13;

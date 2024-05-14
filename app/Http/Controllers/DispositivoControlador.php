@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class DispositivoControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// Atributos de la clase.
 	public $idservicio = 17;

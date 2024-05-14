@@ -19,6 +19,7 @@ use Spipu\Html2Pdf\Html2Pdf;
 class MapaDeZonaControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// Atributos de la clase.
 	public $idservicio = 38;

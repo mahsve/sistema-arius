@@ -11,6 +11,7 @@ use Spipu\Html2Pdf\Html2Pdf;
 class ServicioTecnicoControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// Atributos de la clase.
 	public $idservicio = 43;
@@ -38,6 +39,7 @@ class ServicioTecnicoControlador extends Controller
 			$fecha_inicio	= $_GET["fecha_inicio"];
 			$fecha_final	= $_GET["fecha_tope"];
 		}
+		
 		$servicios = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.identificacion', 'tb_clientes.nombre', 'tb_personal.nombre as personal')
 			->join('tb_personal', 'tb_servicios_solicitados.cedula', 'tb_personal.cedula')
 			->join('tb_mapa_zonas', 'tb_servicios_solicitados.idcodigo', 'tb_mapa_zonas.idcodigo')

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 class UsuarioControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// Atributos de la clase.
 	public $idservicio = 54;

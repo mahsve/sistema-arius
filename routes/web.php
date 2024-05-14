@@ -138,12 +138,13 @@ Route::middleware('auth')->group(function () {
 	Route::resource('/roles', App\Http\Controllers\RolControlador::class);
 	Route::put('/roles/estatus/{id}', [App\Http\Controllers\RolControlador::class, 'toggle'])->name('roles.status');
 
-	// Controlador [Roles].
+	// Controlador [Usuarios].
 	Route::resource('/usuarios', App\Http\Controllers\UsuarioControlador::class);
 	Route::put('/usuarios/estatus/{id}', [App\Http\Controllers\UsuarioControlador::class, 'toggle'])->name('roles.status');
 
-	// Controlador [Roles].
-	Route::get('/bitacora', App\Http\Controllers\BitacoraControlador::class)->name('bitacora.index');
+	// Controlador [Bitacora].
+	Route::get('/bitacora', [App\Http\Controllers\BitacoraControlador::class, 'index'])->name('bitacora.index');
+	Route::get('/bitacora/{id}', [App\Http\Controllers\BitacoraControlador::class, 'consult'])->name('bitacora.consult');
 
 	/**
 	 * PERFIL

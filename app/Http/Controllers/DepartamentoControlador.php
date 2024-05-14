@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class DepartamentoControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// Atributos de la clase.
 	public $idservicio = 5;

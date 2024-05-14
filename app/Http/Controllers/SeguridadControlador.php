@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\RolModulo;
 use App\Models\RolServicio;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 trait SeguridadControlador
 {

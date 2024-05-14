@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 class MonitoreoControlador extends Controller
 {
 	use SeguridadControlador;
+	use RegistroBitacoraControlador;
 
 	// Atributos de la clase.
 	public $idservicio = 48;
