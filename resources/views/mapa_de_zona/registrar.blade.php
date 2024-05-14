@@ -2,6 +2,26 @@
 
 @section('title', 'Registrar mapa de zona - ' . env('TITLE'))
 
+@section('styles')
+<link rel="stylesheet" href="{{url('libraries/tom-select/css/tom-select.min.css')}}">
+<style>
+	.table-visitas .ts-wrapper.form-control {
+		max-width: 250px;
+	}
+
+	.table-visitas .ts-wrapper.multi.has-items .ts-control {
+		height: auto;
+		max-height: 60px;
+		overflow-y: auto;
+	}
+
+	.table-visitas .ts-dropdown {
+		max-height: 60px;
+		overflow-y: auto;
+	}
+</style>
+@endsection
+
 @section('scripts')
 <script id="contenedor_script_variables_2">
 	const tipos_identificaciones = <?= json_encode($tipos_identificaciones) ?>;
@@ -13,6 +33,7 @@
 	document.getElementById('contenedor_script_variables_2').remove();
 </script>
 <script src="{{url('libraries/sortable/sortable.min.js')}}"></script>
+<script src="{{url('libraries/tom-select/js/tom-select.complete.min.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar_cliente.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar_auxiliares.js')}}"></script>
@@ -21,11 +42,15 @@
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
-		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase my-2"><i class="fas fa-folder-plus"></i> Registrar</h4>
+		<div class="col-12 col-md-7 col-lg-6 text-start">
+			<h4 class="card-title text-uppercase mb-3 my-md-2"><i class="fas fa-folder-plus"></i> Registrar</h4>
 		</div>
-		<div class="col-6 text-end">
-			<a href="{{route('mapas_de_zonas.index')}}" class="btn btn-primary btn-sm"><i class="fas fa-chevron-left me-2"></i>Regresar</a>
+		<div class="col-12 col-md-5 col-lg-6 text-end">
+			<div class="form-row justify-content-end">
+				<div class="col-12 col-md-8 col-lg-6">
+					<a href="{{route('mapas_de_zonas.index')}}" class="btn btn-primary btn-sm w-100"><i class="fas fa-chevron-left me-2"></i>Regresar</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -39,7 +64,7 @@
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="1" class="nav-link tab_mapa" id="pills-usuarios-tab" data-bs-toggle="pill" data-bs-target="#pills-usuarios" role="tab" aria-controls="pills-usuarios" aria-selected="false"><i class="fas fa-address-card"></i> Contactos</button></li>
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="2" class="nav-link tab_mapa" id="pills-zonas-tab" data-bs-toggle="pill" data-bs-target="#pills-zonas" role="tab" aria-controls="pills-zonas" aria-selected="false"><i class="fas fa-door-open"></i> Zonas</button></li>
 				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="3" class="nav-link tab_mapa" id="pills-tecnicos-tab" data-bs-toggle="pill" data-bs-target="#pills-tecnicos" role="tab" aria-controls="pills-tecnicos" aria-selected="false"><i class="fas fa-digital-tachograph"></i> Datos técnico</button></li>
-				<!-- <li class="nav-item mb-2" role="presentation"><button type="button" data-vista="4" class="nav-link tab_mapa" id="pills-visitas-tab" data-bs-toggle="pill" data-bs-target="#pills-visitas" role="tab" aria-controls="pills-visitas" aria-selected="false"><i class="fas fa-map-marked-alt"></i> Visitas</button></li> -->
+				<li class="nav-item mb-2" role="presentation"><button type="button" data-vista="4" class="nav-link tab_mapa" id="pills-visitas-tab" data-bs-toggle="pill" data-bs-target="#pills-visitas" role="tab" aria-controls="pills-visitas" aria-selected="false"><i class="fas fa-map-marked-alt"></i> Visitas</button></li>
 			</ul>
 
 			<div class="tab-content border rounded pt-3 pb-0" id="pills-tabContent">
@@ -297,8 +322,24 @@
 					<!-- CAMPOS -->
 					<div class="form-row">
 						<div class="form-group col-12 col-md-3 mb-3">
-							<label for="m_panel_version" class="d-block text-truncate required"><i class="fas fa-digital-tachograph"></i> Panel y versión</label>
-							<input type="text" class="form-control text-uppercase form-tecnicos" name="m_panel_version" id="m_panel_version" placeholder="Ingrese el panel y la versión">
+							<div class="row align-items-center">
+								<div class="col">
+									<label for="m_panel_version" class="d-block text-truncate required"><i class="fas fa-digital-tachograph"></i> Panel y versión</label>
+								</div>
+								@if (isset($crear_dispositivo))
+								<div class="col text-end">
+									<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto form-tecnicos" id="btn_modal_panel"><i class="fas fa-plus"></i></button>
+								</div>
+								@endif
+							</div>
+							<select class="form-control text-uppercase form-tecnicos" name="m_panel_version" id="m_panel_version">
+								<option value="">Seleccione el panel</option>
+								@foreach ($dispositivos as $dispositivo)
+								<?php if ($dispositivo->tipo == "P") { ?>
+									<option value="{{$dispositivo->iddispositivo}}">{{$dispositivo->dispositivo}}</option>
+								<?php } ?>
+								@endforeach
+							</select>
 						</div>
 						<div class="form-group col-12 col-md-3 mb-3">
 							<div class="row align-items-center">
@@ -312,10 +353,10 @@
 								@endif
 							</div>
 							<select class="form-control text-uppercase form-tecnicos" name="m_teclado" id="m_teclado">
-								<option value="">Seleccione un modelo</option>
+								<option value="">Seleccione el modelo</option>
 								@foreach ($dispositivos as $dispositivo)
 								<?php if ($dispositivo->tipo == "T") { ?>
-								<option value="{{$dispositivo->iddispositivo}}">{{$dispositivo->dispositivo}}</option>
+									<option value="{{$dispositivo->iddispositivo}}">{{$dispositivo->dispositivo}}</option>
 								<?php } ?>
 								@endforeach
 							</select>
@@ -391,7 +432,7 @@
 							<label for="m_monitoreo" class="required"><i class="fas fa-desktop"></i> Monitoreo</label>
 							<select class="form-control text-uppercase" name="m_monitoreo" id="m_monitoreo">
 								<option value="N">No contratado</option>
-								<option value="Y">Contratado</option>
+								<option value="S">Contratado</option>
 							</select>
 						</div>
 					</div>
@@ -435,11 +476,15 @@
 				<div class="tab-pane fade" id="pills-visitas" role="tabpanel" aria-labelledby="pills-visitas-tab" tabindex="0">
 					<!-- TITULO -->
 					<div class="row align-items-center mb-3">
-						<div class="col-6 text-start">
-							<h4 class="text-uppercase m-0"><i class="fas fa-map-marked-alt"></i> Visitas</h4>
+						<div class="col-12 col-md-6 text-start">
+							<h4 class="text-uppercase mb-3 m-md-0"><i class="fas fa-map-marked-alt"></i> Visitas</h4>
 						</div>
-						<div class="col-6 text-end">
-							<button type="button" class="btn btn-primary btn-sm" id="btn_abrir_modal_anio"><i class="fas fa-calendar-week me-2"></i>Agregar nuevo</button>
+						<div class="col-12 col-md-6 text-end">
+							<div class="form-row justify-content-end">
+								<div class="col-12 col-md-6">
+									<button type="button" class="btn btn-primary btn-sm w-100" id="btn_abrir_modal_anio"><i class="fas fa-calendar-week me-2"></i>Agregar nuevo</button>
+								</div>
+							</div>
 						</div>
 					</div>
 

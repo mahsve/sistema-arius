@@ -3,6 +3,7 @@
 	// [Equipos].
 	const btn_modal_equipos = document.getElementById('btn_modal_equipos');
 	const btn_modal_teclados = document.getElementById('btn_modal_teclados');
+	const btn_modal_panel = document.getElementById('btn_modal_panel');
 	const modal_registrar_disp = document.getElementById('modal_registrar_disp') != null ? new bootstrap.Modal('#modal_registrar_disp') : null;
 	const input_tipo = document.getElementById("c_tipo_aux");
 	const formulario_registro_disp = document.getElementById("formulario_registro_disp");
@@ -31,6 +32,18 @@
 			input_tipo.value = "T";
 			input_tipo.dispatchEvent(new Event('change'));
 			document.getElementById('text_label_devices').innerText = "Modelo teclado";
+			modal_registrar_disp.show();
+		});
+	}
+
+	// Abrir modal para registrar dispositivos [Panel].
+	if (btn_modal_panel != null) {
+		btn_modal_panel.addEventListener("click", function (e) {
+			e.preventDefault();
+			formulario_registro_disp.reset();
+			input_tipo.value = "P";
+			input_tipo.dispatchEvent(new Event('change'));
+			document.getElementById('text_label_devices').innerText = "Panel y versión";
 			modal_registrar_disp.show();
 		});
 	}
@@ -103,7 +116,11 @@
 						const optionR = document.createElement('option'); // Creamos un nuevo elemento de tipo option con la info para agregar la nueva opción al campo select del formulario.
 						optionR.setAttribute('value', data.response.data.iddispositivo);
 						optionR.innerHTML = data.response.data.dispositivo;
-						document.getElementById('m_teclado').append(optionR); // Campo Teclados.
+						if (c_tipo.value == 'P') { // Panel.
+							document.getElementById('m_panel_version').append(optionR); // Campo Teclados.
+						} else { // Teclado.
+							document.getElementById('m_teclado').append(optionR); // Campo Teclados.
+						}
 					}
 
 					// Enviamos mensaje de exito.

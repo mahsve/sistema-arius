@@ -2,6 +2,26 @@
 
 @section('title', 'Modificar mapa de zona - ' . env('TITLE'))
 
+@section('styles')
+<link rel="stylesheet" href="{{url('libraries/tom-select/css/tom-select.min.css')}}">
+<style>
+	.table-visitas .ts-wrapper.form-control {
+		max-width: 250px;
+	}
+
+	.table-visitas .ts-wrapper.multi.has-items .ts-control {
+		height: auto;
+		max-height: 60px;
+		overflow-y: auto;
+	}
+
+	.table-visitas .ts-dropdown {
+		max-height: 60px;
+		overflow-y: auto;
+	}
+</style>
+@endsection
+
 <?php
 // Definimos que lista del tipo de Identificaciones se mostrara en el campo [Cédulas(V-E)|RIF(V-J-G-E)].
 $lista_tpid = $lista_cedula;
@@ -31,6 +51,7 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 	document.getElementById('contenedor_script_variables_2').remove();
 </script>
 <script src="{{url('libraries/sortable/sortable.min.js')}}"></script>
+<script src="{{url('libraries/tom-select/js/tom-select.complete.min.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/modificar.js')}}"></script>
 <script src="{{url('js/app/mapa_de_zona/registrar_auxiliares.js')}}"></script>
 
@@ -135,11 +156,15 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
-		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase my-2"><i class="fas fa-folder-open"></i> Modificar</h4>
+		<div class="col-12 col-md-7 col-lg-6 text-start">
+			<h4 class="card-title text-uppercase mb-3 my-md-2"><i class="fas fa-folder-open"></i> Modificar</h4>
 		</div>
-		<div class="col-6 text-end">
-			<a href="{{route('mapas_de_zonas.index')}}" class="btn btn-primary btn-sm"><i class="fas fa-chevron-left me-2"></i>Regresar</a>
+		<div class="col-12 col-md-5 col-lg-6 text-end">
+			<div class="form-row justify-content-end">
+				<div class="col-12 col-md-8 col-lg-6">
+					<a href="{{route('mapas_de_zonas.index')}}" class="btn btn-primary btn-sm w-100"><i class="fas fa-chevron-left me-2"></i>Regresar</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -386,8 +411,24 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 					<!-- CAMPOS -->
 					<div class="form-row">
 						<div class="form-group col-12 col-md-3 mb-3">
-							<label for="m_panel_version" class="d-block text-truncate required"><i class="fas fa-digital-tachograph"></i> Panel y versión</label>
-							<input type="text" class="form-control text-uppercase form-tecnicos" name="m_panel_version" id="m_panel_version" value="{{$mapa->panel_version}}" placeholder="Ingrese el panel y la versión">
+							<div class="row align-items-center">
+								<div class="col">
+									<label for="m_panel_version" class="d-block text-truncate required"><i class="fas fa-digital-tachograph"></i> Panel y versión</label>
+								</div>
+								@if (isset($crear_dispositivo))
+								<div class="col text-end">
+									<button type="button" class="btn btn-sm btn-primary btn-auxilar ms-auto form-tecnicos" id="btn_modal_panel"><i class="fas fa-plus"></i></button>
+								</div>
+								@endif
+							</div>
+							<select class="form-control text-uppercase form-tecnicos" name="m_panel_version" id="m_panel_version">
+								<option value="">Seleccione el panel</option>
+								@foreach ($dispositivos as $dispositivo)
+								<?php if ($dispositivo->tipo == "P") { ?>
+									<option value="{{$dispositivo->iddispositivo}}" <?= $mapa->idpanel == $dispositivo->iddispositivo ? "selected" : "" ?>>{{$dispositivo->dispositivo}}</option>
+								<?php } ?>
+								@endforeach
+							</select>
 						</div>
 						<div class="form-group col-12 col-md-3 mb-3">
 							<div class="row align-items-center">
@@ -401,7 +442,7 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 								@endif
 							</div>
 							<select class="form-control text-uppercase form-tecnicos" name="m_teclado" id="m_teclado">
-								<option value="">Seleccione un modelo</option>
+								<option value="">Seleccione el modelo</option>
 								@foreach ($dispositivos as $dispositivo)
 								<?php if ($dispositivo->tipo == "T") { ?>
 									<option value="{{$dispositivo->iddispositivo}}" <?= $mapa->idteclado == $dispositivo->iddispositivo ? "selected" : "" ?>>{{$dispositivo->dispositivo}}</option>
@@ -522,11 +563,15 @@ if ($mapa->tipocontrato == 1 or $mapa->tipocontrato == 5) {
 				<div class="tab-pane fade" id="pills-visitas" role="tabpanel" aria-labelledby="pills-visitas-tab" tabindex="0">
 					<!-- TITULO -->
 					<div class="row align-items-center mb-3">
-						<div class="col-6 text-start">
-							<h4 class="text-uppercase m-0"><i class="fas fa-map-marked-alt"></i> Visitas</h4>
+						<div class="col-12 col-md-6 text-start">
+							<h4 class="text-uppercase mb-3 m-md-0"><i class="fas fa-map-marked-alt"></i> Visitas</h4>
 						</div>
-						<div class="col-6 text-end">
-							<button type="button" class="btn btn-primary btn-sm" id="btn_abrir_modal_anio"><i class="fas fa-calendar-week me-2"></i>Agregar nuevo</button>
+						<div class="col-12 col-md-6 text-end">
+							<div class="form-row justify-content-end">
+								<div class="col-12 col-md-6">
+									<button type="button" class="btn btn-primary btn-sm w-100" id="btn_abrir_modal_anio"><i class="fas fa-calendar-week me-2"></i>Agregar nuevo</button>
+								</div>
+							</div>
 						</div>
 					</div>
 

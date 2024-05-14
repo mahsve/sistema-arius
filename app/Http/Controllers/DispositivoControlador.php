@@ -16,8 +16,9 @@ class DispositivoControlador extends Controller
 	public $idservicio = 17;
 	public $idservicio_conf = 21; // ID del submódulo configuración.
 	public $tiposDispositivos = [
-		"Z" => "General",
+		"Z"	=> "General",
 		"T"	=> "Teclado",
+		"P"	=> "Panel",
 	];
 
 	// Display a listing of the resource.

@@ -9,6 +9,8 @@ use App\Models\MapaDeZona;
 use App\Models\Contacto;
 use App\Models\Instaladores;
 use App\Models\Personal;
+use App\Models\Visita;
+use App\Models\VisitaTecnico;
 use App\Models\Zona;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -125,8 +127,9 @@ class MapaDeZonaControlador extends Controller
 		],
 	];
 	public $tiposDispositivos = [
-		"Z" => "General",
+		"Z"	=> "General",
 		"T"	=> "Teclado",
+		"P"	=> "Panel",
 	];
 	public $canales_reportes = [
 		"Cantv",
@@ -304,16 +307,16 @@ class MapaDeZonaControlador extends Controller
 				$mapa_de_zona = new MapaDeZona();
 
 				// Detalles cliente y contrato.
-				$mapa_de_zona->idcodigo = $request->m_codigo;
 				$mapa_de_zona->registro = $request->m_ingreso;
 				$mapa_de_zona->tipocontrato = $request->m_tipo_contrato;
+				$mapa_de_zona->idcodigo = $request->m_codigo;
+				$mapa_de_zona->cedula_asesor = $request->m_asesor;
 				$mapa_de_zona->idcliente = $request->id_cliente;
 				$mapa_de_zona->direccion = $request->c_direccion;
 				$mapa_de_zona->referencia = $request->c_referencia;
-				$mapa_de_zona->cedula_asesor = auth()->user()->cedula;
 				$mapa_de_zona->observaciones = $request->m_observacion;
-				$mapa_de_zona->monitoreo_contratado = $request->m_monitoreo;
-				$mapa_de_zona->monitoreo_estatus = "A";
+				$mapa_de_zona->monitoreo_contratado	= $request->m_monitoreo;
+				$mapa_de_zona->monitoreo_estatus		= $request->m_monitoreo == "S" ? "A" : "N";
 
 				// Detalles técnicos.
 				if (!isset($request->omitir_datos_tecnicos)) {
@@ -325,7 +328,7 @@ class MapaDeZonaControlador extends Controller
 					}
 
 					// Guardamos los datos técnicos agregados por el usuario.
-					$mapa_de_zona->panel_version = $request->m_panel_version;
+					$mapa_de_zona->idpanel = $request->m_panel_version;
 					$mapa_de_zona->idteclado = $request->m_teclado;
 					$mapa_de_zona->reporta_por = $request->m_reporta;
 					$mapa_de_zona->telefono_asig = $telefono_as;
@@ -405,6 +408,27 @@ class MapaDeZonaControlador extends Controller
 						$zona->nota = $request->zona_nota[$var];
 						$zona->idcodigo = $request->m_codigo;
 						$zona->save();
+					}
+				}
+
+				// Registramos las visitas en el mapa.
+				if (isset($request->visita_fecha)) {
+					for ($var = 0; $var < count($request->visita_fecha); $var++) {
+						// Agregamos la visita en el mapa de zona.
+						$visita = new Visita();
+						$visita->idcodigo = $request->m_codigo;
+						$visita->fecha = $request->visita_fecha[$var];
+						$visita->servicioprestado = $request->visita_servicio[$var];
+						$visita->pendientes = $request->visita_pendiente[$var];
+						$visita->save();
+
+						$idtec = $request->idselvis_tecnicos[$var];
+						for ($vat = 0; $vat < count($request->input("visita_tecnicos_" . $idtec)); $vat++) {
+							$visita_tec = new VisitaTecnico();
+							$visita_tec->cedula = $request->input("visita_tecnicos_" . $idtec)[$vat];
+							$visita_tec->idvisita = $visita->idvisita;
+							$visita_tec->save();
+						}
 					}
 				}
 			});
@@ -539,8 +563,8 @@ class MapaDeZonaControlador extends Controller
 				$mapa_de_zona->direccion = $request->c_direccion;
 				$mapa_de_zona->referencia = $request->c_referencia;
 				$mapa_de_zona->observaciones = $request->m_observacion;
-				$mapa_de_zona->monitoreo_contratado = $request->m_monitoreo;
-				// $mapa_de_zona->monitoreo_estatus = "A";
+				$mapa_de_zona->monitoreo_contratado	= $request->m_monitoreo;
+				$mapa_de_zona->monitoreo_estatus		= $request->m_monitoreo == "S" ? "A" : "N";
 
 				// Detalles técnicos.
 				if (!isset($request->omitir_datos_tecnicos)) {
@@ -552,7 +576,7 @@ class MapaDeZonaControlador extends Controller
 					}
 
 					// Guardamos los datos técnicos agregados por el usuario.
-					$mapa_de_zona->panel_version = $request->m_panel_version;
+					$mapa_de_zona->idpanel = $request->m_panel_version;
 					$mapa_de_zona->idteclado = $request->m_teclado;
 					$mapa_de_zona->reporta_por = $request->m_reporta;
 					$mapa_de_zona->telefono_asig = $telefono_as;
@@ -660,6 +684,27 @@ class MapaDeZonaControlador extends Controller
 							$zona->idconfiguracion = $request->zona_configuracion[$var];
 							$zona->nota = $request->zona_nota[$var];
 							$zona->save();
+						}
+					}
+				}
+
+				// Registramos las visitas en el mapa.
+				if (isset($request->visita_fecha)) {
+					for ($var = 0; $var < count($request->visita_fecha); $var++) {
+						// Agregamos la visita en el mapa de zona.
+						$visita = new Visita();
+						$visita->idcodigo = $id;
+						$visita->fecha = $request->visita_fecha[$var];
+						$visita->servicioprestado = $request->visita_servicio[$var];
+						$visita->pendientes = $request->visita_pendiente[$var];
+						$visita->save();
+
+						$idtec = $request->idselvis_tecnicos[$var];
+						for ($vat = 0; $vat < count($request->input("visita_tecnicos_" . $idtec)); $vat++) {
+							$visita_tec = new VisitaTecnico();
+							$visita_tec->cedula = $request->input("visita_tecnicos_" . $idtec)[$vat];
+							$visita_tec->idvisita = $visita->idvisita;
+							$visita_tec->save();
 						}
 					}
 				}

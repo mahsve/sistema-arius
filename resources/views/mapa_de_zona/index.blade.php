@@ -15,11 +15,17 @@
 @section('content')
 <div class="mb-3">
 	<div class="row align-items-center">
-		<div class="col-6 text-start">
-			<h4 class="card-title text-uppercase my-2"><i class="fas fa-map-marked-alt"></i> Mapas de zonas</h4>
+		<div class="col-12 col-md-7 col-lg-6 text-start">
+			<h4 class="card-title text-uppercase mb-3 my-md-2"><i class="fas fa-map-marked-alt"></i> Mapas de zonas</h4>
 		</div>
-		<div class="col-6 text-end">
-			<a href="{{route('mapas_de_zonas.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-folder-plus me-2"></i>Agregar</a>
+		<div class="col-12 col-md-5 col-lg-6 text-end">
+			@if (isset($permisos->create))
+			<div class="form-row justify-content-end">
+				<div class="col-12 col-md-8 col-lg-6">
+					<a href="{{route('mapas_de_zonas.create')}}" class="btn btn-primary btn-sm w-100"><i class="fas fa-folder-plus me-2"></i>Agregar</a>
+				</div>
+			</div>
+			@endif
 		</div>
 	</div>
 </div>
@@ -36,7 +42,9 @@
 						<th class="ps-2"><i class="fas fa-address-card"></i> Asesor</th>
 						<th class="ps-2"><i class="fas fa-desktop"></i> Monitoreo</th>
 						<th class="ps-2"><i class="fas fa-toggle-on"></i> Estatus</th>
+						@if (isset($permisos->update) or isset($permisos->toggle) or isset($permisos->generar_pdf))
 						<th class="ps-2 text-center"><i class="fas fa-cogs"></i></th>
+						@endif
 					</tr>
 				</thead>
 
@@ -59,8 +67,12 @@
 							<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
 							@endif
 						</td>
+						@if (isset($permisos->update) or isset($permisos->toggle) or isset($permisos->generar_pdf))
 						<td class="py-1 px-2" width="63px">
+							@if (isset($permisos->update))
 							<a href="{{route('mapas_de_zonas.edit', ['id' => $mapa_de_zona->idcodigo])}}" class="btn btn-primary btn-sm btn-icon"><i class="fas fa-edit"></i></a>
+							@endif
+							@if (isset($permisos->toggle) or isset($permisos->generar_pdf))
 							<div class="d-inline dropdown no_arrow">
 								<button class="btn btn-secondary btn-sm btn-icon dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
 									<i class="fas fa-ellipsis-v px-1"></i>
@@ -69,7 +81,9 @@
 									<li><a class="dropdown-item" href="{{route('mapas_de_zonas.pdf', ['id' => $mapa_de_zona->idcodigo])}}" target="blank"><i class="fas fa-print"></i> Imprimir</a></li>
 								</ul>
 							</div>
+							@endif
 						</td>
+						@endif
 					</tr>
 					@endforeach
 				</tbody>

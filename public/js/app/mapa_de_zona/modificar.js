@@ -449,30 +449,36 @@
 		e.preventDefault();
 
 		// Si esta el mensaje de "Sin visitas agregadas", procede a eliminarla.
-		if (document.querySelector('#contenedor_visitas .sin_anios') != null) {
-			document.querySelector('#contenedor_visitas .sin_anios').remove();
-		}
+		if (document.querySelector('#contenedor_visitas .sin_anios') != null) document.querySelector('#contenedor_visitas .sin_anios').remove();
 
+		// Llamamos la función para agregar el HTML y ocultamos la modal de fecha.
+		agregar_tabla_visitas(anio_input.value);
+		modal_visita1.hide();
+	});
+
+	// Agregar la tabla de visita de cada año en el DOM.
+	function agregar_tabla_visitas(anio) {
 		// Agregamos la nueva tabla en el contenedor.
 		const idrand = Math.random().toString().replace('.', '');
 		contenedor_visitas.innerHTML += `
-		<div class="table-responsive border rounded mb-4">
+		<div class="table-responsive border rounded mb-4 table-visitas">
 			<table id="tabla_visitas_${idrand}" class="table table-hover m-0">
 				<thead>
 					<tr>
-						<td colspan="5" class="text-uppercase fw-bold py-1">
+						<td colspan="6" class="text-uppercase fw-bold py-1">
 							<div class="d-flex justify-content-between align-items-center">
-								<h4 class="d-inline-block m-0">REGISTROS DE VISITAS TéCNICAS - ${anio_input.value}</h4>
-								<button type="button" class="btn btn-primary btn-sm my-1" id="btn_agg_visita_${idrand}" data-rand="${idrand}"><i class="fas fa-toolbox me-2"></i>Agregar</button>
+								<h4 class="d-inline-block m-0">REGISTROS DE VISITAS TÉCNICAS - ${anio}</h4>
+								<button type="button" class="btn btn-primary btn-sm my-1" id="btn_agg_visita_${idrand}" data-rand="${idrand}" data-anio="${anio}"><i class="fas fa-toolbox me-2"></i>Agregar</button>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<th class="py-2 pe-2"><i class="fas fa-calendar-day"></i> <span class="required">Fecha</span></th>
-						<th class="py-2 ps-2"><i class="fas fa-laptop-house"></i> <span class="required">Servicio</span></th>
-						<th class="py-2 ps-2"><i class="fas fa-user-tie"></i> <span class="required">Técnicos</span></th>
-						<th class="py-2 ps-2"><i class="fas fa-sticky-note"></i> <span class="required">Pendientes</span></th>
-						<th class="py-2 px-2 text-center" width="55px"><i class="fas fa-cogs"></i></th>
+						<th class="py-2 px-1 text-center" width="40px"><i class="fas fa-list-ol"></i> N°</th>
+						<th class="py-2 px-1" width="130px"><i class="fas fa-calendar-day"></i> <span class="required">Fecha</span></th>
+						<th class="py-2 px-1"><i class="fas fa-laptop-house"></i> <span class="required">Servicio</span></th>
+						<th class="py-2 px-1"><i class="fas fa-user-tie"></i> <span class="required">Técnicos</span></th>
+						<th class="py-2 px-1"><i class="fas fa-sticky-note"></i> <span>Pendientes</span></th>
+						<th class="py-2 px-1 text-center" width="40px"><i class="fas fa-cogs"></i></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -480,23 +486,100 @@
 						<td colspan="8" class="text-center"><i class="fas fa-times"></i> Sin visitas registradas</td>
 					</tr>
 				</tbody>
+				<tfoot>
+					<tr class="sin_visitas border-top">
+						<td colspan="8" class="text-center py-3"> Lista visitas ${anio}</td>
+					</tr>
+				</tfoot>
 			</table>
 		</div>
 		`;
 
 		// Ocultamos la modal y deshabilitamos el año agregado para evitar repetir datos.
-		modal_visita1.hide();
-		document.querySelector(`#lista_anios option[value="${anio_input.value}"]`).setAttribute('disabled', true);
+		document.querySelector(`#lista_anios option[value="${anio}"]`).setAttribute('disabled', true);
 
 		// Agregamos evento al botón.
 		document.getElementById(`btn_agg_visita_${idrand}`).addEventListener('click', agregar_visita);
-	});
+	}
 
 	// Función para registrar una nueva visita en el mapa de zona.
 	function agregar_visita(e) {
 		e.preventDefault();
 
+		// Elementos HTML.
+		const idrand_table = this.getAttribute('data-rand');
+		const tabla_visitas = document.querySelector(`#tabla_visitas_${idrand_table} tbody`);
 
+		// ELEMENTOS.
+		if (tabla_visitas.children.length > 0 && tabla_visitas.children[0].classList.contains('sin_visitas')) tabla_visitas.innerHTML = '';
+
+		// GENERAMOS UN NUEVO ELEMENTO.
+		const idrand = Math.random().toString().replace('.', ''); // GENERAMOS UN ID UNICO PARA MANEJAR LA FILA DEL USUARIO.
+		const idseltec = Math.random().toString().replace('.', '');
+		const elemento = document.createElement('tr'); // GENERAMOS UN NUEVO ELEMENTO.
+		elemento.id = `tr_visita_${idrand}`;
+		elemento.setAttribute('data-rand', idrand);
+		elemento.setAttribute('data-table', idrand_table);
+
+		// Definimos toda la estructura de la nueva fila.
+		elemento.innerHTML = `
+		<td class="py-1 px-1 text-center n_visitas" style="vertical-align: top;" data-id="${idrand}" id="visita_norden_${idrand}">${tabla_visitas.children.length + 1}</td>
+		<td class="py-1 px-1" style="vertical-align: top;">
+			<input type="hidden" name="idvisita[]" id="idvisita_${idrand}">
+			<input type="date" class="form-control text-uppercase visita_fecha" name="visita_fecha[]" id="visita_fecha_${idrand}" style="max-width: 130px;">
+		</td>
+		<td class="py-1 px-1">
+			<textarea class="form-control visita_servicio" name="visita_servicio[]" id="visita_servicio_${idrand}" placeholder="Servicio prestado"></textarea>
+		</td>
+		<td class="py-1 px-1" style="vertical-align: top;">
+			<input type="hidden" name="idselvis_tecnicos[]" value="${idseltec}">
+			<select class="form-control text-uppercase visita_tecnicos" name="visita_tecnicos_${idseltec}[]" id="visita_tecnicos_${idrand}" multiple data-id="${idrand}" style="max-width: 200px;">
+				${lista_tecnicos.map(tec => `<option value="${tec.cedula}">${tec.nombre}</option>`).join('')}
+			</select>
+		</td>
+		<td class="py-1 px-1">
+			<textarea class="form-control visita_pendiente" name="visita_pendiente[]" id="visita_pendiente_${idrand}" placeholder="Pendientes"></textarea>
+		</td>
+		<td class="py-1 px-1" style="vertical-align: top;">
+			<button type="button" class="btn btn-danger btn-sm btn-icon" id="btn_eliminar_visita_${idrand}" data-id="${idrand}" data-table="${idrand_table}"><i class="fas fa-times"></i></button>
+		</td>`;
+		tabla_visitas.appendChild(elemento);
+
+		// Agregamos los eventos a los elementos agregados a la tabla.
+		new TomSelect(`#visita_tecnicos_${idrand}`, {
+			plugins: ['remove_button'],
+			persist: false,
+			createOnBlur: false,
+			create: false,
+		});
+		// document.getElementById(`visita_tecnicos_${idrand}`).addEventListener("change", consultar_configuracion);
+		document.getElementById(`btn_eliminar_visita_${idrand}`).addEventListener("click", eliminar_visita);
+
+		// // 
+		// document.getElementById(`zona_descripcion_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		// document.getElementById(`zona_equipos_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+		// document.getElementById(`zona_configuracion_${idrand}`).addEventListener('change', function () { this.classList.remove('border-danger') });
+	}
+
+	// Eliminar visita de la tabla.
+	function eliminar_visita(e) {
+		// Capturamos el elemento que provoco el evento.
+		const idrand = this.getAttribute('data-id');
+		const idrand_table = this.getAttribute('data-table');
+		const tabla_visitas = document.querySelector(`#tabla_visitas_${idrand_table} tbody`);
+
+		document.getElementById(`tr_visita_${idrand}`).remove();
+		// En caso que quede vacío, cargamos un mensaje en la tabla "Sin visitas".
+		if (tabla_visitas.children.length == 0) {
+			tabla_visitas.innerHTML = `<tr class="sin_visitas"><td colspan="8" class="text-center"><i class="fas fa-times"></i> Sin visitas registradas</td></tr>`;
+			return;
+		}
+
+		// Reordenamos la enumeración del listado.
+		Array.from(document.querySelectorAll('.n_visitas')).forEach((tr_, index) => {
+			const idrand = tr_.getAttribute('data-id');
+			document.querySelector(`#visita_norden_${idrand}`).innerHTML = (index + 1);
+		});
 	}
 
 
