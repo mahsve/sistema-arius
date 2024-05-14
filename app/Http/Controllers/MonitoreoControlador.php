@@ -13,7 +13,7 @@ class MonitoreoControlador extends Controller
 	use SeguridadControlador;
 
 	// Atributos de la clase.
-	public $idservicio = 43;
+	public $idservicio = 48;
 
 	// Display a listing of the resource. 
 	public function index()

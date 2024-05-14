@@ -13,7 +13,7 @@ class ServicioTecnicoControlador extends Controller
 	use SeguridadControlador;
 
 	// Atributos de la clase.
-	public $idservicio = 48;
+	public $idservicio = 43;
 	public $motivos = [
 		'Instalación',
 		'Avería',
