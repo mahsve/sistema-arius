@@ -110,11 +110,12 @@ class MonitoreoControlador extends Controller
 		// Cargamos la vista para gestionar el reporte con los datos necesarios.
 		$reporte = ReporteDiarioOperador::select('tb_reportes_diarios.*', 'tb_personal.nombre as operador')
 			->join('tb_personal', 'tb_reportes_diarios.cedula', 'tb_personal.cedula')
+			->where('tb_reportes_diarios', '=', $id)
 			->first();
 		$eventos = EventoMonitoreo::select('tb_reportes_detalles.*', 'tb_clientes.nombre as cliente')
 			->join('tb_mapa_zonas', 'tb_reportes_detalles.idcodigo', 'tb_mapa_zonas.idcodigo')
 			->join('tb_clientes', 'tb_mapa_zonas.idcliente', 'tb_clientes.identificacion')
-			->where('idreporte', '=', $reporte->idreporte)
+			->where('tb_reportes_diarios.idreporte', '=', $reporte->idreporte)
 			->get();
 
 		// Verificamos que este todavía abierto para poder editar.
@@ -122,6 +123,7 @@ class MonitoreoControlador extends Controller
 			return redirect()->route('monitoreo.index');
 		}
 
+		// Cargamos el HTML con todos los datos correspondientes.
 		return view('monitoreo.gestionar', [
 			'reporte' => $reporte,
 			'eventos' => $eventos,
