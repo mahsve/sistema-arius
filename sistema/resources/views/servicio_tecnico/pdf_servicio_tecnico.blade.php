@@ -46,7 +46,7 @@
 		<table class="page_header">
 			<tr>
 				<td style="width: 50%; text-align: left">
-					<img src="{{public_path('images/logo.png')}}" style="width: 40mm" />
+					<img src="{{public_path('images/logo_pdf.png')}}" style="width: 40mm"/>
 				</td>
 				<td style="width: 50%; text-align: right">
 				</td>
