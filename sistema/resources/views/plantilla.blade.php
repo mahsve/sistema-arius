@@ -155,16 +155,18 @@
 		});
 
 		// right-sidebar
-		document.getElementById("btn_toggle_todo").addEventListener('click', function(e) {
-			e.preventDefault();
-			const sidebar_todo = document.getElementById("right-sidebar");
-			console.log(sidebar_todo.style.right);
-			if (!sidebar_todo.style.right || sidebar_todo.style.right != '0px' || sidebar_todo.style.right == "") {
-				sidebar_todo.style.right = 0;
-			} else {
-				sidebar_todo.style.right = null;
-			}
-		});
+		if (false) {
+			document.getElementById("btn_toggle_todo").addEventListener('click', function(e) {
+				e.preventDefault();
+				const sidebar_todo = document.getElementById("right-sidebar");
+				console.log(sidebar_todo.style.right);
+				if (!sidebar_todo.style.right || sidebar_todo.style.right != '0px' || sidebar_todo.style.right == "") {
+					sidebar_todo.style.right = 0;
+				} else {
+					sidebar_todo.style.right = null;
+				}
+			});
+		}
 	</script>
 </body>
 

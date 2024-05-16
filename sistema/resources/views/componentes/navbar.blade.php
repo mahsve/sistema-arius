@@ -24,9 +24,11 @@
 		</ul>
 
 		<ul class="navbar-nav ms-auto">
+			<?php /*
 			<li class="nav-item dropdown">
 				<a href="javascript:void(0);" id="btn_toggle_todo"><i class="fas fa-clipboard-list"></i></a>
 			</li>
+			*/ ?>
 			<li class="nav-item dropdown">
 				<a class="nav-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-expanded="false">
 					<img class="img-xs rounded-circle border" src="{{url('images/user-default.jpg')}}" alt="Imagen usuario">

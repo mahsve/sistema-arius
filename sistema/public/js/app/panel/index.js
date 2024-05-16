@@ -5,12 +5,10 @@
 	const formulario_registrar_tarea = document.getElementById("formulario_registrar_tarea");
 
 	//
-	btn_modal_tarea.addEventListener("click", function (e) {
-		e.preventDefault();
-
-
-		modal_tarea.show();
-	});
-
-	
+	if (false){
+		btn_modal_tarea.addEventListener("click", function (e) {
+			e.preventDefault();
+			modal_tarea.show();
+		});
+	}
 })();

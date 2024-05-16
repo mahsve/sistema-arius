@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\MapaDeZona;
+use App\Models\Personal;
 use App\Models\ServicioTecnicoSolicitado;
+use App\Models\Visita;
+use App\Models\VisitaTecnico;
 use Illuminate\Http\Request;
 use Spipu\Html2Pdf\Html2Pdf;
 
@@ -39,7 +42,8 @@ class ServicioTecnicoControlador extends Controller
 			$fecha_inicio	= $_GET["fecha_inicio"];
 			$fecha_final	= $_GET["fecha_tope"];
 		}
-		
+
+		$personal = Personal::all();
 		$servicios = ServicioTecnicoSolicitado::select('tb_servicios_solicitados.*', 'tb_clientes.identificacion', 'tb_clientes.nombre', 'tb_personal.nombre as personal')
 			->join('tb_personal', 'tb_servicios_solicitados.cedula', 'tb_personal.cedula')
 			->join('tb_mapa_zonas', 'tb_servicios_solicitados.idcodigo', 'tb_mapa_zonas.idcodigo')
@@ -49,6 +53,7 @@ class ServicioTecnicoControlador extends Controller
 		return view('servicio_tecnico.index', [
 			'permisos' => $permisos,
 			'motivos' => $this->motivos,
+			'personal' => $personal,
 			'fecha_inicio' => $fecha_inicio,
 			'fecha_final' => $fecha_final,
 			'servicios' => $servicios,
@@ -246,7 +251,7 @@ class ServicioTecnicoControlador extends Controller
 	}
 
 	// Update status.
-	public function toggle(string $id)
+	public function toggle(Request $request, string $id)
 	{
 		// Verificamos primeramente si tiene acceso al metodo del controlador.
 		if (!$this->verificar_acceso_servicio_metodo($this->idservicio, 'toggle')) {
@@ -255,13 +260,29 @@ class ServicioTecnicoControlador extends Controller
 		}
 
 		// Consultamos el registro a actualizar el estatus.
-		$monitoreo = ServicioTecnicoSolicitado::find($id);
-		$monitoreo->estatus = $monitoreo->estatus != "A" ? "A" : "C";
-		$monitoreo->save();
+		$servicio = ServicioTecnicoSolicitado::find($id);
+		$servicio->estatus = $servicio->estatus != "A" ? "A" : "C";
+		$servicio->save();
+
+		// Registramos las visitas en el mapa.
+		$visita = new Visita();
+		$visita->idcodigo = $servicio->idcodigo;
+		$visita->fecha = $request->c_fecha;
+		$visita->servicioprestado = $request->c_servicio;
+		$visita->pendientes = $request->c_pendiente;
+		$visita->save();
+
+		// Registramos los tecnicos.
+		for ($var = 0; $var < count($request->c_tecnicos); $var++) {
+			$visita_tec = new VisitaTecnico();
+			$visita_tec->cedula = $request->c_tecnicos[$var];
+			$visita_tec->idvisita = $visita->idvisita;
+			$visita_tec->save();
+		}
 
 		// Enviamos un mensaje de exito al usuario.
-		$message	= $monitoreo->estatus == "A" ? "¡Reporte abierto exitosamente!" : "¡Reporte cerrado exitosamente!";
-		$response = ["status" => "success", "response" => ["message" => $message, "data" => ["estatus" => $monitoreo->estatus]]];
+		$message	= $servicio->estatus == "A" ? "¡Solicitud abierta exitosamente!" : "¡Solicitud cerrada exitosamente!";
+		$response = ["status" => "success", "response" => ["message" => $message, "data" => ["estatus" => $servicio->estatus]]];
 		return response($response, 200)->header('Content-Type', 'text/json');
 	}
 }

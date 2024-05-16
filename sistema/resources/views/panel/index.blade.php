@@ -11,64 +11,73 @@
 
 @section('content')
 <div class="form-row">
-	<div class="col-6 col-md-4 col-xl-2 mb-3">
-		<div class="card">
-			<div class="card-body">
-				<p class="statistics-title">Bounce Rate</p>
-				<h3 class="rate-percentage">32.53%</h3>
-				<p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>-0.5%</span></p>
+	<?php if (isset($vista_clientes) and $vista_clientes != null) { ?>
+		<div class="col-6 col-md-4 col-xl-2 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<p class="statistics-title">Clientes registrados</p>
+					<h3 class="rate-percentage">{{count($clientes_activos) + count($clientes_inactivos)}}</h3>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="col-6 col-md-4 col-xl-2 mb-3">
-		<div class="card">
-			<div class="card-body">
-				<p class="statistics-title">Page Views</p>
-				<h3 class="rate-percentage">7,682</h3>
-				<p class="text-success d-flex"><i class="mdi mdi-menu-up"></i><span>+0.1%</span></p>
+		<div class="col-6 col-md-4 col-xl-2 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<p class="statistics-title">Clientes activos</p>
+					<h3 class="rate-percentage">{{count($clientes_activos)}}</h3>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="col-6 col-md-4 col-xl-2 mb-3">
-		<div class="card">
-			<div class="card-body">
-				<p class="statistics-title">New Sessions</p>
-				<h3 class="rate-percentage">68.8</h3>
-				<p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>68.8</span></p>
+		<div class="col-6 col-md-4 col-xl-2 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<p class="statistics-title">Clientes inactivos</p>
+					<h3 class="rate-percentage">{{count($clientes_inactivos)}}</h3>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="col-6 col-md-4 col-xl-2 mb-3">
-		<div class="card">
-			<div class="card-body">
-				<p class="statistics-title">Avg. Time on Site</p>
-				<h3 class="rate-percentage">2m:35s</h3>
-				<p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>+0.8%</span></p>
+		<div class="col-6 col-md-4 col-xl-2 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<p class="statistics-title">Monitoreo activos</p>
+					<h3 class="rate-percentage">{{count($monitoreo_activos)}}</h3>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="col-6 col-md-4 col-xl-2 mb-3">
-		<div class="card">
-			<div class="card-body">
-				<p class="statistics-title">New Sessions</p>
-				<h3 class="rate-percentage">68.8</h3>
-				<p class="text-danger d-flex"><i class="mdi mdi-menu-down"></i><span>68.8</span></p>
+		<div class="col-6 col-md-4 col-xl-2 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<p class="statistics-title">Monitoreo inactivos</p>
+					<h3 class="rate-percentage">{{count($monitoreo_inactivos)}}</h3>
+				</div>
 			</div>
 		</div>
-	</div>
-	<div class="col-6 col-md-4 col-xl-2 mb-3">
+	<?php } ?>
+	<?php if (isset($vista_servicio) and $vista_servicio != null) { ?>
+		<div class="col-6 col-md-4 col-xl-2 mb-3">
+			<div class="card">
+				<div class="card-body">
+					<p class="statistics-title">Servicios abiertos</p>
+					<h3 class="rate-percentage">{{count($servicios_abiertos)}}</h3>
+				</div>
+			</div>
+		</div>
+	<?php } ?>
+	<div class="col-12 mb-3">
 		<div class="card">
 			<div class="card-body">
-				<p class="statistics-title">Avg. Time on Site</p>
-				<h3 class="rate-percentage">2m:35s</h3>
-				<p class="text-success d-flex"><i class="mdi mdi-menu-down"></i><span>+0.8%</span></p>
+				<h2 class="mb-4">Panel de administración</h2>
+				<div class="overflow-hidden d-flex justify-content-center align-items-start rounded" style="max-height: 400px;">
+					<img src="{{url('images/dashboard.jpg')}}" alt="Panel" class="w-100">
+				</div>
 			</div>
 		</div>
 	</div>
 </div>
 
+@if (false)
 <div class="form-row">
-	<div class="col-12 col-lg-8 mb-3">
+	<div class="col-12 mb-3">
 		<div class="card">
 			<div class="card-body">
 				<div class="d-sm-flex justify-content-between align-items-start">
@@ -107,6 +116,7 @@
 		</div>
 	</div>
 
+	@if (false)
 	<!-- Lista de tareas -->
 	<div class="col-12 col-lg-4 mb-3">
 		<div class="card">
@@ -145,6 +155,7 @@
 			</div>
 		</div>
 	</div>
+	@endif
 
 	@if (false)
 	<div class="row flex-grow">
@@ -619,4 +630,5 @@
 	</div>
 	@endif
 </div>
+@endif
 @endsection

@@ -55,7 +55,15 @@
 						<td class="py-1 px-2">{{$mapa_de_zona->idcliente}}</td>
 						<td class="py-1 px-2">{{$mapa_de_zona->cliente}}</td>
 						<td class="py-1 px-2">{{$mapa_de_zona->asesor}}</td>
-						<td class="py-1 px-2">{{$mapa_de_zona->asesor}}</td>
+						<td class="py-1 px-2">
+							@if ($mapa_de_zona->monitoreo_estatus == "A")
+							<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>
+							@elseif ($mapa_de_zona->monitoreo_estatus == "N")
+							<span class="badge badge-info"><i class="fas fa-times"></i> No contratado</span>
+							@else
+							<span class="badge badge-danger"><i class="fas fa-times"></i> Inactivo</span>
+							@endif
+						</td>
 						<td class="py-1 px-2">
 							@if ($mapa_de_zona->estatus == "A")
 							<span class="badge badge-success"><i class="fas fa-check"></i> Activo</span>

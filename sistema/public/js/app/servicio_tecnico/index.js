@@ -3,6 +3,7 @@
 	const btn_nueva_solicitud = document.getElementById('btn_nueva_solicitud');
 	const btn_detalles = document.querySelectorAll(".btn_detalles");
 	const btn_editar = document.querySelectorAll(".btn_editar");
+	const btn_cerrar = document.querySelectorAll(".btn_cerrar");
 	const btn_buscar_por_fecha = document.getElementById("btn_buscar_por_fecha");
 	const switch_estatus = document.querySelectorAll(".switch_estatus");
 	// Formularios.
@@ -12,6 +13,17 @@
 	const modal_modificar = document.getElementById('modal_modificar') != null ? new bootstrap.Modal('#modal_modificar') : null;
 	const formulario_actualizacion = document.getElementById("formulario_actualizacion");
 	const modal_detalles = document.getElementById('modal_detalles') != null ? new bootstrap.Modal('#modal_detalles') : null;
+	// Modal cerrar
+	const formulario_cerrar = document.getElementById("formulario_cerrar");
+	const modal_cerrar = document.getElementById('modal_cerrar') != null ? new bootstrap.Modal('#modal_cerrar') : null;
+
+	// Habilitamos el select multiple en cerrar ticket.
+	new TomSelect(`#c_tecnicos_cr`, {
+		plugins: ['remove_button'],
+		persist: false,
+		createOnBlur: false,
+		create: false,
+	});
 
 	// Registrar dato.
 	if (btn_nueva_solicitud != null) {
@@ -165,6 +177,54 @@
 		});
 	}
 
+	// Modificar dato.
+	if (formulario_cerrar != null) {
+		formulario_cerrar.addEventListener("submit", function (e) {
+			e.preventDefault();
+
+			// Elementos del formulario.
+			const c_fecha = document.getElementById("c_fecha_cr");
+			const c_tecnicos = document.getElementById("c_tecnicos_cr");
+			const c_servicio = document.getElementById("c_servicio_cr");
+			const btn_guardar = document.getElementById("btn_cerrar");
+
+			// Validamos los campos.
+			if (c_fecha.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese la fecha de visita!' });
+				c_fecha.focus();
+			} else if (c_tecnicos.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese los tecnicos!' });
+				c_tecnicos.focus();
+			} else if (c_servicio.value == "") {
+				Toast.fire({ icon: 'error', title: '¡Ingrese el servicio prestado!' });
+				c_servicio.focus();
+			} else {
+				btn_guardar.classList.add("loading");
+				btn_guardar.setAttribute('disabled', true);
+				fetch(`${formulario_cerrar.getAttribute('action')}`, { method: 'post', body: new FormData(formulario_cerrar) }).then(response => response.json()).then(data => {
+					btn_guardar.classList.remove("loading");
+					btn_guardar.removeAttribute('disabled');
+
+					// Verificamos si ocurrió algún error.
+					if (data.status == "error") {
+						Toast.fire({ icon: data.status, title: data.response.message });
+						return false;
+					}
+
+					// Enviamos mensaje de exito.
+					modal_modificar.hide();
+					Swal.fire({
+						title: "Exito",
+						icon: data.status,
+						text: data.response.message,
+						timer: 2000,
+						willClose: () => location.reload(),
+					});
+				});
+			}
+		});
+	}
+
 	// Mostrar detalles.
 	Array.from(btn_detalles).forEach(btn_ => {
 		btn_.addEventListener('click', function (e) {
@@ -245,6 +305,33 @@
 				document.getElementById('c_motivo_m').value = data.motivo;
 				document.getElementById('c_descripcion_m').value = data.descripcion;
 				modal_modificar.show();
+			});
+		});
+	});
+
+	// Consultar registro.
+	Array.from(btn_cerrar).forEach(btn_ => {
+		btn_.addEventListener('click', function (e) {
+			e.preventDefault();
+
+			// Capturamos el elemento que provoco el evento.
+			const btn_consultar = this;
+			const id_data = btn_consultar.getAttribute('data-id');
+
+			// Realizamos la consulta AJAX.
+			btn_consultar.classList.add('loading');
+			btn_consultar.setAttribute('disabled', true);
+			fetch(`${url_}/servicios_tecnico/modificar/${id_data}`, { method: 'get' }).then(response => response.json()).then((data) => {
+				btn_consultar.classList.remove('loading');
+				btn_consultar.removeAttribute('disabled');
+
+				// Limpiamos el formulario y cargamos los datos consultados.
+				formulario_cerrar.reset();
+				document.getElementById('modal_cerrar_label').innerHTML = `<i class="fas fa-file-invoice"></i> Solicitud #${id_data.toString().padStart(8, '0')}`;
+				formulario_cerrar.setAttribute('action', `${url_}/servicios_tecnico/cerrar/${id_data}`);
+				document.getElementById('c_codigo_cr').value = data.idcodigo;
+				document.getElementById('c_cliente_cr').value = data.nombre;
+				modal_cerrar.show();
 			});
 		});
 	});

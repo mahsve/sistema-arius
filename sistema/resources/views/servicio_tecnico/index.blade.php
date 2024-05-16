@@ -4,9 +4,11 @@
 
 @section('styles')
 <link href="{{url('css/datatable/datatables.min.css')}}" rel="stylesheet">
+<link rel="stylesheet" href="{{url('libraries/tom-select/css/tom-select.min.css')}}">
 @endsection
 
 @section('scripts')
+<script src="{{url('libraries/tom-select/js/tom-select.complete.min.js')}}"></script>
 <script src="{{url('js/datatable/datatables.min.js')}}"></script>
 <script src="{{url('js/datatable/configuracion.js')}}"></script>
 <script src="{{url('js/app/servicio_tecnico/index.js')}}"></script>
@@ -116,11 +118,14 @@ if (!isset($permisos->generar_pdf) and !isset($permisos->create)) {
 							<span class="badge badge-info"><i class="fas fa-folder"></i> Cerrado</span>
 							@endif
 						</td>
-						@if (isset($permisos->update))
+						@if (isset($permisos->update) or isset($permisos->toggle))
 						<td class="py-1 px-2" style="width: 20px;">
 							<button type="button" class="btn btn-info btn-sm btn-icon btn_detalles" data-id="{{$servicio->idsolicitud}}"><i class="fas fa-eye"></i></button>
-							@if (isset($permisos->update))
+							@if (isset($permisos->update) and $servicio->estatus == "A")
 							<button type="button" class="btn btn-primary btn-sm btn-icon btn_editar" data-id="{{$servicio->idsolicitud}}"><i class="fas fa-edit"></i></button>
+							@endif
+							@if (isset($permisos->toggle) and $servicio->estatus == "A")
+							<button type="button" class="btn btn-warning btn-sm btn-icon btn_cerrar" data-id="{{$servicio->idsolicitud}}"><i class="fas fa-ban"></i></button>
 							@endif
 						</td>
 						@endif
@@ -311,6 +316,71 @@ if (!isset($permisos->generar_pdf) and !isset($permisos->create)) {
 						</tbody>
 					</table>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
+@endif
+
+@if (isset($permisos->toggle))
+<div class="modal fade" id="modal_cerrar" tabindex="-1" aria-labelledby="modal_cerrar_label" aria-hidden="true">
+	<div class="modal-dialog modal-lg">
+		<div class="modal-content">
+			<div class="modal-header border-0 pb-0">
+				<h1 class="modal-title text-uppercase fs-5" id="modal_cerrar_label"><i class="fas fa-folder-open"></i> Modificar departamento</h1>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body py-3">
+				<form class="forms-sample" name="formulario_cerrar" id="formulario_cerrar" method="POST" action="">
+					@csrf
+					@method('PATCH')
+					<div class="form-row">
+						<div class="col-12 col-xl-2">
+							<div class="form-group mb-3">
+								<label for="c_codigo_cr"><i class="fas fa-barcode"></i> Código</label>
+								<input type="text" class="form-control text-uppercase" name="c_codigo" id="c_codigo_cr" readonly>
+							</div>
+						</div>
+						<div class="col-12 col-xl-10">
+							<div class="form-group mb-3">
+								<label for="c_cliente_cr"><i class="fas fa-address-card"></i> Nombre/Razón social</label>
+								<input type="text" class="form-control text-uppercase" id="c_cliente_cr" readonly>
+							</div>
+						</div>
+						<div class="col-12 col-md-4">
+							<div class="form-group mb-3">
+								<label for="c_fecha_cr" class="required"><i class="fas fa-calendar-day"></i> Fecha</label>
+								<input type="date" class="form-control text-uppercase" name="c_fecha" id="c_fecha_cr">
+							</div>
+						</div>
+						<div class="col-12 col-md-8">
+							<div class="form-group mb-3">
+								<label for="c_tecnicos_cr" class="required"><i class="fas fa-user-tie"></i> Técnicos</label>
+								<select class="form-control text-uppercase" name="c_tecnicos[]" id="c_tecnicos_cr" multiple>
+									@foreach($personal as $tecnico)
+									<option value="{{$tecnico->cedula}}">{{$tecnico->nombre}}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="col-12 col-md-6">
+							<div class="form-group mb-3">
+								<label for="c_servicio_cr" class="required"><i class="fas fa-laptop-house"></i> Servicio prestado</label>
+								<textarea class="form-control text-uppercase" name="c_servicio" id="c_servicio_cr" placeholder="Ingrese el servicio prestado"></textarea>
+							</div>
+						</div>
+						<div class="col-12 col-md-6">
+							<div class="form-group mb-3">
+								<label for="c_pendiente_cr"><i class="fas fa-sticky-note"></i> Pendiente</label>
+								<textarea class="form-control text-uppercase" name="c_pendiente" id="c_pendiente_cr" placeholder="Ingrese los detalles pendientes"></textarea>
+							</div>
+						</div>
+					</div>
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"><i class="fas fa-times me-2"></i>Cerrar</button>
+						<button type="submit" class="btn btn-primary btn-sm" id="btn_cerrar"><i class="fas fa-save me-2"></i>Guardar</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
